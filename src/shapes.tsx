@@ -44,7 +44,7 @@ export const footerShapes = [
   (c: string) => <svg viewBox="0 0 100 100"><path d="M50 0l50 100H0z" fill={c} /></svg>,
   (c: string) => <svg viewBox="0 0 100 100"><path d="M35 0h30v35h35v30H65v35H35V65H0V35h35z" fill={c} /></svg>,
   (c: string) => <svg viewBox="0 0 100 100"><path d="M0 50a50 50 0 0 1 100 0z M0 55h100a50 50 0 0 1-100 0z" fill={c} /></svg>,
-  (c: string) => <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill={c} /><circle cx="50" cy="50" r="22" fill="#0a0a0a" /></svg>,
+  (c: string) => <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill={c} /><circle cx="50" cy="50" r="22" fill="#000" /></svg>,
   (c: string) => <svg viewBox="0 0 100 100"><path d="M50 2c4 30 18 44 48 48-30 4-44 18-48 48-4-30-18-44-48-48C32 46 46 32 50 2z" fill={c} /></svg>,
 ]
-export const footerColors = ['#ffffff', '#c6f432', '#ffffff', '#7b5cff', '#ffffff', '#3dd6ff', '#ff3d8b', '#ffffff']
+export const footerColors = ['#7a4dff', '#b9f43c', '#ffffff', '#7a4dff', '#ffffff', '#ff2bd1', '#b9f43c', '#ff2bd1']

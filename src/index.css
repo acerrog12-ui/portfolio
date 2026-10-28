@@ -1,17 +1,16 @@
 @import 'tailwindcss';
 
 @theme {
-  --color-ink: #0a0a0a;
-  --color-ink-2: #141414;
-  --color-paper: #f2f1ed;
-  --color-line: #2a2a2a;
-  --color-pink: #ff3d8b;
-  --color-violet: #7b5cff;
-  --color-lime: #c6f432;
-  --color-sky: #3dd6ff;
-  --font-display: 'Unbounded', system-ui, sans-serif;
-  --font-sans: 'Inter', system-ui, sans-serif;
-  --font-hand: 'Caveat', cursive;
+  --color-ink: #000000;
+  --color-ink-2: #0c0c0c;
+  --color-paper: #e9ecef;
+  --color-line: #262626;
+  --color-pink: #ff2bd1;
+  --color-violet: #7a4dff;
+  --color-lime: #b9f43c;
+  --color-orange: #ff9d4d;
+  --font-display: 'Archivo', system-ui, sans-serif;
+  --font-sans: 'Archivo', system-ui, sans-serif;
 }
 
 html {
@@ -38,11 +37,20 @@ body {
   color: #fff;
 }
 
-.grad {
-  background-image: linear-gradient(100deg, var(--color-pink), var(--color-violet));
+/* Heavy display type, like the reference */
+.font-display {
+  font-weight: 900;
+  font-stretch: 112%;
+  letter-spacing: -0.01em;
 }
-.grad-text {
-  background-image: linear-gradient(100deg, var(--color-pink), var(--color-violet));
+.font-cond {
+  font-stretch: 88%;
+}
+
+/* Silver headline: each letter carries its own vertical gradient,
+   so it still works when the letters are animated one by one */
+.silver .char {
+  background-image: linear-gradient(180deg, #ffffff 0%, #e4e4e4 45%, #9c9c9c 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -50,7 +58,48 @@ body {
 
 .outline-text {
   color: transparent;
-  -webkit-text-stroke: max(1.5px, 0.012em) rgba(255, 255, 255, 0.95);
+  -webkit-text-stroke: max(1.5px, 0.014em) rgba(255, 255, 255, 0.6);
+}
+.outline-dark {
+  color: transparent;
+  -webkit-text-stroke: max(1.5px, 0.014em) rgba(0, 0, 0, 0.55);
+}
+
+/* Gradient pill button (dark purple to magenta to orange) */
+.pill-grad {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  border-radius: 999px;
+  border: 1.5px solid rgba(255, 196, 240, 0.85);
+  background-image: linear-gradient(90deg, #12061c 0%, #3b0f55 22%, #c43cf0 55%, #ff5fb0 78%, #ff9d4d 100%);
+  background-size: 160% 100%;
+  background-position: 0% 0;
+  color: #fff;
+  font-weight: 800;
+  font-stretch: 100%;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  transition: background-position 0.6s ease, transform 0.4s ease;
+}
+.pill-grad:hover {
+  background-position: 100% 0;
+  transform: translateY(-2px);
+}
+
+.pill-line {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  border: 1.5px solid rgba(255, 255, 255, 0.8);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  transition: background 0.3s, color 0.3s;
+}
+.pill-line:hover {
+  background: #fff;
+  color: #000;
 }
 
 /* Split-text masks used by the reveal animation */
@@ -89,19 +138,14 @@ body {
   animation: floaty var(--d, 6s) ease-in-out infinite;
 }
 
-.noise::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 60;
-  opacity: 0.05;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-
 @media (prefers-reduced-motion: reduce) {
   .marquee,
   .floaty {
     animation: none;
   }
+}
+
+/* The hero headline sits on one line on desktop */
+.hero-title .line-mask {
+  display: inline-block;
 }

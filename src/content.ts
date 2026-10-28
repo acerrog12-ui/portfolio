@@ -60,13 +60,19 @@ export const ui = {
     close: { uz: 'Yopish', en: 'Close' },
   },
   contact: {
-    title: { uz: "BOG'LANING", en: 'GET IN TOUCH' },
+    title: { uz: "KELING, GAPLASHAMIZ", en: "LET'S GET IN TOUCH" },
+    form: {
+      name: { uz: 'Ismingiz', en: 'Your name' },
+      email: { uz: 'Email', en: 'Email' },
+      message: { uz: 'Loyiha haqida qisqacha', en: 'Tell me about your project' },
+      send: { uz: 'Yuborish', en: 'Send' },
+    },
     lead: {
       uz: "Loyihangiz bormi? Yozing, birga muhokama qilamiz.",
       en: "Have a project in mind? Drop me a line and let's talk.",
     },
     social: { uz: 'Ijtimoiy tarmoqlar', en: 'Social' },
-    mail: { uz: 'Email', en: 'Email' },
+    mail: { uz: 'Aloqa', en: 'Contact' },
     rights: { uz: 'Barcha huquqlar himoyalangan', en: 'All rights reserved' },
   },
 } satisfies Record<string, unknown>

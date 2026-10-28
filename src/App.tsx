@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState, type FormEvent } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Lenis from 'lenis'
@@ -27,7 +27,7 @@ export default function App() {
   }, [])
 
   return (
-    <div className="noise">
+    <div>
       <Nav />
       <main>
         <Hero />
@@ -57,27 +57,23 @@ function Nav() {
   const links = ['about', 'services', 'projects', 'contact'] as const
   return (
     <header className="fixed inset-x-0 top-0 z-50 mix-blend-difference">
-      <nav className="mx-auto flex max-w-[1400px] items-center justify-between px-4 py-5 text-[11px] font-medium tracking-[0.18em] uppercase sm:px-8">
-        <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="font-display text-sm font-black tracking-normal">
-          DD<span className="text-pink">.</span>
-        </button>
-        <ul className="hidden gap-10 md:flex">
+      <nav className="mx-auto flex max-w-[1500px] items-center gap-4 px-4 py-4 text-[11px] font-bold tracking-wide uppercase sm:px-8 sm:text-[13px]">
+        <ul className="hidden flex-1 justify-around md:flex">
           {links.map((l) => (
             <li key={l}>
               <button onClick={() => scrollTo(l)} className="group relative">
                 {t(ui.nav[l])}
-                <span className="absolute -bottom-1 left-0 h-px w-full origin-right scale-x-0 bg-white transition-transform duration-500 group-hover:origin-left group-hover:scale-x-100" />
+                <span className="absolute -bottom-1 left-0 h-[1.5px] w-full origin-right scale-x-0 bg-white transition-transform duration-500 group-hover:origin-left group-hover:scale-x-100" />
               </button>
             </li>
           ))}
         </ul>
-        <div className="flex overflow-hidden rounded-full border border-white/40">
+        <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="font-display text-base md:hidden">
+          ACE<span className="text-pink">.</span>
+        </button>
+        <div className="ml-auto flex overflow-hidden rounded-full border border-white/50 md:ml-0">
           {(['uz', 'en'] as const).map((l) => (
-            <button
-              key={l}
-              onClick={() => setLang(l)}
-              className={`px-3 py-1.5 transition-colors ${lang === l ? 'bg-white text-black' : 'text-white'}`}
-            >
+            <button key={l} onClick={() => setLang(l)} className={`px-2.5 py-1 transition-colors ${lang === l ? 'bg-white text-black' : 'text-white'}`}>
               {l}
             </button>
           ))}
@@ -97,17 +93,16 @@ function Hero() {
     if (reducedMotion()) return
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: 'expo.out' } })
-      tl.from('.hero-title .char', { yPercent: 110, duration: 1.3, stagger: 0.035 }, 0.15)
-        .from(avatar.current, { scale: 0.4, autoAlpha: 0, rotate: -18, duration: 1.6, ease: 'elastic.out(1,0.6)' }, 0.5)
+      tl.from('.hero-title .char', { yPercent: 110, duration: 1.3, stagger: 0.03 }, 0.15)
+        .from(avatar.current, { yPercent: 40, autoAlpha: 0, scale: 0.7, duration: 1.6, ease: 'elastic.out(1,0.7)' }, 0.45)
         .from('.hero-fade', { y: 30, autoAlpha: 0, duration: 1, stagger: 0.1 }, 0.9)
 
-      // avatar drifts up and the title spreads apart on scroll
-      gsap.to(avatar.current, { yPercent: -35, scale: 0.85, ease: 'none', scrollTrigger: { trigger: root.current, start: 'top top', end: 'bottom top', scrub: true } })
-      gsap.to('.hero-l1', { xPercent: -12, ease: 'none', scrollTrigger: { trigger: root.current, start: 'top top', end: 'bottom top', scrub: true } })
-      gsap.to('.hero-l2', { xPercent: 12, ease: 'none', scrollTrigger: { trigger: root.current, start: 'top top', end: 'bottom top', scrub: true } })
+      // on scroll the head rises and the headline slides away
+      gsap.to(avatar.current, { yPercent: -30, ease: 'none', scrollTrigger: { trigger: root.current, start: 'top top', end: 'bottom top', scrub: true } })
+      gsap.to('.hero-title', { yPercent: -40, autoAlpha: 0.2, ease: 'none', scrollTrigger: { trigger: root.current, start: 'top top', end: 'bottom top', scrub: true } })
     }, root)
 
-    // avatar follows the mouse a little
+    // the head follows the mouse a little
     const inner = avatar.current?.firstElementChild as HTMLElement | null
     const xTo = inner && gsap.quickTo(inner, 'x', { duration: 0.8, ease: 'power3' })
     const yTo = inner && gsap.quickTo(inner, 'y', { duration: 0.8, ease: 'power3' })
@@ -115,9 +110,9 @@ function Hero() {
     const move = (e: MouseEvent) => {
       const dx = e.clientX / window.innerWidth - 0.5
       const dy = e.clientY / window.innerHeight - 0.5
-      xTo?.(dx * 40)
-      yTo?.(dy * 30)
-      rTo?.(dx * 8)
+      xTo?.(dx * 36)
+      yTo?.(dy * 24)
+      rTo?.(dx * 7)
     }
     window.addEventListener('mousemove', move)
     return () => {
@@ -127,34 +122,28 @@ function Hero() {
   }, [])
 
   return (
-    <section ref={root} className="relative flex min-h-[100svh] flex-col justify-center overflow-hidden px-4 pt-24 pb-10 sm:px-8">
-      <div className="pointer-events-none absolute -top-40 left-1/2 h-[600px] w-[900px] -translate-x-1/2 rounded-full bg-violet/20 blur-[140px]" />
-      <div className="pointer-events-none absolute right-[-10%] bottom-[-20%] h-[500px] w-[500px] rounded-full bg-pink/15 blur-[120px]" />
+    <section ref={root} className="relative flex min-h-[100svh] flex-col overflow-hidden bg-ink px-4 pt-14 pb-8 sm:px-8 sm:pt-16">
+      <h1 className="hero-title silver relative z-0 text-center font-display text-[16.8vw] leading-[0.86] uppercase sm:text-[9.4vw]">
+        <span className="block sm:inline-block">
+          <SplitChars text={t(ui.hero.hi)} className="inline-block" />
+        </span>{' '}
+        <span className="block sm:inline-block">
+          <SplitChars text={t(ui.hero.name)} className="inline-block" />
+        </span>
+      </h1>
 
-      <div className="relative mx-auto w-full max-w-[1400px]">
-        <p className="hero-fade mb-6 text-[11px] font-semibold tracking-[0.3em] text-white/60 uppercase sm:text-xs">
-          <span className="mr-2 inline-block h-2 w-2 rounded-full bg-pink align-middle" />
-          {t(ui.hero.kicker)}
-        </p>
-        <h1 className="hero-title font-display leading-[0.86] font-black tracking-[-0.04em] text-[clamp(3.4rem,14vw,14rem)]">
-          <span className="hero-l1 block">
-            <SplitChars text={t(ui.hero.hi)} />
-          </span>
-          <span className="hero-l2 outline-text block text-right">
-            <SplitChars text={t(ui.hero.name)} />
-          </span>
-        </h1>
-
-        <div ref={avatar} className="relative mx-auto mt-8 w-[62vw] max-w-[440px] sm:absolute sm:top-1/2 sm:left-1/2 sm:mt-0 sm:w-[30vw] sm:-translate-x-1/2 sm:-translate-y-[46%]">
-          <img src={img('avatar-glasses.webp')} alt="Doston Daminov" className="w-full drop-shadow-[0_30px_60px_rgba(0,0,0,0.6)]" />
+      <div className="relative flex flex-1 flex-col items-center justify-end sm:block">
+        <div ref={avatar} className="relative z-10 mx-auto -mt-[6vw] w-[78vw] max-w-[560px] sm:absolute sm:top-0 sm:left-1/2 sm:mt-[-5.6vw] sm:w-[40vw] sm:max-w-[680px] sm:-translate-x-1/2">
+          <img src={img('avatar-glasses.webp')} alt="Doston «Ace» Daminov" className="w-full drop-shadow-[0_30px_60px_rgba(0,0,0,0.7)]" />
         </div>
 
-        <div className="relative mt-10 flex flex-col items-start justify-between gap-8 sm:mt-14 sm:flex-row sm:items-end">
-          <p className="hero-fade max-w-[300px] text-[13px] leading-relaxed font-medium tracking-wide text-white/70 uppercase">{t(ui.hero.tagline)} 🎨</p>
-          <a href={`mailto:${contacts.email}`} className="hero-fade group relative overflow-hidden rounded-full p-[1.5px] grad">
-            <span className="block rounded-full bg-ink px-8 py-4 text-xs font-semibold tracking-[0.2em] uppercase transition-colors duration-500 group-hover:bg-transparent">
-              {t(ui.hero.cta)} ↗
-            </span>
+        <div className="relative z-20 mt-6 flex w-full flex-col items-start justify-between gap-6 sm:absolute sm:top-[9vw] sm:mt-0 sm:flex-row sm:items-center">
+          <div className="hero-fade max-w-[300px] text-[12px] leading-[1.6] font-semibold uppercase sm:max-w-[25vw] sm:text-[13px]">
+            <p className="mb-2 text-white/50">{t(ui.hero.kicker)}</p>
+            <p>{t(ui.hero.tagline)} 😎</p>
+          </div>
+          <a href={`mailto:${contacts.email}`} className="hero-fade pill-grad px-7 py-3.5 text-[13px] sm:px-9 sm:py-4 sm:text-[15px]">
+            {t(ui.hero.cta)} <span aria-hidden>•</span>
           </a>
         </div>
       </div>
@@ -164,26 +153,28 @@ function Hero() {
 
 /* ---------------- CLIENT LOGOS + IMAGE STRIP ---------------- */
 function Clients() {
-  const row = [...clients, ...clients]
   const covers = projects.map((p) => p.id)
+  const half = Math.ceil(covers.length / 2)
+  const rows = [covers.slice(0, half), covers.slice(half)]
   return (
-    <section aria-label="Clients" className="relative border-y border-line py-8">
-      <div className="flex overflow-hidden">
-        <div className="marquee flex shrink-0 items-center gap-14 pr-14" style={{ ['--speed' as string]: '40s' }}>
-          {row.map((c, i) => (
-            <span key={i} className="flex items-center gap-14 font-display text-2xl font-bold whitespace-nowrap text-white/80 sm:text-3xl">
-              {c}
-              <Star className="h-5 w-5" color="#ff3d8b" />
-            </span>
-          ))}
-        </div>
-      </div>
-      <div className="mt-8 flex overflow-hidden">
-        <div className="marquee marquee-reverse flex shrink-0 gap-4 pr-4" style={{ ['--speed' as string]: '70s' }}>
-          {[...covers, ...covers].map((id, i) => (
-            <img key={i} src={img(`${id}.jpg`)} alt="" loading="lazy" className="h-40 w-auto shrink-0 rounded-2xl object-cover sm:h-56" />
-          ))}
-        </div>
+    <section aria-label="Clients" className="relative bg-ink py-10 sm:py-14">
+      <ul className="mx-auto flex max-w-[1400px] flex-wrap items-center justify-center gap-x-10 gap-y-4 px-4 sm:justify-between sm:px-8">
+        {clients.map((c) => (
+          <li key={c} className="font-display text-lg leading-none text-white uppercase opacity-90 sm:text-2xl">
+            {c}
+          </li>
+        ))}
+      </ul>
+      <div className="mt-10 space-y-3 sm:mt-14 sm:space-y-4">
+        {rows.map((r, ri) => (
+          <div key={ri} className="flex overflow-hidden">
+            <div className={`marquee flex shrink-0 gap-3 pr-3 sm:gap-4 sm:pr-4 ${ri ? 'marquee-reverse' : ''}`} style={{ ['--speed' as string]: ri ? '60s' : '50s' }}>
+              {[...r, ...r, ...r].map((id, i) => (
+                <img key={i} src={img(`${id}.jpg`)} alt="" loading="lazy" className="h-32 w-auto shrink-0 rounded-[1.25rem] object-cover sm:h-52" />
+              ))}
+            </div>
+          </div>
+        ))}
       </div>
     </section>
   )
@@ -197,30 +188,13 @@ function About() {
   useLayoutEffect(() => {
     if (reducedMotion()) return
     const ctx = gsap.context(() => {
-      gsap.from('.about-title .char', {
-        yPercent: 110,
-        stagger: 0.04,
-        duration: 1,
-        ease: 'expo.out',
-        scrollTrigger: { trigger: '.about-title', start: 'top 85%' },
-      })
+      gsap.from('.about-title .char', { yPercent: 110, stagger: 0.04, duration: 1, ease: 'expo.out', scrollTrigger: { trigger: '.about-title', start: 'top 85%' } })
       // words light up one by one while scrolling
-      gsap.fromTo('.about-word', { opacity: 0.12 }, {
-        opacity: 1,
-        stagger: 0.1,
-        ease: 'none',
-        scrollTrigger: { trigger: '.about-text', start: 'top 80%', end: 'bottom 45%', scrub: true },
-      })
+      gsap.fromTo('.about-word', { opacity: 0.15 }, { opacity: 1, stagger: 0.1, ease: 'none', scrollTrigger: { trigger: '.about-text', start: 'top 80%', end: 'bottom 55%', scrub: true } })
       gsap.utils.toArray<HTMLElement>('.stat-num').forEach((el) => {
         const end = Number(el.dataset.value)
         const o = { v: 0 }
-        gsap.to(o, {
-          v: end,
-          duration: 1.6,
-          ease: 'power3.out',
-          scrollTrigger: { trigger: el, start: 'top 90%' },
-          onUpdate: () => (el.textContent = String(Math.round(o.v))),
-        })
+        gsap.to(o, { v: end, duration: 1.6, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 90%' }, onUpdate: () => (el.textContent = String(Math.round(o.v))) })
       })
       gsap.from('.award', { y: 80, autoAlpha: 0, duration: 1.2, ease: 'expo.out', stagger: 0.15, scrollTrigger: { trigger: '.award', start: 'top 85%' } })
       gsap.to('.parallax', {
@@ -233,26 +207,25 @@ function About() {
   }, [lang])
 
   return (
-    <section id="about" ref={root} className="relative overflow-hidden px-4 py-28 sm:px-8 sm:py-40">
-      <div className="parallax pointer-events-none absolute top-24 left-[4%] w-16 sm:w-28">
+    <section id="about" ref={root} className="relative overflow-hidden bg-ink px-4 pt-28 pb-40 sm:px-8 sm:pt-40 sm:pb-56">
+      <div className="parallax pointer-events-none absolute top-20 left-[5%] w-16 sm:w-32">
         <Star className="floaty w-full" />
       </div>
-      <div className="parallax pointer-events-none absolute top-[38%] right-[5%] w-16 sm:w-24">
+      <div className="parallax pointer-events-none absolute top-16 right-[6%] w-16 sm:w-28">
         <Cube className="floaty w-full" />
       </div>
-      <div className="parallax pointer-events-none absolute bottom-[34%] left-[6%] w-14 sm:w-24" style={{ ['--r' as string]: '-12deg' }}>
+      <div className="parallax pointer-events-none absolute top-[40%] left-[4%] w-16 sm:w-28" style={{ ['--r' as string]: '-12deg' }}>
         <Heart className="floaty w-full" />
       </div>
-      <div className="parallax pointer-events-none absolute top-[12%] right-[18%] w-12 sm:w-20" style={{ ['--d' as string]: '8s' }}>
+      <div className="parallax pointer-events-none absolute top-[30%] right-[5%] w-14 sm:w-28" style={{ ['--d' as string]: '8s' }}>
         <Flower className="floaty w-full" />
       </div>
 
       <div className="relative mx-auto max-w-[1100px] text-center">
-        <img src={img('avatar-hoodie.webp')} alt="" loading="lazy" className="mx-auto mb-6 w-36 sm:w-48" />
-        <h2 className="about-title outline-text font-display text-[clamp(2.2rem,9.5vw,9rem)] leading-none font-black tracking-tight">
+        <h2 className="about-title outline-text font-display text-[clamp(2.6rem,10vw,10rem)] leading-none uppercase">
           <SplitChars text={t(ui.about.title)} />
         </h2>
-        <p className="about-text mx-auto mt-12 max-w-[820px] text-xl leading-snug font-medium sm:text-3xl">
+        <p className="about-text mx-auto mt-10 max-w-[640px] text-base leading-[1.7] font-medium sm:text-lg">
           {t(ui.about.text)
             .split(' ')
             .map((w, i) => (
@@ -261,27 +234,31 @@ function About() {
               </span>
             ))}
         </p>
+        <a href={`mailto:${contacts.email}`} className="pill-grad mt-10 px-7 py-3 text-[12px]">
+          {t(ui.hero.cta)} <span aria-hidden>•</span>
+        </a>
 
-        <div className="mx-auto mt-20 grid max-w-[900px] grid-cols-3 gap-4">
+        <div className="mx-auto mt-24 grid max-w-[820px] grid-cols-3 border-y border-line">
           {ui.about.stats.map((s, i) => (
-            <div key={i} className="text-left">
-              <div className="text-xs tracking-wide text-white/50 sm:text-sm">{t(s.label)}</div>
-              <div className="font-display text-5xl font-black sm:text-8xl">
+            <div key={i} className={`py-6 ${i ? 'border-l border-line' : ''}`}>
+              <div className="font-display text-5xl sm:text-7xl">
                 <span className="stat-num" data-value={s.value}>
                   {s.value}
                 </span>
                 {s.suffix}
               </div>
-              <div className="-mt-2 font-hand text-2xl text-pink sm:-mt-4 sm:text-4xl">{t(s.unit)}</div>
+              <div className="mt-2 text-[11px] font-bold tracking-wide text-white/50 uppercase sm:text-xs">
+                {t(s.label)} · {t(s.unit)}
+              </div>
             </div>
           ))}
         </div>
 
-        <div className="mx-auto mt-24 flex max-w-[900px] flex-col items-center gap-8 sm:flex-row sm:items-stretch">
+        <div className="mx-auto mt-16 flex max-w-[820px] flex-col items-center gap-8 sm:flex-row sm:items-stretch">
           <img src={img('taf-trophy.webp')} alt="Tashkent Advertising Festival 2023" loading="lazy" className="award w-32 shrink-0 object-contain sm:w-40" />
-          <div className="award flex-1 rounded-3xl border border-dashed border-white/25 bg-ink-2 p-6 text-left sm:p-8">
-            <div className="font-display text-4xl font-black">{t(ui.about.award.title)}</div>
-            <p className="mt-2 text-sm text-white/60 uppercase">{t(ui.about.award.sub)}</p>
+          <div className="award flex-1 rounded-[1.75rem] border-[1.5px] border-white/60 p-6 text-left sm:p-8">
+            <div className="font-display text-4xl">{t(ui.about.award.title)}</div>
+            <p className="mt-2 text-sm font-semibold text-white/60 uppercase">{t(ui.about.award.sub)}</p>
             <div className="mt-5 grid grid-cols-2 gap-3">
               <img src={img('violence.jpg')} alt="Violence" loading="lazy" className="aspect-video w-full rounded-xl object-cover" />
               <img src={img('istedodlar-zamini.jpg')} alt="" loading="lazy" className="aspect-video w-full rounded-xl object-cover" />
@@ -294,42 +271,37 @@ function About() {
   )
 }
 
-/* ---------------- SERVICES ---------------- */
+/* ---------------- SERVICES (light panel) ---------------- */
 function Services() {
   const { t, lang } = useLang()
   const root = useRef<HTMLElement>(null)
   useLayoutEffect(() => {
     if (reducedMotion()) return
     const ctx = gsap.context(() => {
-      gsap.from('.svc-card', {
-        y: 140,
-        scale: 0.94,
-        ease: 'none',
-        scrollTrigger: { trigger: root.current, start: 'top bottom', end: 'top 30%', scrub: true },
-      })
-      gsap.from('.svc-title .char', { yPercent: 110, stagger: 0.04, duration: 1, ease: 'expo.out', scrollTrigger: { trigger: '.svc-title', start: 'top 85%' } })
+      // the light panel slides up over the black page
+      gsap.from('.svc-card', { y: 120, scale: 0.96, ease: 'none', scrollTrigger: { trigger: root.current, start: 'top bottom', end: 'top 35%', scrub: true } })
+      // the title starts pale grey and fills in black
+      gsap.fromTo('.svc-title', { color: '#c4c7cb' }, { color: '#000', ease: 'none', scrollTrigger: { trigger: '.svc-title', start: 'top 85%', end: 'top 35%', scrub: true } })
       gsap.utils.toArray<HTMLElement>('.svc-row').forEach((row) => {
-        gsap.from(row, { y: 60, autoAlpha: 0, duration: 1, ease: 'expo.out', scrollTrigger: { trigger: row, start: 'top 90%' } })
+        gsap.from(row, { y: 60, autoAlpha: 0, duration: 1, ease: 'expo.out', scrollTrigger: { trigger: row, start: 'top 92%' } })
       })
     }, root)
     return () => ctx.revert()
   }, [lang])
 
   return (
-    <section id="services" ref={root} className="px-2 sm:px-4">
-      <div className="svc-card rounded-[2rem] bg-paper px-4 py-20 text-ink sm:rounded-[3rem] sm:px-12 sm:py-28">
-        <h2 className="svc-title text-center font-display text-[clamp(2.2rem,9.5vw,9rem)] leading-none font-black tracking-tight">
-          <SplitChars text={t(ui.services.title)} />
-        </h2>
-        <ol className="mx-auto mt-16 grid max-w-[1200px] gap-x-12 md:grid-cols-2">
+    <section id="services" ref={root} className="relative z-10 -mt-24 bg-transparent px-2 sm:-mt-32 sm:px-3">
+      <div className="svc-card rounded-[2rem] bg-paper px-5 pt-20 pb-40 text-black sm:rounded-[2.75rem] sm:px-12 sm:pt-28 sm:pb-56">
+        <h2 className="svc-title text-center font-display text-[clamp(2.6rem,10vw,10rem)] leading-none uppercase">{t(ui.services.title)}</h2>
+        <ol className="mx-auto mt-16 max-w-[1000px] sm:mt-24">
           {services.map((s, i) => (
-            <li key={i} className="svc-row group grid grid-cols-[64px_1fr] gap-x-4 border-t border-ink/15 py-6 sm:grid-cols-[88px_1fr]">
-              <span className="font-display text-3xl font-black transition-colors duration-300 group-hover:text-pink sm:text-5xl">
+            <li key={i} className="svc-row group grid grid-cols-[70px_1fr] items-start gap-x-4 border-b border-black/15 py-7 sm:grid-cols-[150px_1fr] sm:py-10">
+              <span className="font-display text-[2.6rem] leading-[0.85] transition-colors duration-300 group-hover:text-violet sm:text-[4.5rem]">
                 {String(i + 1).padStart(2, '0')}
               </span>
               <div className="transition-transform duration-500 group-hover:translate-x-2">
-                <h3 className="font-display text-base font-bold uppercase sm:text-xl">{t(s.title)}</h3>
-                <p className="mt-1.5 text-sm text-ink/60">{t(s.text)}</p>
+                <h3 className="font-cond text-base font-extrabold uppercase sm:text-xl">{t(s.title)}</h3>
+                <p className="mt-2 max-w-[640px] text-sm leading-relaxed text-black/50 sm:text-base">{t(s.text)}</p>
               </div>
             </li>
           ))}
@@ -352,43 +324,46 @@ function Projects({ onOpen }: { onOpen: (p: Project) => void }) {
       cards.forEach((card, i) => {
         const next = cards[i + 1]
         if (!next) return
-        // shrink and dim each card as the next one slides over it
-        gsap.to(card.firstElementChild, {
-          scale: 0.9,
-          filter: 'brightness(0.55)',
-          ease: 'none',
-          scrollTrigger: { trigger: next, start: 'top 75%', end: 'top 12%', scrub: true },
-        })
+        // each card dims a little as the next one slides over it
+        gsap.to(card.firstElementChild, { scale: 0.97, filter: "brightness(0.75)", ease: 'none', scrollTrigger: { trigger: next, start: 'top 80%', end: 'top 20%', scrub: true } })
       })
     }, root)
     return () => ctx.revert()
   }, [lang])
 
   return (
-    <section id="projects" ref={root} className="px-4 pt-32 pb-24 sm:px-8">
-      <h2 className="proj-title mb-16 text-center font-display text-[clamp(2.2rem,9.5vw,9rem)] leading-none font-black tracking-tight">
+    <section id="projects" ref={root} className="relative z-20 -mt-24 rounded-t-[2rem] bg-ink px-3 pt-24 pb-24 sm:-mt-32 sm:rounded-t-[2.75rem] sm:px-8 sm:pt-32">
+      <h2 className="proj-title outline-text mb-14 text-center font-display text-[clamp(2.6rem,10vw,10rem)] leading-none uppercase sm:mb-20">
         <SplitChars text={t(ui.projects.title)} />
       </h2>
-      <div className="mx-auto max-w-[1200px]">
+      <div className="mx-auto max-w-[1180px]">
         {projects.map((p, i) => (
-          <article key={p.id} className="proj-card sticky top-[8vh] mb-[8vh] sm:h-[84vh] sm:max-h-[860px]" style={{ top: `calc(8vh + ${Math.min(i, 6) * 6}px)` }}>
-            <div className="flex h-full origin-top flex-col overflow-hidden rounded-[1.75rem] border border-white/15 bg-ink-2 p-3 will-change-transform sm:p-4">
-              <header className="flex items-center gap-4 px-2 pt-1 pb-4 sm:px-3">
-                <span className="font-display text-3xl font-black sm:text-5xl">{String(i + 1).padStart(2, '0')}</span>
+          <article key={p.id} className="proj-card sticky mb-[6vh]" style={{ top: `calc(9vh + ${Math.min(i, 4) * 14}px)` }}>
+            <div className="origin-top overflow-hidden rounded-[1.75rem] border-[1.5px] border-white/70 bg-ink p-3 will-change-transform sm:rounded-[2.25rem] sm:p-5">
+              <header className="flex items-center gap-3 px-1 pt-1 pb-4 sm:gap-5 sm:px-2 sm:pb-5">
+                <span className="font-display text-4xl leading-none sm:text-6xl">{String(i + 1).padStart(2, '0')}</span>
                 <div className="min-w-0 flex-1">
-                  <div className="text-[10px] tracking-[0.2em] text-white/50 uppercase">
-                    {t(ui.projects.client)} · {p.client}
+                  <div className="font-cond text-sm font-extrabold uppercase sm:text-lg">{p.client}</div>
+                  <div className="truncate text-[11px] text-white/50 sm:text-sm">
+                    {t(p.title)}
                     {p.year && ` · ${p.year}`}
                   </div>
-                  <h3 className="truncate font-display text-sm font-bold sm:text-xl">{t(p.title)}</h3>
                 </div>
-                <span className="hidden text-xs text-white/50 md:block">{t(p.tags)}</span>
-                <button onClick={() => onOpen(p)} className="shrink-0 rounded-full border border-white/30 px-4 py-2 text-[10px] font-semibold tracking-[0.18em] uppercase transition-colors hover:border-transparent hover:bg-white hover:text-black sm:px-5">
-                  {t(ui.projects.view)} ↗
+                <span className="hidden text-xs text-white/40 lg:block">{t(p.tags)}</span>
+                <button onClick={() => onOpen(p)} className="pill-line shrink-0 px-4 py-2 text-[10px] sm:px-6 sm:py-2.5 sm:text-xs">
+                  {t(ui.projects.view)}
                 </button>
               </header>
-              <button onClick={() => onOpen(p)} className="group relative aspect-[4/3] min-h-0 overflow-hidden rounded-[1.25rem] sm:aspect-auto sm:flex-1" aria-label={t(p.title)}>
-                <img src={img(`${p.id}.jpg`)} alt={t(p.title)} loading="lazy" className="h-full w-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-105" />
+              <button onClick={() => onOpen(p)} className="group grid w-full grid-cols-3 gap-2 sm:grid-rows-2 sm:h-[62vh] sm:max-h-[620px] sm:gap-3" aria-label={t(p.title)}>
+                <span className="col-span-3 aspect-video overflow-hidden rounded-[1.25rem] sm:col-span-2 sm:row-span-2 sm:aspect-auto sm:h-full">
+                  <img src={img(`${p.id}.jpg`)} alt={t(p.title)} loading="lazy" className="h-full w-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-105" />
+                </span>
+                <span className="hidden overflow-hidden rounded-[1.25rem] sm:block">
+                  <img src={img(`${p.id}-full.jpg`)} alt="" loading="lazy" className="h-full w-full object-cover object-top transition-transform duration-[1.2s] ease-out group-hover:scale-105" />
+                </span>
+                <span className="hidden overflow-hidden rounded-[1.25rem] sm:block">
+                  <img src={img(`${p.id}-full.jpg`)} alt="" loading="lazy" className="h-full w-full object-cover object-bottom transition-transform duration-[1.2s] ease-out group-hover:scale-105" />
+                </span>
               </button>
             </div>
           </article>
@@ -416,8 +391,8 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
   }, [onClose])
   return (
     <div className="fixed inset-0 z-[70] bg-black/70 backdrop-blur-sm" onClick={onClose}>
-      <div ref={ref} data-lenis-prevent className="absolute inset-x-0 top-6 bottom-0 overflow-y-auto rounded-t-[2rem] bg-ink-2 sm:inset-x-8" onClick={(e) => e.stopPropagation()}>
-        <div className="sticky top-0 z-10 flex items-center justify-between gap-4 bg-ink-2/90 px-5 py-4 backdrop-blur sm:px-8">
+      <div ref={ref} data-lenis-prevent className="absolute inset-x-0 top-6 bottom-0 overflow-y-auto rounded-t-[2rem] bg-ink sm:inset-x-8" onClick={(e) => e.stopPropagation()}>
+        <div className="sticky top-0 z-10 flex items-center justify-between gap-4 bg-ink/90 px-5 py-4 backdrop-blur sm:px-8">
           <div className="min-w-0">
             <div className="text-[10px] tracking-[0.2em] text-white/50 uppercase">{project.client}{project.year && ` · ${project.year}`} · {t(project.tags)}</div>
             <h3 className="truncate font-display text-lg font-bold sm:text-2xl">{t(project.title)}</h3>
@@ -447,26 +422,25 @@ function Team() {
   }, [lang])
 
   const ring = `${t(team.title)} • ${t(team.title)} • `
-  const chipColors = ['bg-pink', 'bg-violet', 'bg-lime text-ink', 'bg-sky text-ink', 'bg-white text-ink', 'bg-pink']
+  const dots = ['bg-violet', 'bg-lime', 'bg-pink', 'bg-white', 'bg-violet', 'bg-lime']
   return (
-    <section ref={root} className="relative overflow-hidden px-4 py-28 sm:px-8 sm:py-36">
+    <section ref={root} className="relative z-20 overflow-hidden bg-ink px-4 pt-16 pb-48 sm:px-8 sm:pb-64">
       <div className="mx-auto grid max-w-[1300px] items-center gap-14 lg:grid-cols-[1.2fr_1fr]">
         <div>
-          <h2 className="team-title font-display text-[clamp(2.6rem,8vw,7rem)] leading-[0.9] font-black tracking-tight">
+          <h2 className="team-title outline-text font-display text-[clamp(2.6rem,8vw,7.5rem)] leading-[0.9] uppercase">
             <SplitChars text={t(team.title)} />
           </h2>
-          <p className="mt-8 max-w-xl text-lg leading-relaxed text-white/70 sm:text-xl">{t(team.lead)}</p>
+          <p className="mt-8 max-w-xl text-base leading-[1.7] font-medium text-white/80 sm:text-lg">{t(team.lead)}</p>
           <div className="team-chips mt-10 flex flex-wrap gap-3">
             {team.directions.map((d, i) => (
-              <span key={i} className={`team-chip rounded-full px-5 py-3 text-sm font-semibold ${chipColors[i % chipColors.length]}`}>
+              <span key={i} className="team-chip inline-flex items-center gap-2.5 rounded-full border-[1.5px] border-white/70 px-5 py-2.5 text-sm font-bold uppercase">
+                <span className={`h-2.5 w-2.5 rounded-full ${dots[i % dots.length]}`} />
                 {t(d)}
               </span>
             ))}
           </div>
-          <button onClick={() => scrollTo('contact')} className="group mt-12 inline-flex items-center gap-3 rounded-full p-[1.5px] grad">
-            <span className="rounded-full bg-ink px-8 py-4 text-xs font-semibold tracking-[0.2em] uppercase transition-colors duration-500 group-hover:bg-transparent">
-              {t(team.cta)} ↗
-            </span>
+          <button onClick={() => scrollTo('contact')} className="pill-grad mt-12 px-8 py-4 text-[13px]">
+            {t(team.cta)} <span aria-hidden>•</span>
           </button>
         </div>
         <div className="relative mx-auto aspect-square w-full max-w-[460px]">
@@ -474,7 +448,7 @@ function Team() {
             <defs>
               <path id="ring" d="M100,100 m-82,0 a82,82 0 1,1 164,0 a82,82 0 1,1 -164,0" />
             </defs>
-            <text className="fill-white font-display text-[13px] font-black tracking-[0.18em]">
+            <text className="fill-white font-display text-[13px] tracking-[0.14em]">
               <textPath href="#ring" textLength="510">{ring}</textPath>
             </text>
           </svg>
@@ -487,22 +461,23 @@ function Team() {
   )
 }
 
-/* ---------------- CONTACT + FOOTER ---------------- */
+/* ---------------- CONTACT (light panel) + FOOTER (black panel) ---------------- */
 function Contact() {
   const { t, lang } = useLang()
   const root = useRef<HTMLElement>(null)
   useLayoutEffect(() => {
     if (reducedMotion()) return
     const ctx = gsap.context(() => {
-      gsap.from('.ct-title .char', { yPercent: 110, stagger: 0.035, duration: 1, ease: 'expo.out', scrollTrigger: { trigger: '.ct-title', start: 'top 85%' } })
-      gsap.from('.ct-fig', { y: 120, autoAlpha: 0, duration: 1.4, ease: 'expo.out', scrollTrigger: { trigger: '.ct-fig', start: 'top 90%' } })
+      gsap.from('.ct-panel', { y: 120, scale: 0.96, ease: 'none', scrollTrigger: { trigger: '.ct-panel', start: 'top bottom', end: 'top 40%', scrub: true } })
+      gsap.from('.ct-title .char', { yPercent: 110, stagger: 0.03, duration: 1, ease: 'expo.out', scrollTrigger: { trigger: '.ct-title', start: 'top 85%' } })
+      gsap.from('.ct-shape', { scale: 0, rotate: -40, duration: 1.4, ease: 'elastic.out(1,0.6)', stagger: 0.15, scrollTrigger: { trigger: '.ct-title', start: 'top 85%' } })
       gsap.from('.foot-shape', {
         y: 160,
         rotate: () => gsap.utils.random(-90, 90),
         stagger: 0.07,
         duration: 1.2,
         ease: 'back.out(1.6)',
-        scrollTrigger: { trigger: '.foot-shapes', start: 'top 95%' },
+        scrollTrigger: { trigger: '.foot-shapes', start: 'top 98%' },
       })
     }, root)
     return () => ctx.revert()
@@ -514,59 +489,88 @@ function Contact() {
     { name: 'Behance', href: contacts.behance },
   ]
 
+  // The form opens the visitor's mail app with the message filled in
+  const send = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const f = new FormData(e.currentTarget)
+    const subject = `Portfolio: ${f.get('name') || ''}`
+    const body = `${f.get('message') || ''}\n\n${f.get('name') || ''} · ${f.get('email') || ''}`
+    window.location.href = `mailto:${contacts.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+  }
+  const field = 'w-full border-b border-black/25 bg-transparent py-3 text-base text-black outline-none placeholder:text-black/40 focus:border-black'
+
   return (
-    <footer id="contact" ref={root} className="relative overflow-hidden px-4 pt-24 pb-6 sm:px-8">
-      <div className="mx-auto max-w-[1400px]">
-        <div className="relative grid items-end gap-10 md:grid-cols-[1fr_auto]">
-          <div>
-            <h2 className="ct-title font-display text-[clamp(2.2rem,9vw,8.5rem)] leading-[0.9] font-black tracking-tight">
-              <SplitChars text={t(ui.contact.title)} />
+    <footer id="contact" ref={root} className="relative z-30 -mt-24 px-2 sm:-mt-32 sm:px-3">
+      <div className="ct-panel relative overflow-hidden rounded-[2rem] bg-paper px-5 pt-20 pb-40 text-black sm:rounded-[2.75rem] sm:px-14 sm:pt-28 sm:pb-52">
+        <Flower className="ct-shape pointer-events-none absolute bottom-28 left-[3%] w-20 sm:bottom-36 sm:w-32" color="#7a4dff" />
+        <Star className="ct-shape floaty pointer-events-none absolute top-8 right-[4%] w-16 sm:w-24" color="#b9f43c" />
+        <div className="relative mx-auto grid max-w-[1200px] gap-14 md:grid-cols-2 md:items-center">
+          <div className="md:pl-10">
+            <h2 className="ct-title font-display text-[clamp(2.3rem,3.8vw,4.4rem)] leading-[0.92] uppercase">
+              {t(ui.contact.title)
+                .split(' ')
+                .map((w, i) => (
+                  <SplitChars key={i} text={w} />
+                ))}
             </h2>
-            <p className="mt-6 max-w-md text-white/60">{t(ui.contact.lead)}</p>
-            <a href={`mailto:${contacts.email}`} className="mt-8 inline-block font-display text-xl font-bold break-all underline decoration-pink decoration-2 underline-offset-8 transition-colors hover:text-pink sm:text-4xl">
+            <a href={`mailto:${contacts.email}`} className="mt-6 inline-block text-lg font-semibold break-all text-violet underline underline-offset-4 hover:text-pink sm:text-xl">
               {contacts.email}
             </a>
+            <p className="mt-4 max-w-sm text-sm text-black/55">{t(ui.contact.lead)}</p>
           </div>
-          <img src={img('contact-figure.jpg')} alt="" loading="lazy" className="ct-fig mx-auto w-40 mix-blend-lighten sm:w-56" />
+          <form onSubmit={send} className="flex flex-col gap-4">
+            <input name="name" required placeholder={t(ui.contact.form.name)} className={field} />
+            <input name="email" type="email" placeholder={t(ui.contact.form.email)} className={field} />
+            <textarea name="message" rows={3} placeholder={t(ui.contact.form.message)} className={`${field} resize-none`} />
+            <button type="submit" className="mt-4 rounded-full border-[1.5px] border-black/30 py-3 text-sm font-extrabold tracking-wide text-violet uppercase transition-colors hover:border-violet hover:bg-violet hover:text-white">
+              {t(ui.contact.form.send)}
+            </button>
+          </form>
         </div>
+      </div>
 
-        <div className="mt-20 grid gap-10 border-t border-line pt-10 text-sm sm:grid-cols-3">
-          <div className="font-display text-3xl leading-none font-black uppercase sm:text-5xl">
-            Doston
-            <br />
-            Daminov
-          </div>
-          <div>
-            <div className="mb-3 text-[10px] tracking-[0.2em] text-white/40 uppercase">{t(ui.contact.social)}</div>
-            <ul className="space-y-1.5">
-              {socials.map((s) => (
-                <li key={s.name}>
-                  <a href={s.href} target="_blank" rel="noreferrer" className="transition-colors hover:text-pink">
-                    {s.name} ↗
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <div className="mb-3 text-[10px] tracking-[0.2em] text-white/40 uppercase">{t(ui.contact.mail)}</div>
-            <a href={`mailto:${contacts.email}`} className="transition-colors hover:text-pink">
-              {contacts.email}
-            </a>
-            <div className="mt-1 text-white/40">Tashkent, Uzbekistan</div>
-          </div>
-        </div>
-
-        <div className="foot-shapes mt-14 grid grid-cols-8 gap-2 sm:gap-4">
-          {footerShapes.map((S, i) => (
-            <div key={i} className="foot-shape aspect-square transition-transform duration-500 hover:-rotate-12 hover:scale-110">
-              {S(footerColors[i])}
+      <div className="relative z-10 -mt-24 overflow-hidden rounded-t-[2rem] bg-ink px-4 pt-12 pb-6 text-white sm:-mt-32 sm:rounded-t-[2.75rem] sm:px-10 sm:pt-16">
+        <div className="mx-auto max-w-[1400px]">
+          <div className="grid gap-10 sm:grid-cols-[1.4fr_1fr_1fr]">
+            <div className="outline-text font-display text-[clamp(2.6rem,7vw,6.5rem)] leading-[0.9] uppercase">
+              Doston
+              <br />
+              Daminov
             </div>
-          ))}
-        </div>
-        <div className="mt-8 flex justify-between text-[11px] text-white/40">
-          <span>© {new Date().getFullYear()} Doston Daminov</span>
-          <span>{t(ui.contact.rights)}</span>
+            <div className="text-sm">
+              <div className="mb-3 text-[11px] font-extrabold tracking-wide uppercase">{t(ui.contact.social)}</div>
+              <ul className="space-y-1.5 text-white/70">
+                {socials.map((s) => (
+                  <li key={s.name}>
+                    <a href={s.href} target="_blank" rel="noreferrer" className="transition-colors hover:text-white">
+                      {s.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="text-sm">
+              <div className="mb-3 text-[11px] font-extrabold tracking-wide uppercase">{t(ui.contact.mail)}</div>
+              <div className="space-y-1.5 text-white/70">
+                <a href={`mailto:${contacts.email}`} className="block transition-colors hover:text-white">
+                  {contacts.email}
+                </a>
+                <div>Tashkent, Uzbekistan</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="foot-shapes mt-12 grid grid-cols-8 gap-1.5 sm:mt-16 sm:gap-3">
+            {footerShapes.map((S, i) => (
+              <div key={i} className="foot-shape aspect-square transition-transform duration-500 hover:-rotate-12 hover:scale-110">
+                {S(footerColors[i])}
+              </div>
+            ))}
+          </div>
+          <div className="mt-6 flex justify-between text-[11px] text-white/40">
+            <span>© {new Date().getFullYear()} Doston «Ace» Daminov</span>
+            <span>{t(ui.contact.rights)}</span>
+          </div>
         </div>
       </div>
     </footer>
