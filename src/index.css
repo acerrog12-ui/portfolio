@@ -1,5 +1,15 @@
 @import 'tailwindcss';
 
+/* Cyrillic for outlined headings: a static copy of Roboto Flex with overlapping
+   contours merged, so the stroke doesn't draw lines inside letters like К, Ж. */
+@font-face {
+  font-family: 'Cyr Outline';
+  src: url('./assets/cyr-outline.woff2') format('woff2');
+  font-weight: 100 1000;
+  font-stretch: 25% 151%;
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+
 @theme {
   --color-ink: #000000;
   --color-ink-2: #0c0c0c;
@@ -57,10 +67,12 @@ body {
 }
 
 .outline-text {
+  font-family: 'Archivo', 'Cyr Outline', system-ui, sans-serif;
   color: transparent;
   -webkit-text-stroke: max(1.5px, 0.014em) rgba(255, 255, 255, 0.6);
 }
 .outline-dark {
+  font-family: 'Archivo', 'Cyr Outline', system-ui, sans-serif;
   color: transparent;
   -webkit-text-stroke: max(1.5px, 0.014em) rgba(0, 0, 0, 0.55);
 }
