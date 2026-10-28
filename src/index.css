@@ -194,3 +194,32 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .foot-shape { transform: none; opacity: 1; }
 }
+
+/* Custom cursor (mouse only). The arrow tip sits at the pointer position. */
+.has-cursor,
+.has-cursor * {
+  cursor: none !important;
+}
+.site-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  margin: -1px 0 0 -1px;
+}
+.site-cursor img {
+  display: block;
+  width: 36px;
+  height: auto;
+  transform-origin: 1px 1px;
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.site-cursor.is-hot img {
+  transform: scale(1.25) rotate(-8deg);
+}
+.site-cursor.is-down img {
+  transform: scale(0.85);
+}

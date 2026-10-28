@@ -3,6 +3,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Lenis from 'lenis'
 import { categories, clients, contacts, projects, services, team, ui, type Category, type Project } from './content'
+import Cursor from './Cursor'
 import { img, reducedMotion, SplitChars, useLang } from './lib'
 import { ChromeDefs, chromeFill, footerShapes } from './shapes'
 
@@ -66,13 +67,14 @@ export default function App() {
 
   return (
     <div>
+      <Cursor />
       <Nav />
       {cat ? (
         <CategoryPage key={cat.id} cat={cat} onOpen={setOpen} />
       ) : (
         <main>
           <Hero />
-          <Clients />
+          <Clients onOpen={setOpen} />
           <About />
           <Services />
           <Projects />
@@ -236,9 +238,12 @@ function Hero() {
 /* ---------------- CLIENT LOGOS + IMAGE STRIP ---------------- */
 // An endlessly moving row that can also be grabbed and thrown left or right.
 // speed is in px per second; negative moves left. Children must be the item list repeated twice.
-function DragRow({ speed, children }: { speed: number; children: ReactNode }) {
+// A tap without movement on an item with data-id calls onTap with that id.
+function DragRow({ speed, children, onTap }: { speed: number; children: ReactNode; onTap?: (id: string) => void }) {
   const wrap = useRef<HTMLDivElement>(null)
   const track = useRef<HTMLDivElement>(null)
+  const onTapRef = useRef(onTap)
+  onTapRef.current = onTap
 
   useEffect(() => {
     const el = track.current
@@ -252,6 +257,9 @@ function DragRow({ speed, children }: { speed: number; children: ReactNode }) {
     let lastT = 0
     let raf = 0
     let prev = performance.now()
+    let startX = 0
+    let startT = 0
+    let moved = 0
 
     const wrapX = () => {
       const half = el.scrollWidth / 2
@@ -273,6 +281,9 @@ function DragRow({ speed, children }: { speed: number; children: ReactNode }) {
 
     const down = (e: PointerEvent) => {
       dragging = true
+      startX = e.clientX
+      startT = performance.now()
+      moved = 0
       lastX = e.clientX
       lastT = performance.now()
       vel = 0
@@ -284,13 +295,24 @@ function DragRow({ speed, children }: { speed: number; children: ReactNode }) {
       const now = performance.now()
       const dx = e.clientX - lastX
       x += dx
+      moved = Math.max(moved, Math.abs(e.clientX - startX))
       vel = (dx / Math.max(1, now - lastT)) * 1000
       lastX = e.clientX
       lastT = now
     }
-    const up = () => {
+    const up = (e: PointerEvent) => {
       if (!dragging) return
       dragging = false
+      // a quick press that barely moved is a click, not a drag
+      if (e.type === 'pointerup' && moved < 6 && performance.now() - startT < 500) {
+        const hit = document.elementsFromPoint(e.clientX, e.clientY).find((n) => (n as HTMLElement).dataset?.id) as HTMLElement | undefined
+        if (hit?.dataset.id) {
+          vel = auto
+          box.classList.remove('cursor-grabbing')
+          onTapRef.current?.(hit.dataset.id)
+          return
+        }
+      }
       vel = Math.max(-3000, Math.min(3000, vel))
       box.classList.remove('cursor-grabbing')
     }
@@ -316,7 +338,7 @@ function DragRow({ speed, children }: { speed: number; children: ReactNode }) {
   )
 }
 
-function Clients() {
+function Clients({ onOpen }: { onOpen: (p: Project) => void }) {
   const covers = projects.map((p) => p.id)
   const half = Math.ceil(covers.length / 2)
   const rows = [covers.slice(0, half), covers.slice(half)]
@@ -333,9 +355,9 @@ function Clients() {
       </div>
       <div className="mt-10 space-y-3 sm:mt-14 sm:space-y-4">
         {rows.map((r, ri) => (
-          <DragRow key={ri} speed={ri ? 40 : -48}>
+          <DragRow key={ri} speed={ri ? 40 : -48} onTap={(id) => { const p = projects.find((q) => q.id === id); if (p) onOpen(p) }}>
             {[...r, ...r].map((id, i) => (
-              <img key={i} src={img(`${id}-s.webp`)} decoding="async" alt="" width={370} height={208} draggable={false} className="pointer-events-none h-32 w-[228px] shrink-0 rounded-[1.25rem] object-cover select-none sm:h-52 sm:w-[370px]" />
+              <img key={i} data-id={id} data-cursor src={img(`${id}-s.webp`)} decoding="async" alt="" width={370} height={208} draggable={false} className="h-32 w-[228px] shrink-0 rounded-[1.25rem] object-cover transition-transform duration-500 select-none hover:scale-[1.03] sm:h-52 sm:w-[370px]" />
             ))}
           </DragRow>
         ))}
@@ -484,9 +506,9 @@ function About() {
           ))}
         </div>
 
-        <div className="mx-auto mt-28 flex max-w-[820px] sm:mt-40 flex-col items-center gap-8 sm:flex-row sm:items-stretch">
-          <TafSpin className="award w-52 shrink-0 sm:-my-6 sm:-ml-36 sm:w-72" />
-          <div className="award flex-1 rounded-[1.75rem] border-[1.5px] border-white/60 p-6 text-left sm:p-8">
+        <div className="mx-auto mt-28 flex max-w-[1080px] flex-col items-center justify-center gap-6 sm:mt-40 sm:flex-row sm:gap-12">
+          <TafSpin className="award w-52 shrink-0 sm:w-64 lg:w-72" />
+          <div className="award w-full max-w-[700px] flex-1 rounded-[1.75rem] border-[1.5px] border-white/60 p-6 text-left sm:p-9">
             <div className="font-display text-4xl">{t(ui.about.award.title)}</div>
             <p className="mt-2 text-sm font-semibold text-white/60 uppercase">{t(ui.about.award.sub)}</p>
             <img src={img('violence.webp')} srcSet={`${img('violence-s.webp')} 640w, ${img('violence.webp')} 1200w`} sizes="(max-width: 640px) 90vw, 560px" alt="Violence" loading="lazy" className="mt-5 aspect-video w-full rounded-xl object-cover" />
