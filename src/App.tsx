@@ -100,7 +100,7 @@ function Nav() {
   const { t, lang, setLang } = useLang()
   const links = ['about', 'services', 'projects', 'contact'] as const
   return (
-    <header className="fixed inset-x-0 top-0 z-50 mix-blend-difference">
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-black/95 backdrop-blur-md">
       <nav className="mx-auto flex max-w-[1500px] items-center gap-4 px-4 py-4 text-[11px] font-bold tracking-wide uppercase sm:px-8 sm:text-[13px]">
         <ul className="hidden flex-1 justify-around md:flex">
           {links.map((l) => (
