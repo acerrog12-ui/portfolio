@@ -361,7 +361,8 @@ function About() {
           { xPercent: side * 140, yPercent: 40, scale: 0.55, rotate: side * 35 },
           { xPercent: 0, yPercent: 0, scale: 1, rotate: 0, ease: 'power2.out', scrollTrigger: { trigger: root.current, start: 'top 95%', end: 'top 15%', scrub: 1 } },
         )
-        gsap.to(el, { yPercent: -[50, 30, 70, 40][i % 4], ease: 'none', scrollTrigger: { trigger: root.current, start: 'top 15%', end: 'bottom top', scrub: true } })
+        // explicit start value so this drift never picks up the fly-in's starting offset (that caused a jump)
+        gsap.fromTo(el, { yPercent: 0 }, { yPercent: -[50, 30, 70, 40][i % 4], ease: 'none', immediateRender: false, scrollTrigger: { trigger: root.current, start: 'top 15%', end: 'bottom top', scrub: true } })
       })
     }, root)
     return () => ctx.revert()
