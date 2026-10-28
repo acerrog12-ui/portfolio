@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState, type FormEvent } from 're
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Lenis from 'lenis'
-import { clients, contacts, projects, services, team, ui, type Project } from './content'
+import { clients, contacts, featured, projects, services, team, ui, type Project } from './content'
 import { img, reducedMotion, SplitChars, useLang } from './lib'
 import { Cube, Flower, footerColors, footerShapes, Heart, Star } from './shapes'
 
@@ -337,8 +337,8 @@ function Projects({ onOpen }: { onOpen: (p: Project) => void }) {
         <SplitChars text={t(ui.projects.title)} />
       </h2>
       <div className="mx-auto max-w-[1180px]">
-        {projects.map((p, i) => (
-          <article key={p.id} className="proj-card sticky mb-[6vh]" style={{ top: `calc(9vh + ${Math.min(i, 4) * 14}px)` }}>
+        {featured.map((id) => projects.find((p) => p.id === id)!).map((p, i) => (
+          <article key={p.id} className="proj-card sticky mb-[6vh]" style={{ top: `calc(9vh + ${i * 14}px)` }}>
             <div className="origin-top overflow-hidden rounded-[1.75rem] border-[1.5px] border-white/70 bg-ink p-3 will-change-transform sm:rounded-[2.25rem] sm:p-5">
               <header className="flex items-center gap-3 px-1 pt-1 pb-4 sm:gap-5 sm:px-2 sm:pb-5">
                 <span className="font-display text-4xl leading-none sm:text-6xl">{String(i + 1).padStart(2, '0')}</span>
@@ -368,6 +368,11 @@ function Projects({ onOpen }: { onOpen: (p: Project) => void }) {
             </div>
           </article>
         ))}
+        <div className="mt-4 text-center">
+          <a href={contacts.behance} target="_blank" rel="noreferrer" className="pill-line px-7 py-3 text-xs sm:text-sm">
+            {t(ui.projects.all)} ↗
+          </a>
+        </div>
       </div>
     </section>
   )

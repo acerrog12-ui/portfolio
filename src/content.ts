@@ -57,6 +57,7 @@ export const ui = {
     title: { uz: 'LOYIHALAR', en: 'PROJECTS' },
     client: { uz: 'Mijoz', en: 'Client' },
     view: { uz: "Ko'rish", en: 'View project' },
+    all: { uz: "Barcha ishlar Behance'da", en: 'All works on Behance' },
     close: { uz: 'Yopish', en: 'Close' },
   },
   contact: {
@@ -135,5 +136,9 @@ export const projects: Project[] = [
   { id: 'mkbank', client: 'MKBANK', title: { uz: 'Omonat kampaniyasi', en: 'Deposit campaign' }, tags: { uz: '3D · Reklama', en: '3D · Advertising' } },
   { id: 'bliss', client: 'Bliss', title: { uz: 'BAAga sayohat aksiyasi', en: 'Trip to the UAE promo' }, tags: { uz: 'Key visual · Aksiya', en: 'Key visual · Promo' } },
 ]
+
+// Projects shown as big cards in the Projects section (the rest stay in the image strip).
+// To change them, put other project ids here.
+export const featured = ['pepsi', 'superleague', 'fide']
 
 export const clients = ['Pepsi', 'Agrobank', 'MKBANK', 'FIDE', 'UZSL', 'Bliss', 'Tasnif Group', 'Oltin Chinor', 'Chiroqchi']
