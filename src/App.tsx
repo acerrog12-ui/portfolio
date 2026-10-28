@@ -417,7 +417,7 @@ function About() {
         </div>
 
         <div className="mx-auto mt-28 flex max-w-[820px] sm:mt-40 flex-col items-center gap-8 sm:flex-row sm:items-stretch">
-          <img src={img('taf-trophy.webp')} alt="Tashkent Advertising Festival 2023" loading="lazy" className="award w-32 shrink-0 object-contain sm:w-40" />
+          <img src={img('taf-trophy.webp')} alt="Tashkent Advertising Festival 2023" loading="lazy" className="award w-40 shrink-0 object-contain drop-shadow-[0_20px_40px_rgba(122,77,255,0.35)] sm:-ml-28 sm:w-56" />
           <div className="award flex-1 rounded-[1.75rem] border-[1.5px] border-white/60 p-6 text-left sm:p-8">
             <div className="font-display text-4xl">{t(ui.about.award.title)}</div>
             <p className="mt-2 text-sm font-semibold text-white/60 uppercase">{t(ui.about.award.sub)}</p>
