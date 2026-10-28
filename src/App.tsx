@@ -704,7 +704,14 @@ function Contact() {
 const ctx = gsap.context(() => {
       gsap.from('.ct-panel', { y: 120, scale: 0.96, ease: 'none', scrollTrigger: { trigger: '.ct-panel', start: 'top bottom', end: 'top 40%', scrub: true } })
       gsap.from('.ct-title .char', { yPercent: 110, stagger: 0.03, duration: 1, ease: 'expo.out', scrollTrigger: { trigger: '.ct-title', start: 'top 85%' } })
-      gsap.from('.ct-shape', { scale: 0, rotate: -40, duration: 1.4, ease: 'elastic.out(1,0.6)', stagger: 0.15, scrollTrigger: { trigger: '.ct-title', start: 'top 85%' } })
+      gsap.utils.toArray<HTMLElement>('.ct-obj').forEach((el) => {
+        const side = Number(el.dataset.from)
+        gsap.fromTo(
+          el,
+          { xPercent: side * 140, yPercent: 40, scale: 0.55, rotate: side * 35 },
+          { xPercent: 0, yPercent: 0, scale: 1, rotate: 0, ease: 'power2.out', scrollTrigger: { trigger: '.ct-panel', start: 'top 95%', end: 'top 20%', scrub: 1 } },
+        )
+      })
     }, root)
     return () => ctx.revert()
   }, [lang])
@@ -743,11 +750,12 @@ const ctx = gsap.context(() => {
   return (
     <footer id="contact" ref={root} className="relative z-30 -mt-24 px-2 sm:-mt-32 sm:px-3">
       <div className="ct-panel relative overflow-hidden rounded-[2rem] bg-paper px-5 pt-20 pb-40 text-black sm:rounded-[2.75rem] sm:px-14 sm:pt-28 sm:pb-52">
-        <div className="ct-shape pointer-events-none absolute bottom-28 left-[1.5%] w-20 sm:bottom-40 sm:w-28">
-          <img src={img('el-3d.webp')} alt="" loading="lazy" className="floaty w-full drop-shadow-[0_18px_30px_rgba(0,0,0,0.25)]" style={{ ['--r' as string]: '-10deg' }} />
+        {/* big chrome objects half off the panel edges, flying in on scroll like in About */}
+        <div data-from="-1" className="ct-obj pointer-events-none absolute bottom-14 left-[-8%] w-24 sm:bottom-[24%] sm:left-[-7%] sm:w-[16vw]">
+          <img src={img('el-3d.webp')} alt="" loading="lazy" className="floaty w-full drop-shadow-[0_24px_40px_rgba(0,0,0,0.25)]" style={{ ['--r' as string]: '-12deg' }} />
         </div>
-        <div className="ct-shape pointer-events-none absolute top-8 right-[3%] w-20 sm:w-32">
-          <img src={img('el-pen.webp')} alt="" loading="lazy" className="floaty w-full drop-shadow-[0_18px_30px_rgba(0,0,0,0.25)]" style={{ ['--r' as string]: '14deg', ['--d' as string]: '8s' }} />
+        <div data-from="1" className="ct-obj pointer-events-none absolute top-[-2%] right-[-5%] w-32 sm:w-[18vw]">
+          <img src={img('el-pen.webp')} alt="" loading="lazy" className="floaty w-full drop-shadow-[0_24px_40px_rgba(0,0,0,0.25)]" style={{ ['--r' as string]: '16deg', ['--d' as string]: '8s' }} />
         </div>
         <div className="relative mx-auto grid max-w-[1200px] gap-14 md:grid-cols-2 md:items-center">
           <div className="md:pl-10">
