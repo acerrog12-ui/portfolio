@@ -212,18 +212,18 @@ function Hero() {
 
       <div className="relative flex flex-1 flex-col items-center sm:block">
         {/* the head sits on top of the headline, touching the letters like in the reference */}
-        <div ref={avatar} className="relative z-10 mx-auto -mt-[7vw] w-[64vw] max-w-[440px] sm:absolute sm:top-0 sm:left-1/2 sm:mt-[-6.6vw] sm:w-[29vw] sm:max-w-[560px] sm:-translate-x-1/2">
+        <div ref={avatar} className="relative z-10 mx-auto -mt-[7vw] w-[min(58vw,46svh)] max-w-[440px] sm:absolute sm:top-0 sm:left-1/2 sm:mt-[-6.6vw] sm:w-[29vw] sm:max-w-[560px] sm:-translate-x-1/2">
           <div>
             <img src={img('ace-head.webp')} srcSet={`${img('ace-head-s.webp')} 640w, ${img('ace-head.webp')} 1000w`} sizes="(max-width: 640px) 64vw, 29vw" fetchPriority="high" alt="Doston «Ace» Daminov" className="hero-head w-full" />
           </div>
         </div>
 
-        <div className="relative z-20 mt-6 flex w-full flex-col items-start justify-between gap-6 sm:absolute sm:top-[3.4vw] sm:mt-0 sm:flex-row sm:items-start sm:px-[3vw]">
-          <p className="hero-fade max-w-[300px] text-[13px] leading-[1.55] font-semibold uppercase sm:max-w-[23vw] sm:text-[1.3vw]">
+        <div className="relative z-20 mt-4 flex w-full flex-row items-center justify-between gap-3 sm:absolute sm:top-[3.4vw] sm:mt-0 sm:items-start sm:gap-6 sm:px-[3vw]">
+          <p className="hero-fade min-w-0 flex-1 text-[12px] leading-[1.5] font-semibold uppercase sm:max-w-[23vw] sm:flex-none sm:text-[1.3vw]">
             {t(ui.hero.tagline)}
           </p>
-          <div className="hero-fade">
-            <a href={contacts.telegram} target="_blank" rel="noreferrer" className="pill-grad hero-pill px-7 py-3.5 text-[14px] sm:mt-[-0.4vw] sm:px-[2.4vw] sm:py-[1.15vw] sm:text-[1.3vw]">
+          <div className="hero-fade shrink-0">
+            <a href={contacts.telegram} target="_blank" rel="noreferrer" className="pill-grad hero-pill px-5 py-3 text-[13px] sm:mt-[-0.4vw] sm:px-[2.4vw] sm:py-[1.15vw] sm:text-[1.3vw]">
             {t(ui.hero.cta)}
           </a>
           </div>
