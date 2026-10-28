@@ -1,0 +1,53 @@
+import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import type { Lang } from './content'
+
+type Ctx = { lang: Lang; setLang: (l: Lang) => void; t: (v: Record<Lang, string>) => string }
+const LangCtx = createContext<Ctx>({ lang: 'uz', setLang: () => {}, t: (v) => v.uz })
+
+function initialLang(): Lang {
+  try {
+    const saved = localStorage.getItem('lang')
+    if (saved === 'uz' || saved === 'en') return saved
+  } catch {
+    /* storage blocked */
+  }
+  return navigator.language?.startsWith('uz') || navigator.language?.startsWith('ru') ? 'uz' : 'en'
+}
+
+export function LangProvider({ children }: { children: ReactNode }) {
+  const [lang, setLang] = useState<Lang>(initialLang)
+  useEffect(() => {
+    document.documentElement.lang = lang
+    try {
+      localStorage.setItem('lang', lang)
+    } catch {
+      /* storage blocked */
+    }
+  }, [lang])
+  return <LangCtx.Provider value={{ lang, setLang, t: (v) => v[lang] }}>{children}</LangCtx.Provider>
+}
+
+export const useLang = () => useContext(LangCtx)
+
+export const img = (name: string) => `${import.meta.env.BASE_URL}img/${name}`
+
+export const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+/** Splits text into per-letter spans (grouped by word, so words never break) for GSAP. */
+export function SplitChars({ text, className = '' }: { text: string; className?: string }) {
+  const words = text.split(' ')
+  return (
+    <span className={`line-mask ${className}`} aria-label={text}>
+      {words.map((w, wi) => (
+        <span key={wi} className="inline-block whitespace-nowrap" aria-hidden>
+          {[...w].map((c, i) => (
+            <span key={i} className="char">
+              {c}
+            </span>
+          ))}
+          {wi < words.length - 1 && <span className="char">{'\u00a0'}</span>}
+        </span>
+      ))}
+    </span>
+  )
+}
