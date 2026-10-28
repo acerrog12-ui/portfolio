@@ -138,7 +138,7 @@ function Hero() {
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: 'expo.out' } })
       tl.from('.hero-title .char', { yPercent: 110, duration: 1.3, stagger: 0.03 }, 0.15)
-        .from(avatar.current, { yPercent: 40, autoAlpha: 0, scale: 0.7, duration: 1.6, ease: 'elastic.out(1,0.7)' }, 0.45)
+        .from('.hero-head', { y: 140, autoAlpha: 0, scale: 0.8, duration: 1.6, ease: 'elastic.out(1,0.7)' }, 0.45)
         .from('.hero-fade', { y: 30, autoAlpha: 0, duration: 1, stagger: 0.1 }, 0.9)
 
       // on scroll the head rises and the headline slides away
@@ -179,16 +179,20 @@ function Hero() {
       <div className="relative flex flex-1 flex-col items-center sm:block">
         {/* the head sits on top of the headline, touching the letters like in the reference */}
         <div ref={avatar} className="relative z-10 mx-auto -mt-[7vw] w-[64vw] max-w-[440px] sm:absolute sm:top-0 sm:left-1/2 sm:mt-[-6.6vw] sm:w-[29vw] sm:max-w-[560px] sm:-translate-x-1/2">
-          <img src={img('ace-head.webp')} alt="Doston «Ace» Daminov" className="w-full drop-shadow-[0_30px_60px_rgba(0,0,0,0.7)]" />
+          <div>
+            <img src={img('ace-head.webp')} alt="Doston «Ace» Daminov" className="hero-head w-full drop-shadow-[0_30px_60px_rgba(0,0,0,0.7)]" />
+          </div>
         </div>
 
         <div className="relative z-20 mt-6 flex w-full flex-col items-start justify-between gap-6 sm:absolute sm:top-[3.4vw] sm:mt-0 sm:flex-row sm:items-start sm:px-[3vw]">
           <p className="hero-fade max-w-[300px] text-[13px] leading-[1.55] font-semibold uppercase sm:max-w-[23vw] sm:text-[1.3vw]">
-            {t(ui.hero.tagline)} 😎
+            {t(ui.hero.tagline)}
           </p>
-          <a href={`mailto:${contacts.email}`} className="hero-fade pill-grad px-7 py-3.5 text-[14px] sm:mt-[-0.4vw] sm:px-[2.4vw] sm:py-[1.15vw] sm:text-[1.3vw]">
+          <div className="hero-fade">
+            <a href={`mailto:${contacts.email}`} className="pill-grad hero-pill px-7 py-3.5 text-[14px] sm:mt-[-0.4vw] sm:px-[2.4vw] sm:py-[1.15vw] sm:text-[1.3vw]">
             {t(ui.hero.cta)}
           </a>
+          </div>
         </div>
       </div>
     </section>

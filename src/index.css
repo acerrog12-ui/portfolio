@@ -158,3 +158,8 @@ body {
 .hero-title .line-mask {
   display: inline-block;
 }
+
+/* tilted contact pill in the hero, like the reference */
+.hero-pill {
+  rotate: -7deg;
+}

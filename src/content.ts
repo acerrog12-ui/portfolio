@@ -24,8 +24,8 @@ export const ui = {
     name: { uz: 'VISUALS', en: 'VISUALS' },
     kicker: { uz: 'Doston «Ace» Daminov · Art director va dizayner', en: 'Doston «Ace» Daminov · Art director & designer' },
     tagline: {
-      uz: 'Art director va dizayner. Jasur va esda qoladigan vizuallar yarataman',
-      en: 'An art director and designer crafting bold and memorable visuals',
+      uz: "Brendlar uchun vizual olamlar quraman: kampaniyadan sahnagacha, g'oyadan 3D'gacha ✦",
+      en: 'I build visual worlds for brands: from campaign to stage, from idea to 3D ✦',
     },
     cta: { uz: "Bog'lanish", en: 'Contact me' },
     scroll: { uz: 'Pastga suring', en: 'Scroll down' },
