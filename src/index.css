@@ -50,7 +50,7 @@ body {
 /* Silver headline: each letter carries its own vertical gradient,
    so it still works when the letters are animated one by one */
 .silver .char {
-  background-image: linear-gradient(180deg, #ffffff 0%, #e4e4e4 45%, #9c9c9c 100%);
+  background-image: linear-gradient(180deg, #f6f6f6 0%, #dcdcdc 50%, #b4b4b4 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -72,18 +72,18 @@ body {
   gap: 0.5em;
   border-radius: 999px;
   border: 1.5px solid rgba(255, 196, 240, 0.85);
-  background-image: linear-gradient(90deg, #12061c 0%, #3b0f55 22%, #c43cf0 55%, #ff5fb0 78%, #ff9d4d 100%);
-  background-size: 160% 100%;
-  background-position: 0% 0;
+  background-image: linear-gradient(90deg, #1a0726 0%, #4a1270 20%, #b93ae8 48%, #ff4fb0 74%, #ff9a55 100%);
+
   color: #fff;
   font-weight: 800;
   font-stretch: 100%;
   letter-spacing: 0.02em;
   text-transform: uppercase;
-  transition: background-position 0.6s ease, transform 0.4s ease;
+  box-shadow: 0 0 0 0 rgba(255, 79, 176, 0);
+  transition: box-shadow 0.4s ease, transform 0.4s ease;
 }
 .pill-grad:hover {
-  background-position: 100% 0;
+  box-shadow: 0 10px 40px -8px rgba(255, 79, 176, 0.7);
   transform: translateY(-2px);
 }
 

@@ -123,7 +123,7 @@ function Hero() {
 
   return (
     <section ref={root} className="relative flex min-h-[100svh] flex-col overflow-hidden bg-ink px-4 pt-14 pb-8 sm:px-8 sm:pt-16">
-      <h1 className="hero-title silver relative z-0 text-center font-display text-[16.8vw] leading-[0.86] uppercase sm:text-[9.4vw]">
+      <h1 className="hero-title silver relative z-0 text-center font-display text-[16.5vw] leading-[0.84] uppercase sm:text-[10vw]" style={{ fontStretch: '96%', letterSpacing: '-0.025em' }}>
         <span className="block sm:inline-block">
           <SplitChars text={t(ui.hero.hi)} className="inline-block" />
         </span>{' '}
@@ -132,18 +132,18 @@ function Hero() {
         </span>
       </h1>
 
-      <div className="relative flex flex-1 flex-col items-center justify-end sm:block">
-        <div ref={avatar} className="relative z-10 mx-auto -mt-[6vw] w-[78vw] max-w-[560px] sm:absolute sm:top-0 sm:left-1/2 sm:mt-[-5.6vw] sm:w-[40vw] sm:max-w-[680px] sm:-translate-x-1/2">
+      <div className="relative flex flex-1 flex-col items-center sm:block">
+        {/* the head sits on top of the headline, touching the letters like in the reference */}
+        <div ref={avatar} className="relative z-10 mx-auto -mt-[7vw] w-[80vw] max-w-[560px] sm:absolute sm:top-0 sm:left-1/2 sm:mt-[-6.2vw] sm:w-[38vw] sm:max-w-[680px] sm:-translate-x-1/2">
           <img src={img('avatar-glasses.webp')} alt="Doston «Ace» Daminov" className="w-full drop-shadow-[0_30px_60px_rgba(0,0,0,0.7)]" />
         </div>
 
-        <div className="relative z-20 mt-6 flex w-full flex-col items-start justify-between gap-6 sm:absolute sm:top-[9vw] sm:mt-0 sm:flex-row sm:items-center">
-          <div className="hero-fade max-w-[300px] text-[12px] leading-[1.6] font-semibold uppercase sm:max-w-[25vw] sm:text-[13px]">
-            <p className="mb-2 text-white/50">{t(ui.hero.kicker)}</p>
-            <p>{t(ui.hero.tagline)} 😎</p>
-          </div>
-          <a href={`mailto:${contacts.email}`} className="hero-fade pill-grad px-7 py-3.5 text-[13px] sm:px-9 sm:py-4 sm:text-[15px]">
-            {t(ui.hero.cta)} <span aria-hidden>•</span>
+        <div className="relative z-20 mt-6 flex w-full flex-col items-start justify-between gap-6 sm:absolute sm:top-[3.4vw] sm:mt-0 sm:flex-row sm:items-start sm:px-[3vw]">
+          <p className="hero-fade max-w-[300px] text-[13px] leading-[1.55] font-semibold uppercase sm:max-w-[23vw] sm:text-[1.3vw]">
+            {t(ui.hero.tagline)} 😎
+          </p>
+          <a href={`mailto:${contacts.email}`} className="hero-fade pill-grad px-7 py-3.5 text-[14px] sm:mt-[-0.4vw] sm:px-[2.4vw] sm:py-[1.15vw] sm:text-[1.3vw]">
+            {t(ui.hero.cta)}
           </a>
         </div>
       </div>
