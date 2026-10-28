@@ -178,8 +178,8 @@ function Hero() {
 
       <div className="relative flex flex-1 flex-col items-center sm:block">
         {/* the head sits on top of the headline, touching the letters like in the reference */}
-        <div ref={avatar} className="relative z-10 mx-auto -mt-[7vw] w-[80vw] max-w-[560px] sm:absolute sm:top-0 sm:left-1/2 sm:mt-[-6.2vw] sm:w-[38vw] sm:max-w-[680px] sm:-translate-x-1/2">
-          <img src={img('avatar-glasses.webp')} alt="Doston «Ace» Daminov" className="w-full drop-shadow-[0_30px_60px_rgba(0,0,0,0.7)]" />
+        <div ref={avatar} className="relative z-10 mx-auto -mt-[7vw] w-[64vw] max-w-[440px] sm:absolute sm:top-0 sm:left-1/2 sm:mt-[-6.6vw] sm:w-[29vw] sm:max-w-[560px] sm:-translate-x-1/2">
+          <img src={img('ace-head.webp')} alt="Doston «Ace» Daminov" className="w-full drop-shadow-[0_30px_60px_rgba(0,0,0,0.7)]" />
         </div>
 
         <div className="relative z-20 mt-6 flex w-full flex-col items-start justify-between gap-6 sm:absolute sm:top-[3.4vw] sm:mt-0 sm:flex-row sm:items-start sm:px-[3vw]">
@@ -573,8 +573,8 @@ function Team() {
               <textPath href="#ring" textLength="510">{ring}</textPath>
             </text>
           </svg>
-          <div className="absolute inset-[22%] overflow-hidden rounded-full">
-            <img src={img('istedodlar-zamini.jpg')} alt="" loading="lazy" className="h-full w-full object-cover" />
+          <div className="absolute inset-[20%] overflow-hidden rounded-full bg-[radial-gradient(circle_at_50%_40%,#7a4dff_0%,#2a0f4a_55%,#000_100%)]">
+            <img src={img('ace-bust.webp')} alt="Doston «Ace» Daminov" loading="lazy" className="absolute inset-x-0 bottom-0 mx-auto w-[96%]" />
           </div>
         </div>
       </div>
