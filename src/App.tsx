@@ -158,13 +158,15 @@ function Clients() {
   const rows = [covers.slice(0, half), covers.slice(half)]
   return (
     <section aria-label="Clients" className="relative bg-ink py-10 sm:py-14">
-      <ul className="mx-auto flex max-w-[1400px] flex-wrap items-center justify-center gap-x-10 gap-y-4 px-4 sm:justify-between sm:px-8">
-        {clients.map((c) => (
-          <li key={c} className="font-display text-lg leading-none text-white uppercase opacity-90 sm:text-2xl">
-            {c}
-          </li>
-        ))}
-      </ul>
+      <div className="flex overflow-hidden [mask-image:linear-gradient(90deg,transparent,#000_8%,#000_92%,transparent)]">
+        <ul className="marquee flex shrink-0 items-center gap-14 pr-14 sm:gap-20 sm:pr-20" style={{ ['--speed' as string]: '35s' }}>
+          {[...clients, ...clients].map((c, i) => (
+            <li key={i} className="font-display text-lg leading-none whitespace-nowrap text-white uppercase opacity-90 sm:text-2xl">
+              {c}
+            </li>
+          ))}
+        </ul>
+      </div>
       <div className="mt-10 space-y-3 sm:mt-14 sm:space-y-4">
         {rows.map((r, ri) => (
           <div key={ri} className="flex overflow-hidden">
