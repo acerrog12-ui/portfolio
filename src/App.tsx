@@ -574,7 +574,7 @@ function Team() {
             </text>
           </svg>
           <div className="absolute inset-[20%] overflow-hidden rounded-full bg-[radial-gradient(circle_at_50%_40%,#7a4dff_0%,#2a0f4a_55%,#000_100%)]">
-            <img src={img('ace-bust.webp')} alt="Doston «Ace» Daminov" loading="lazy" className="absolute inset-x-0 bottom-0 mx-auto w-[96%]" />
+            <img src={img('ace-bust.webp')} alt="Doston «Ace» Daminov" loading="lazy" className="absolute inset-x-0 bottom-0 mx-auto w-[96%] translate-x-[11%]" />
           </div>
         </div>
       </div>
