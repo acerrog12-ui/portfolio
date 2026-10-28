@@ -754,8 +754,8 @@ const ctx = gsap.context(() => {
         <div data-from="-1" className="ct-obj pointer-events-none absolute bottom-14 left-[-8%] w-24 sm:bottom-[24%] sm:left-[-7%] sm:w-[16vw]">
           <img src={img('el-3d.webp')} alt="" loading="lazy" className="floaty w-full drop-shadow-[0_24px_40px_rgba(0,0,0,0.25)]" style={{ ['--r' as string]: '-12deg' }} />
         </div>
-        <div data-from="1" className="ct-obj pointer-events-none absolute top-[-2%] right-[-5%] w-32 sm:w-[18vw]">
-          <img src={img('el-pen.webp')} alt="" loading="lazy" className="floaty w-full drop-shadow-[0_24px_40px_rgba(0,0,0,0.25)]" style={{ ['--r' as string]: '16deg', ['--d' as string]: '8s' }} />
+        <div data-from="1" className="ct-obj pointer-events-none absolute top-[-4%] right-[-3%] w-24 sm:right-[-2%] sm:w-[12vw]">
+          <img src={img('el-bolt.webp')} alt="" loading="lazy" className="floaty w-full drop-shadow-[0_24px_40px_rgba(0,0,0,0.25)]" style={{ ['--r' as string]: '16deg', ['--d' as string]: '8s' }} />
         </div>
         <div className="relative mx-auto grid max-w-[1200px] gap-14 md:grid-cols-2 md:items-center">
           <div className="md:pl-10">
