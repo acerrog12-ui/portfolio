@@ -58,6 +58,9 @@ export const ui = {
     client: { uz: 'Mijoz', en: 'Client' },
     view: { uz: "Ko'rish", en: 'View project' },
     all: { uz: "Barcha ishlar Behance'da", en: 'All works on Behance' },
+    open: { uz: "Bo'limga o'tish", en: 'Open' },
+    count: { uz: 'ta loyiha', en: 'projects' },
+    back: { uz: 'Orqaga', en: 'Back' },
     close: { uz: 'Yopish', en: 'Close' },
   },
   contact: {
@@ -137,8 +140,35 @@ export const projects: Project[] = [
   { id: 'bliss', client: 'Bliss', title: { uz: 'BAAga sayohat aksiyasi', en: 'Trip to the UAE promo' }, tags: { uz: 'Key visual · Aksiya', en: 'Key visual · Promo' } },
 ]
 
-// Projects shown as big cards in the Projects section (the rest stay in the image strip).
-// To change them, put other project ids here.
-export const featured = ['pepsi', 'superleague', 'fide']
+// Work directions shown as big cards in the Projects section.
+// Clicking a card opens that direction's page with all its projects.
+// To move a project, put its id in another list.
+export type Category = { id: string; title: T; text: T; projects: string[] }
+export const categories: Category[] = [
+  {
+    id: 'key-visual',
+    title: { uz: 'Key visual va kampaniyalar', en: 'Key visuals & campaigns' },
+    text: { uz: 'Festival, konsert va aksiyalar uchun asosiy vizuallar', en: 'Key visuals for festivals, shows and promos' },
+    projects: ['pepsi', 'chempion', 'bliss', 'uzsl-awards'],
+  },
+  {
+    id: '3d',
+    title: { uz: '3D va reklama', en: '3D & advertising' },
+    text: { uz: 'Banklar va brendlar uchun 3D reklama hamda immersiv kontent', en: '3D ads and immersive content for banks and brands' },
+    projects: ['agrobank', 'mkbank', 'violence'],
+  },
+  {
+    id: 'event',
+    title: { uz: 'Event va sahna dizayni', en: 'Event & stage design' },
+    text: { uz: "Katta tadbirlar uchun sahna, ekran va ko'rgazma dizayni", en: 'Stage, screen and exhibition design for large events' },
+    projects: ['fide', 'istedodlar-zamini', 'oltin-chinor', 'amir-temur'],
+  },
+  {
+    id: 'branding',
+    title: { uz: 'Brending va sport', en: 'Branding & sports' },
+    text: { uz: 'Klublar, ligalar va hududlar uchun vizual identifikatsiya', en: 'Visual identity for clubs, leagues and places' },
+    projects: ['superleague', 'chiroqchi'],
+  },
+]
 
 export const clients = ['Pepsi', 'Agrobank', 'MKBANK', 'FIDE', 'UZSL', 'Bliss', 'Tasnif Group', 'Oltin Chinor', 'Chiroqchi']

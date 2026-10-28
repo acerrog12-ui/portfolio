@@ -2,14 +2,49 @@ import { useEffect, useLayoutEffect, useRef, useState, type FormEvent } from 're
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Lenis from 'lenis'
-import { clients, contacts, featured, projects, services, team, ui, type Project } from './content'
+import { categories, clients, contacts, projects, services, team, ui, type Category, type Project } from './content'
 import { img, reducedMotion, SplitChars, useLang } from './lib'
 import { Cube, Flower, footerColors, footerShapes, Heart, Star } from './shapes'
 
 gsap.registerPlugin(ScrollTrigger)
 
+// Simple hash routing: #/work/<category-id> opens a direction page
+function useRoute() {
+  const read = () => window.location.hash.replace(/^#\/?/, '')
+  const [route, setRoute] = useState(read)
+  useEffect(() => {
+    const on = () => setRoute(read())
+    window.addEventListener('hashchange', on)
+    return () => window.removeEventListener('hashchange', on)
+  }, [])
+  return route
+}
+
 export default function App() {
   const [open, setOpen] = useState<Project | null>(null)
+  const route = useRoute()
+  const cat = route.startsWith('work/') ? categories.find((c) => c.id === route.slice(5)) : undefined
+  const lastCat = useRef<string | null>(null)
+
+  // Going to a direction page starts at the top; coming back returns to the Projects section
+  useLayoutEffect(() => {
+    const lenis = (window as unknown as { lenis?: Lenis }).lenis
+    if (cat) {
+      lastCat.current = cat.id
+      lenis ? lenis.scrollTo(0, { immediate: true, force: true }) : window.scrollTo(0, 0)
+      setTimeout(() => lenis?.resize(), 60)
+    } else if (lastCat.current) {
+      lastCat.current = null
+      setTimeout(() => {
+        lenis?.resize()
+        ScrollTrigger.refresh()
+        const el = document.getElementById('projects')
+        if (!el) return
+        const y = el.getBoundingClientRect().top + window.scrollY
+        lenis ? lenis.scrollTo(y, { immediate: true, force: true }) : window.scrollTo(0, y)
+      }, 60)
+    }
+  }, [cat])
 
   // Smooth scrolling, synced with ScrollTrigger
   useEffect(() => {
@@ -29,14 +64,18 @@ export default function App() {
   return (
     <div>
       <Nav />
-      <main>
-        <Hero />
-        <Clients />
-        <About />
-        <Services />
-        <Projects onOpen={setOpen} />
-        <Team />
-      </main>
+      {cat ? (
+        <CategoryPage key={cat.id} cat={cat} onOpen={setOpen} />
+      ) : (
+        <main>
+          <Hero />
+          <Clients />
+          <About />
+          <Services />
+          <Projects />
+          <Team />
+        </main>
+      )}
       <Contact />
       {open && <ProjectModal project={open} onClose={() => setOpen(null)} />}
     </div>
@@ -44,6 +83,11 @@ export default function App() {
 }
 
 function scrollTo(id: string) {
+  if (window.location.hash.startsWith('#/work/') && id !== 'contact') {
+    window.location.hash = ''
+    setTimeout(() => scrollTo(id), 80)
+    return
+  }
   const el = document.getElementById(id)
   const lenis = (window as unknown as { lenis?: Lenis }).lenis
   if (!el) return
@@ -314,7 +358,7 @@ function Services() {
 }
 
 /* ---------------- PROJECTS (stacked sticky cards) ---------------- */
-function Projects({ onOpen }: { onOpen: (p: Project) => void }) {
+function Projects() {
   const { t, lang } = useLang()
   const root = useRef<HTMLElement>(null)
 
@@ -327,7 +371,7 @@ function Projects({ onOpen }: { onOpen: (p: Project) => void }) {
         const next = cards[i + 1]
         if (!next) return
         // each card dims a little as the next one slides over it
-        gsap.to(card.firstElementChild, { scale: 0.97, filter: "brightness(0.75)", ease: 'none', scrollTrigger: { trigger: next, start: 'top 80%', end: 'top 20%', scrub: true } })
+        gsap.to(card.firstElementChild, { scale: 0.97, filter: 'brightness(0.75)', ease: 'none', scrollTrigger: { trigger: next, start: 'top 80%', end: 'top 20%', scrub: true } })
       })
     }, root)
     return () => ctx.revert()
@@ -339,37 +383,35 @@ function Projects({ onOpen }: { onOpen: (p: Project) => void }) {
         <SplitChars text={t(ui.projects.title)} />
       </h2>
       <div className="mx-auto max-w-[1180px]">
-        {featured.map((id) => projects.find((p) => p.id === id)!).map((p, i) => (
-          <article key={p.id} className="proj-card sticky mb-[6vh]" style={{ top: `calc(9vh + ${i * 14}px)` }}>
-            <div className="origin-top overflow-hidden rounded-[1.75rem] border-[1.5px] border-white/70 bg-ink p-3 will-change-transform sm:rounded-[2.25rem] sm:p-5">
-              <header className="flex items-center gap-3 px-1 pt-1 pb-4 sm:gap-5 sm:px-2 sm:pb-5">
-                <span className="font-display text-4xl leading-none sm:text-6xl">{String(i + 1).padStart(2, '0')}</span>
-                <div className="min-w-0 flex-1">
-                  <div className="font-cond text-sm font-extrabold uppercase sm:text-lg">{p.client}</div>
-                  <div className="truncate text-[11px] text-white/50 sm:text-sm">
-                    {t(p.title)}
-                    {p.year && ` · ${p.year}`}
+        {categories.map((c, i) => {
+          const ps = c.projects.map((id) => projects.find((p) => p.id === id)!)
+          const pics = [ps[0], ps[1] ?? ps[0], ps[2] ?? ps[1] ?? ps[0]]
+          return (
+            <article key={c.id} className="proj-card sticky mb-[6vh]" style={{ top: `calc(9vh + ${i * 14}px)` }}>
+              <a href={`#/work/${c.id}`} className="group block origin-top overflow-hidden rounded-[1.75rem] border-[1.5px] border-white/70 bg-ink p-3 will-change-transform sm:rounded-[2.25rem] sm:p-5">
+                <header className="flex items-center gap-3 px-1 pt-1 pb-4 sm:gap-5 sm:px-2 sm:pb-5">
+                  <span className="font-display text-4xl leading-none sm:text-6xl">{String(i + 1).padStart(2, '0')}</span>
+                  <div className="min-w-0 flex-1">
+                    <div className="font-cond text-sm font-extrabold uppercase sm:text-xl">{t(c.title)}</div>
+                    <div className="truncate text-[11px] text-white/50 sm:text-sm">
+                      {ps.length} {t(ui.projects.count)} · {t(c.text)}
+                    </div>
                   </div>
+                  <span className="pill-line shrink-0 px-4 py-2 text-[10px] group-hover:bg-white group-hover:text-black sm:px-6 sm:py-2.5 sm:text-xs">
+                    {t(ui.projects.open)} →
+                  </span>
+                </header>
+                <div className="grid w-full grid-cols-3 gap-2 sm:h-[62vh] sm:max-h-[620px] sm:grid-rows-2 sm:gap-3">
+                  {pics.map((p, k) => (
+                    <span key={k} className={k === 0 ? 'col-span-3 aspect-video overflow-hidden rounded-[1.25rem] sm:col-span-2 sm:row-span-2 sm:aspect-auto sm:h-full' : 'hidden overflow-hidden rounded-[1.25rem] sm:block'}>
+                      <img src={img(`${p.id}.jpg`)} alt={k === 0 ? t(c.title) : ''} loading="lazy" className="h-full w-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-105" />
+                    </span>
+                  ))}
                 </div>
-                <span className="hidden text-xs text-white/40 lg:block">{t(p.tags)}</span>
-                <button onClick={() => onOpen(p)} className="pill-line shrink-0 px-4 py-2 text-[10px] sm:px-6 sm:py-2.5 sm:text-xs">
-                  {t(ui.projects.view)}
-                </button>
-              </header>
-              <button onClick={() => onOpen(p)} className="group grid w-full grid-cols-3 gap-2 sm:grid-rows-2 sm:h-[62vh] sm:max-h-[620px] sm:gap-3" aria-label={t(p.title)}>
-                <span className="col-span-3 aspect-video overflow-hidden rounded-[1.25rem] sm:col-span-2 sm:row-span-2 sm:aspect-auto sm:h-full">
-                  <img src={img(`${p.id}.jpg`)} alt={t(p.title)} loading="lazy" className="h-full w-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-105" />
-                </span>
-                <span className="hidden overflow-hidden rounded-[1.25rem] sm:block">
-                  <img src={img(`${p.id}-full.jpg`)} alt="" loading="lazy" className="h-full w-full object-cover object-top transition-transform duration-[1.2s] ease-out group-hover:scale-105" />
-                </span>
-                <span className="hidden overflow-hidden rounded-[1.25rem] sm:block">
-                  <img src={img(`${p.id}-full.jpg`)} alt="" loading="lazy" className="h-full w-full object-cover object-bottom transition-transform duration-[1.2s] ease-out group-hover:scale-105" />
-                </span>
-              </button>
-            </div>
-          </article>
-        ))}
+              </a>
+            </article>
+          )
+        })}
         <div className="mt-4 text-center">
           <a href={contacts.behance} target="_blank" rel="noreferrer" className="pill-line px-7 py-3 text-xs sm:text-sm">
             {t(ui.projects.all)} ↗
@@ -377,6 +419,78 @@ function Projects({ onOpen }: { onOpen: (p: Project) => void }) {
         </div>
       </div>
     </section>
+  )
+}
+
+/* ---------------- DIRECTION PAGE (all projects of one category) ---------------- */
+function CategoryPage({ cat, onOpen }: { cat: Category; onOpen: (p: Project) => void }) {
+  const { t, lang } = useLang()
+  const root = useRef<HTMLElement>(null)
+  const ps = cat.projects.map((id) => projects.find((p) => p.id === id)!)
+  const idx = categories.indexOf(cat)
+  const others = categories.filter((c) => c.id !== cat.id)
+
+  useLayoutEffect(() => {
+    if (reducedMotion()) return
+    const ctx = gsap.context(() => {
+      gsap.from('.cat-title .char', { yPercent: 110, stagger: 0.03, duration: 1.1, ease: 'expo.out', delay: 0.1 })
+      gsap.from('.cat-fade', { y: 30, autoAlpha: 0, duration: 1, ease: 'expo.out', delay: 0.4 })
+      gsap.utils.toArray<HTMLElement>('.cat-item').forEach((el) => {
+        gsap.from(el, { y: 80, autoAlpha: 0, duration: 1.1, ease: 'expo.out', scrollTrigger: { trigger: el, start: 'top 92%' } })
+      })
+    }, root)
+    ScrollTrigger.refresh()
+    return () => ctx.revert()
+  }, [lang, cat.id])
+
+  return (
+    <main ref={root} className="relative bg-ink px-3 pt-24 pb-48 sm:px-8 sm:pt-28 sm:pb-64">
+      <div className="mx-auto max-w-[1300px]">
+        <a href="#" className="cat-fade pill-line px-5 py-2 text-xs">
+          ← {t(ui.projects.back)}
+        </a>
+        <div className="mt-10 flex items-end gap-4 sm:gap-8">
+          <span className="font-display text-5xl leading-none text-white/30 sm:text-8xl">{String(idx + 1).padStart(2, '0')}</span>
+          <h1 className="cat-title silver font-display text-[clamp(2.4rem,7.5vw,7.5rem)] leading-[0.88] uppercase">
+            <SplitChars text={t(cat.title)} />
+          </h1>
+        </div>
+        <p className="cat-fade mt-6 max-w-xl text-sm font-semibold text-white/60 uppercase sm:text-base">
+          {t(cat.text)} · {ps.length} {t(ui.projects.count)}
+        </p>
+
+        <div className="mt-14 grid gap-5 sm:mt-20 md:grid-cols-2 md:gap-6">
+          {ps.map((p, i) => (
+            <button key={p.id} onClick={() => onOpen(p)} className={`cat-item group block overflow-hidden rounded-[1.75rem] border-[1.5px] border-white/70 p-3 text-left sm:p-4 ${ps.length % 2 && i === 0 ? 'md:col-span-2' : ''}`}>
+              <span className="block aspect-video overflow-hidden rounded-[1.25rem]">
+                <img src={img(`${p.id}.jpg`)} alt={t(p.title)} loading="lazy" className="h-full w-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-105" />
+              </span>
+              <span className="flex items-center gap-4 px-1 pt-4 pb-1">
+                <span className="min-w-0 flex-1">
+                  <span className="block font-cond text-base font-extrabold uppercase sm:text-lg">{p.client}</span>
+                  <span className="block truncate text-xs text-white/50 sm:text-sm">
+                    {t(p.title)}
+                    {p.year && ` · ${p.year}`} · {t(p.tags)}
+                  </span>
+                </span>
+                <span className="pill-line shrink-0 px-4 py-2 text-[10px] group-hover:bg-white group-hover:text-black sm:text-xs">{t(ui.projects.view)}</span>
+              </span>
+            </button>
+          ))}
+        </div>
+
+        <div className="mt-24 border-t border-line pt-10">
+          <div className="mb-5 text-xs font-extrabold tracking-wide text-white/50 uppercase">{t(ui.projects.title)}</div>
+          <div className="flex flex-wrap gap-3">
+            {others.map((c) => (
+              <a key={c.id} href={`#/work/${c.id}`} className="pill-line px-5 py-2.5 text-xs sm:text-sm">
+                {t(c.title)} →
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+    </main>
   )
 }
 
