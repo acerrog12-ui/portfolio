@@ -4,7 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Lenis from 'lenis'
 import { categories, clients, contacts, projects, services, team, ui, type Category, type Project } from './content'
 import { img, reducedMotion, SplitChars, useLang } from './lib'
-import { AcePad, Cube, Flower, footerColors, footerShapes, Heart, Star } from './shapes'
+import { Cube, Flower, footerColors, footerShapes, Heart, Star } from './shapes'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -350,8 +350,8 @@ function About() {
       <div className="parallax pointer-events-none absolute top-[30%] right-[5%] w-14 sm:w-28" style={{ ['--d' as string]: '8s' }}>
         <Flower className="floaty w-full" />
       </div>
-      <div className="parallax pointer-events-none absolute top-[52%] right-[3%] w-28 sm:right-[6%] sm:w-56" style={{ ['--r' as string]: '-14deg', ['--d' as string]: '7s' }}>
-        <AcePad className="floaty w-full" />
+      <div className="parallax pointer-events-none absolute top-[50%] right-[2%] w-32 sm:right-[2%] sm:w-60" style={{ ['--r' as string]: '-14deg', ['--d' as string]: '7s' }}>
+        <img src={img('ace-pad.webp')} alt="" loading="lazy" className="floaty w-full drop-shadow-[0_20px_40px_rgba(122,77,255,0.35)]" />
       </div>
 
       <div className="relative mx-auto max-w-[1100px] text-center">
