@@ -180,7 +180,7 @@ function Hero() {
         {/* the head sits on top of the headline, touching the letters like in the reference */}
         <div ref={avatar} className="relative z-10 mx-auto -mt-[7vw] w-[64vw] max-w-[440px] sm:absolute sm:top-0 sm:left-1/2 sm:mt-[-6.6vw] sm:w-[29vw] sm:max-w-[560px] sm:-translate-x-1/2">
           <div>
-            <img src={img('ace-head.webp')} alt="Doston «Ace» Daminov" className="hero-head w-full drop-shadow-[0_30px_60px_rgba(0,0,0,0.7)]" />
+            <img src={img('ace-head.webp')} alt="Doston «Ace» Daminov" className="hero-head w-full" />
           </div>
         </div>
 
