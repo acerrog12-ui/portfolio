@@ -127,7 +127,7 @@ export type Project = {
   year?: string
 }
 
-// Order = order on the site. Images: public/img/<id>.jpg (cover) and <id>-full.jpg (full layout).
+// Order = order on the site. Images: public/img/<id>.webp (cover), <id>-s.webp (640px, phones) and <id>-full.webp (full layout).
 export const projects: Project[] = [
   { id: 'pepsi', client: 'Pepsi', title: { uz: 'Pepsi Lazzatli Fest', ru: "Pepsi Lazzatli Fest", en: 'Pepsi Lazzatli Fest' }, tags: { uz: 'Key visual · Festival', ru: "Key visual · Фестиваль", en: 'Key visual · Festival' } },
   { id: 'chempion', client: 'Mirshakar Fayzullayev', title: { uz: 'Çempion şousi', ru: "Шоу «Чемпион»", en: 'Chempion show' }, tags: { uz: 'Key visual · Konsert', ru: "Key visual · Концерт", en: 'Key visual · Concert' } },

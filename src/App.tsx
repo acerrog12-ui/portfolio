@@ -7,6 +7,9 @@ import { img, reducedMotion, SplitChars, useLang } from './lib'
 import { ChromeDefs, chromeFill, footerShapes } from './shapes'
 
 gsap.registerPlugin(ScrollTrigger)
+// phone address bar shows/hides while scrolling; don't recalculate every trigger when it does
+ScrollTrigger.config({ ignoreMobileResize: true })
+const isPhone = () => window.matchMedia('(max-width: 639px)').matches
 
 // Simple hash routing: #/work/<category-id> opens a direction page
 function useRoute() {
@@ -100,7 +103,7 @@ function Nav() {
   const { t, lang, setLang } = useLang()
   const links = ['about', 'services', 'projects', 'contact'] as const
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-black/95 backdrop-blur-md">
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-black">
       <nav className="mx-auto flex max-w-[1500px] items-center gap-4 px-4 py-4 text-[11px] font-bold tracking-wide uppercase sm:px-8 sm:text-[13px]">
         <ul className="hidden flex-1 justify-around md:flex">
           {links.map((l) => (
@@ -154,8 +157,14 @@ function Hero() {
     }
     fit()
     document.fonts?.ready.then(fit)
-    window.addEventListener('resize', fit)
-    return () => window.removeEventListener('resize', fit)
+    let w = window.innerWidth
+    const onResize = () => {
+      if (window.innerWidth === w) return
+      w = window.innerWidth
+      fit()
+    }
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
   }, [])
 
   useLayoutEffect(() => {
@@ -167,8 +176,8 @@ function Hero() {
         .from('.hero-fade', { y: 30, autoAlpha: 0, duration: 1, stagger: 0.1 }, 0.9)
 
       // on scroll the head rises and the headline slides away
-      gsap.to(avatar.current, { yPercent: -30, ease: 'none', scrollTrigger: { trigger: root.current, start: 'top top', end: 'bottom top', scrub: true } })
-      gsap.to('.hero-title', { yPercent: -40, autoAlpha: 0.2, ease: 'none', scrollTrigger: { trigger: root.current, start: 'top top', end: 'bottom top', scrub: true } })
+      if (!isPhone()) gsap.to(avatar.current, { yPercent: -30, ease: 'none', scrollTrigger: { trigger: root.current, start: 'top top', end: 'bottom top', scrub: true } })
+      if (!isPhone()) gsap.to('.hero-title', { yPercent: -40, autoAlpha: 0.2, ease: 'none', scrollTrigger: { trigger: root.current, start: 'top top', end: 'bottom top', scrub: true } })
     }, root)
 
     // the head follows the mouse a little
@@ -183,7 +192,7 @@ function Hero() {
       yTo?.(dy * 24)
       rTo?.(dx * 7)
     }
-    window.addEventListener('mousemove', move)
+    if (window.matchMedia('(pointer: fine)').matches) window.addEventListener('mousemove', move)
     return () => {
       ctx.revert()
       window.removeEventListener('mousemove', move)
@@ -205,7 +214,7 @@ function Hero() {
         {/* the head sits on top of the headline, touching the letters like in the reference */}
         <div ref={avatar} className="relative z-10 mx-auto -mt-[7vw] w-[64vw] max-w-[440px] sm:absolute sm:top-0 sm:left-1/2 sm:mt-[-6.6vw] sm:w-[29vw] sm:max-w-[560px] sm:-translate-x-1/2">
           <div>
-            <img src={img('ace-head.webp')} alt="Doston «Ace» Daminov" className="hero-head w-full" />
+            <img src={img('ace-head.webp')} srcSet={`${img('ace-head-s.webp')} 640w, ${img('ace-head.webp')} 1000w`} sizes="(max-width: 640px) 64vw, 29vw" fetchPriority="high" alt="Doston «Ace» Daminov" className="hero-head w-full" />
           </div>
         </div>
 
@@ -326,7 +335,7 @@ function Clients() {
         {rows.map((r, ri) => (
           <DragRow key={ri} speed={ri ? 40 : -48}>
             {[...r, ...r].map((id, i) => (
-              <img key={i} src={img(`${id}.jpg`)} alt="" width={370} height={208} draggable={false} className="pointer-events-none h-32 w-[228px] shrink-0 rounded-[1.25rem] object-cover select-none sm:h-52 sm:w-[370px]" />
+              <img key={i} src={img(`${id}-s.webp`)} decoding="async" alt="" width={370} height={208} draggable={false} className="pointer-events-none h-32 w-[228px] shrink-0 rounded-[1.25rem] object-cover select-none sm:h-52 sm:w-[370px]" />
             ))}
           </DragRow>
         ))}
@@ -354,16 +363,24 @@ function About() {
       gsap.from('.award', { y: 80, autoAlpha: 0, duration: 1.2, ease: 'expo.out', stagger: 0.15, scrollTrigger: { trigger: '.award', start: 'top 85%' } })
       // objects slide in from off-screen and grow as the section scrolls into view,
       // then keep drifting up a little while it scrolls past
-      gsap.utils.toArray<HTMLElement>('.about-obj').forEach((el, i) => {
-        const side = Number(el.dataset.from)
-        gsap.fromTo(
-          el,
-          { xPercent: side * 140, yPercent: 40, scale: 0.55, rotate: side * 35 },
-          { xPercent: 0, yPercent: 0, scale: 1, rotate: 0, ease: 'power2.out', scrollTrigger: { trigger: root.current, start: 'top 95%', end: 'top 15%', scrub: 1 } },
-        )
-        // explicit start value so this drift never picks up the fly-in's starting offset (that caused a jump)
-        gsap.fromTo(el, { yPercent: 0 }, { yPercent: -[50, 30, 70, 40][i % 4], ease: 'none', immediateRender: false, scrollTrigger: { trigger: root.current, start: 'top 15%', end: 'bottom top', scrub: true } })
-      })
+      if (!isPhone()) {
+        gsap.utils.toArray<HTMLElement>('.about-obj').forEach((el, i) => {
+          const side = Number(el.dataset.from)
+          gsap.fromTo(
+            el,
+            { xPercent: side * 140, yPercent: 40, scale: 0.55, rotate: side * 35 },
+            { xPercent: 0, yPercent: 0, scale: 1, rotate: 0, ease: 'power2.out', scrollTrigger: { trigger: root.current, start: 'top 95%', end: 'top 15%', scrub: 1 } },
+          )
+          // explicit start value so this drift never picks up the fly-in's starting offset (that caused a jump)
+          gsap.fromTo(el, { yPercent: 0 }, { yPercent: -[50, 30, 70, 40][i % 4], ease: 'none', immediateRender: false, scrollTrigger: { trigger: root.current, start: 'top 15%', end: 'bottom top', scrub: true } })
+        })
+      } else {
+        // phones: a single light fly-in when each object appears, no scroll-linked motion
+        gsap.utils.toArray<HTMLElement>('.about-obj-m').forEach((el) => {
+          const side = Number(el.dataset.from)
+          gsap.from(el, { xPercent: side * 110, rotate: side * 30, scale: 0.6, autoAlpha: 0, duration: 1.2, ease: 'expo.out', scrollTrigger: { trigger: el, start: 'top 92%' } })
+        })
+      }
     }, root)
     return () => ctx.revert()
   }, [lang])
@@ -371,20 +388,28 @@ function About() {
   return (
     <section id="about" ref={root} className="relative overflow-hidden bg-ink px-4 pt-28 pb-40 sm:px-8 sm:pt-40 sm:pb-56">
       {/* big chrome objects that fly in from the screen edges while scrolling, like the reference */}
-      <div data-from="-1" className="about-obj pointer-events-none absolute top-24 left-[-2%] w-28 sm:top-32 sm:w-[17vw]">
-        <img src={img('el-ae.webp')} alt="" loading="lazy" className="floaty w-full drop-shadow-[0_20px_40px_rgba(122,77,255,0.35)]" style={{ ['--r' as string]: '-12deg' }} />
+      <div data-from="-1" className="about-obj pointer-events-none absolute hidden sm:block top-24 left-[-2%] w-28 sm:top-32 sm:w-[17vw]">
+        <img src={img('el-ae.webp')} alt="" loading="lazy" className="floaty w-full sm:drop-shadow-[0_20px_40px_rgba(122,77,255,0.35)]" style={{ ['--r' as string]: '-12deg' }} />
       </div>
-      <div data-from="1" className="about-obj pointer-events-none absolute top-20 right-[-3%] w-32 sm:top-28 sm:w-[19vw]">
-        <img src={img('el-3d.webp')} alt="" loading="lazy" className="floaty w-full drop-shadow-[0_20px_40px_rgba(122,77,255,0.35)]" style={{ ['--r' as string]: '10deg', ['--d' as string]: '8s' }} />
+      <div data-from="1" className="about-obj pointer-events-none absolute hidden sm:block top-20 right-[-3%] w-32 sm:top-28 sm:w-[19vw]">
+        <img src={img('el-3d.webp')} alt="" loading="lazy" className="floaty w-full sm:drop-shadow-[0_20px_40px_rgba(122,77,255,0.35)]" style={{ ['--r' as string]: '10deg', ['--d' as string]: '8s' }} />
       </div>
-      <div data-from="-1" className="about-obj pointer-events-none absolute top-[34%] left-[-4%] w-28 sm:w-[16vw]">
-        <img src={img('el-pen.webp')} alt="" loading="lazy" className="floaty w-full drop-shadow-[0_20px_40px_rgba(122,77,255,0.35)]" style={{ ['--r' as string]: '14deg', ['--d' as string]: '9s' }} />
+      <div data-from="-1" className="about-obj pointer-events-none absolute hidden sm:block top-[34%] left-[-4%] w-28 sm:w-[16vw]">
+        <img src={img('el-pen.webp')} alt="" loading="lazy" className="floaty w-full sm:drop-shadow-[0_20px_40px_rgba(122,77,255,0.35)]" style={{ ['--r' as string]: '14deg', ['--d' as string]: '9s' }} />
       </div>
-      <div data-from="1" className="about-obj pointer-events-none absolute top-[36%] right-[-4%] w-36 sm:w-[22vw]">
-        <img src={img('ace-pad.webp')} alt="" loading="lazy" className="floaty w-full drop-shadow-[0_20px_40px_rgba(122,77,255,0.35)]" style={{ ['--r' as string]: '-14deg', ['--d' as string]: '7s' }} />
+      <div data-from="1" className="about-obj pointer-events-none absolute hidden sm:block top-[36%] right-[-4%] w-36 sm:w-[22vw]">
+        <img src={img('ace-pad.webp')} alt="" loading="lazy" className="floaty w-full sm:drop-shadow-[0_20px_40px_rgba(122,77,255,0.35)]" style={{ ['--r' as string]: '-14deg', ['--d' as string]: '7s' }} />
       </div>
 
-      <div className="relative mx-auto max-w-[1100px] text-center">
+      {/* phones: two objects above the heading, two between the button and the stats */}
+      <div data-from="-1" className="about-obj-m pointer-events-none absolute top-14 left-3 w-24 sm:hidden">
+        <img src={img('el-ae.webp')} alt="" loading="lazy" className="w-full -rotate-12" />
+      </div>
+      <div data-from="1" className="about-obj-m pointer-events-none absolute top-16 right-2 w-28 sm:hidden">
+        <img src={img('el-3d.webp')} alt="" loading="lazy" className="w-full rotate-[10deg]" />
+      </div>
+
+      <div className="relative mx-auto max-w-[1100px] pt-20 text-center sm:pt-0">
         <h2 className="about-title outline-text font-display text-[clamp(2.6rem,10vw,10rem)] leading-none uppercase">
           <SplitChars text={t(ui.about.title)} />
         </h2>
@@ -401,7 +426,16 @@ function About() {
           {t(ui.hero.cta)} <span aria-hidden>•</span>
         </a>
 
-        <div className="mx-auto mt-24 grid max-w-[820px] grid-cols-3 border-y border-line">
+        <div className="pointer-events-none mt-12 flex items-center justify-between sm:hidden">
+          <div data-from="-1" className="about-obj-m w-32">
+            <img src={img('el-pen.webp')} alt="" loading="lazy" className="w-full rotate-[14deg]" />
+          </div>
+          <div data-from="1" className="about-obj-m w-40">
+            <img src={img('ace-pad.webp')} alt="" loading="lazy" className="w-full -rotate-12" />
+          </div>
+        </div>
+
+        <div className="mx-auto mt-10 grid max-w-[820px] grid-cols-3 border-y border-line sm:mt-24">
           {ui.about.stats.map((s, i) => (
             <div key={i} className={`py-6 ${i ? 'border-l border-line' : ''}`}>
               <div className="font-display text-5xl sm:text-7xl">
@@ -422,7 +456,7 @@ function About() {
           <div className="award flex-1 rounded-[1.75rem] border-[1.5px] border-white/60 p-6 text-left sm:p-8">
             <div className="font-display text-4xl">{t(ui.about.award.title)}</div>
             <p className="mt-2 text-sm font-semibold text-white/60 uppercase">{t(ui.about.award.sub)}</p>
-            <img src={img('violence.jpg')} alt="Violence" loading="lazy" className="mt-5 aspect-video w-full rounded-xl object-cover" />
+            <img src={img('violence.webp')} srcSet={`${img('violence-s.webp')} 640w, ${img('violence.webp')} 1200w`} sizes="(max-width: 640px) 90vw, 560px" alt="Violence" loading="lazy" className="mt-5 aspect-video w-full rounded-xl object-cover" />
             <p className="mt-4 text-xs text-white/40">{t(ui.about.award.note)}</p>
           </div>
         </div>
@@ -485,7 +519,10 @@ function Projects() {
         const next = cards[i + 1]
         if (!next) return
         // each card dims a little as the next one slides over it
-        gsap.to(card.firstElementChild, { scale: 0.97, filter: 'brightness(0.75)', ease: 'none', scrollTrigger: { trigger: next, start: 'top 80%', end: 'top 20%', scrub: true } })
+        const st = { trigger: next, start: 'top 80%', end: 'top 20%', scrub: true }
+        // a black layer fades in instead of a CSS filter, which is slow on phones
+        gsap.to(card.firstElementChild, { scale: 0.97, ease: 'none', scrollTrigger: st })
+        gsap.to(card.querySelector('.proj-dim'), { opacity: 0.4, ease: 'none', scrollTrigger: st })
       })
     }, root)
     return () => ctx.revert()
@@ -502,7 +539,8 @@ function Projects() {
           const pics = [ps[0], ps[1] ?? ps[0], ps[2] ?? ps[1] ?? ps[0]]
           return (
             <article key={c.id} className="proj-card sticky mb-[6vh]" style={{ top: `calc(9vh + ${i * 14}px)` }}>
-              <a href={`#/work/${c.id}`} className="group block origin-top overflow-hidden rounded-[1.75rem] border-[1.5px] border-white/70 bg-ink p-3 will-change-transform sm:rounded-[2.25rem] sm:p-5">
+              <a href={`#/work/${c.id}`} className="group relative block origin-top overflow-hidden rounded-[1.75rem] border-[1.5px] border-white/70 bg-ink p-3 will-change-transform sm:rounded-[2.25rem] sm:p-5">
+                <span className="proj-dim pointer-events-none absolute inset-0 z-10 bg-black opacity-0" />
                 <header className="flex items-center gap-3 px-1 pt-1 pb-4 sm:gap-5 sm:px-2 sm:pb-5">
                   <span className="font-display text-4xl leading-none sm:text-6xl">{String(i + 1).padStart(2, '0')}</span>
                   <div className="min-w-0 flex-1">
@@ -518,7 +556,7 @@ function Projects() {
                 <div className="grid w-full grid-cols-3 gap-2 sm:h-[62vh] sm:max-h-[620px] sm:grid-rows-2 sm:gap-3">
                   {pics.map((p, k) => (
                     <span key={k} className={k === 0 ? 'col-span-3 aspect-video overflow-hidden rounded-[1.25rem] sm:col-span-2 sm:row-span-2 sm:aspect-auto sm:h-full' : 'hidden overflow-hidden rounded-[1.25rem] sm:block'}>
-                      <img src={img(`${p.id}.jpg`)} alt={k === 0 ? t(c.title) : ''} loading="lazy" className="h-full w-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-105" />
+                      <img src={img(`${p.id}.webp`)} srcSet={`${img(`${p.id}-s.webp`)} 640w, ${img(`${p.id}.webp`)} 1200w`} sizes="(max-width: 640px) 90vw, 40vw" alt={k === 0 ? t(c.title) : ''} loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-105" />
                     </span>
                   ))}
                 </div>
@@ -577,7 +615,7 @@ function CategoryPage({ cat, onOpen }: { cat: Category; onOpen: (p: Project) => 
           {ps.map((p, i) => (
             <button key={p.id} onClick={() => onOpen(p)} className={`cat-item group block overflow-hidden rounded-[1.75rem] border-[1.5px] border-white/70 p-3 text-left sm:p-4 ${ps.length % 2 && i === 0 ? 'md:col-span-2' : ''}`}>
               <span className="block aspect-video overflow-hidden rounded-[1.25rem]">
-                <img src={img(`${p.id}.jpg`)} alt={t(p.title)} loading="lazy" className="h-full w-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-105" />
+                <img src={img(`${p.id}.webp`)} srcSet={`${img(`${p.id}-s.webp`)} 640w, ${img(`${p.id}.webp`)} 1200w`} sizes="(max-width: 640px) 95vw, 50vw" alt={t(p.title)} loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-105" />
               </span>
               <span className="flex items-center gap-4 px-1 pt-4 pb-1">
                 <span className="min-w-0 flex-1">
@@ -636,7 +674,7 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
             {t(ui.projects.close)} ✕
           </button>
         </div>
-        <img src={img(`${project.id}-full.jpg`)} alt={t(project.title)} className="mx-auto block w-full max-w-[1100px] px-3 pb-10 sm:px-8" />
+        <img src={img(`${project.id}-full.webp`)} alt={t(project.title)} className="mx-auto block w-full max-w-[1100px] px-3 pb-10 sm:px-8" />
       </div>
     </div>
   )
@@ -688,7 +726,7 @@ function Team() {
             </text>
           </svg>
           <div className="absolute inset-[20%] overflow-hidden rounded-full bg-[radial-gradient(circle_at_50%_40%,#7a4dff_0%,#2a0f4a_55%,#000_100%)]">
-            <img src={img('ace-bust.webp')} alt="Doston «Ace» Daminov" loading="lazy" className="absolute inset-x-0 bottom-0 mx-auto w-[96%] translate-x-[11%]" />
+            <img src={img('ace-bust.webp')} srcSet={`${img('ace-bust-s.webp')} 640w, ${img('ace-bust.webp')} 1000w`} sizes="(max-width: 640px) 80vw, 460px" alt="Doston «Ace» Daminov" loading="lazy" className="absolute inset-x-0 bottom-0 mx-auto w-[96%] translate-x-[11%]" />
           </div>
         </div>
       </div>
@@ -760,7 +798,7 @@ const ctx = gsap.context(() => {
     <footer id="contact" ref={root} className="relative z-30 -mt-24 px-2 sm:-mt-32 sm:px-3">
       <div className="ct-panel relative overflow-hidden rounded-[2rem] bg-paper px-5 pt-20 pb-40 text-black sm:rounded-[2.75rem] sm:px-14 sm:pt-28 sm:pb-52">
         {/* big chrome objects half off the panel edges, flying in on scroll like in About */}
-        <div data-from="-1" className="ct-obj pointer-events-none absolute bottom-14 left-[-8%] w-24 sm:bottom-[24%] sm:left-[-7%] sm:w-[16vw]">
+        <div data-from="-1" className="ct-obj pointer-events-none absolute hidden sm:block bottom-14 left-[-8%] w-24 sm:bottom-[24%] sm:left-[-7%] sm:w-[16vw]">
           <img src={img('el-3d.webp')} alt="" loading="lazy" className="floaty w-full" style={{ ['--r' as string]: '-12deg' }} />
         </div>
         <div data-from="1" className="ct-obj pointer-events-none absolute top-[-4%] right-[-3%] w-24 sm:right-[-2%] sm:w-[12vw]">
