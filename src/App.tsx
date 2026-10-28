@@ -708,7 +708,7 @@ function Contact() {
         <Star className="ct-shape floaty pointer-events-none absolute top-8 right-[4%] w-16 sm:w-24" color="#b9f43c" />
         <div className="relative mx-auto grid max-w-[1200px] gap-14 md:grid-cols-2 md:items-center">
           <div className="md:pl-10">
-            <h2 className="ct-title font-display text-[clamp(2.3rem,3.8vw,4.4rem)] leading-[0.92] uppercase">
+            <h2 className="ct-title font-display text-[clamp(2.1rem,3.6vw,4rem)] leading-[0.92] uppercase">
               {t(ui.contact.title)
                 .split(' ')
                 .map((w, i) => (

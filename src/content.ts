@@ -64,16 +64,16 @@ export const ui = {
     close: { uz: 'Yopish', en: 'Close' },
   },
   contact: {
-    title: { uz: "KELING, GAPLASHAMIZ", en: "LET'S GET IN TOUCH" },
+    title: { uz: "KELING, BIRGA ISHLAYMIZ", en: "LET'S WORK TOGETHER" },
     form: {
       name: { uz: 'Ismingiz', en: 'Your name' },
       email: { uz: 'Email', en: 'Email' },
-      message: { uz: 'Loyiha haqida qisqacha', en: 'Tell me about your project' },
+      message: { uz: "Loyiha, muddat va format haqida", en: 'Project, timeline and format' },
       send: { uz: 'Yuborish', en: 'Send' },
     },
     lead: {
-      uz: "Loyihangiz bormi? Yozing, birga muhokama qilamiz.",
-      en: "Have a project in mind? Drop me a line and let's talk.",
+      uz: "Loyihangiz haqida qisqacha yozing: g'oya, muddat va format. Javob beraman va ishni birga rejalashtiramiz.",
+      en: "Tell me about your project: the idea, timeline and format. I'll reply and we'll plan the work together.",
     },
     social: { uz: 'Ijtimoiy tarmoqlar', en: 'Social' },
     mail: { uz: 'Aloqa', en: 'Contact' },
