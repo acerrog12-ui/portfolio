@@ -345,7 +345,7 @@ function Clients() {
 }
 
 /* ---------------- TAF! STATUETTE ---------------- */
-// A rendered 360° turn of the statuette on black, with the purple glow baked in.
+// A rendered 360° turn of the statuette on black (no glow, Doston asked).
 // Screen blending drops the black so it sits on any dark background.
 // It only plays while on screen.
 function TafSpin({ className = '' }: { className?: string }) {
