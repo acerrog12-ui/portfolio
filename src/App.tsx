@@ -352,10 +352,16 @@ function About() {
         gsap.to(o, { v: end, duration: 1.6, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 90%' }, onUpdate: () => (el.textContent = String(Math.round(o.v))) })
       })
       gsap.from('.award', { y: 80, autoAlpha: 0, duration: 1.2, ease: 'expo.out', stagger: 0.15, scrollTrigger: { trigger: '.award', start: 'top 85%' } })
-      gsap.to('.parallax', {
-        yPercent: (i) => [-60, -30, -80, -45][i % 4],
-        ease: 'none',
-        scrollTrigger: { trigger: root.current, start: 'top bottom', end: 'bottom top', scrub: true },
+      // objects slide in from off-screen and grow as the section scrolls into view,
+      // then keep drifting up a little while it scrolls past
+      gsap.utils.toArray<HTMLElement>('.about-obj').forEach((el, i) => {
+        const side = Number(el.dataset.from)
+        gsap.fromTo(
+          el,
+          { xPercent: side * 140, yPercent: 40, scale: 0.55, rotate: side * 35 },
+          { xPercent: 0, yPercent: 0, scale: 1, rotate: 0, ease: 'power2.out', scrollTrigger: { trigger: root.current, start: 'top 95%', end: 'top 15%', scrub: 1 } },
+        )
+        gsap.to(el, { yPercent: -[50, 30, 70, 40][i % 4], ease: 'none', scrollTrigger: { trigger: root.current, start: 'top 15%', end: 'bottom top', scrub: true } })
       })
     }, root)
     return () => ctx.revert()
@@ -363,17 +369,18 @@ function About() {
 
   return (
     <section id="about" ref={root} className="relative overflow-hidden bg-ink px-4 pt-28 pb-40 sm:px-8 sm:pt-40 sm:pb-56">
-      <div className="parallax pointer-events-none absolute top-20 left-[5%] w-20 sm:w-36" style={{ ['--r' as string]: '-10deg' }}>
-        <img src={img('el-ae.webp')} alt="" loading="lazy" className="floaty w-full" />
+      {/* big chrome objects that fly in from the screen edges while scrolling, like the reference */}
+      <div data-from="-1" className="about-obj pointer-events-none absolute top-24 left-[-2%] w-28 sm:top-32 sm:w-[17vw]">
+        <img src={img('el-ae.webp')} alt="" loading="lazy" className="floaty w-full" style={{ ['--r' as string]: '-12deg' }} />
       </div>
-      <div className="parallax pointer-events-none absolute top-16 right-[6%] w-24 sm:w-44" style={{ ['--r' as string]: '8deg', ['--d' as string]: '8s' }}>
-        <img src={img('el-3d.webp')} alt="" loading="lazy" className="floaty w-full" />
+      <div data-from="1" className="about-obj pointer-events-none absolute top-20 right-[-3%] w-32 sm:top-28 sm:w-[19vw]">
+        <img src={img('el-3d.webp')} alt="" loading="lazy" className="floaty w-full" style={{ ['--r' as string]: '10deg', ['--d' as string]: '8s' }} />
       </div>
-      <div className="parallax pointer-events-none absolute top-[36%] left-[4%] w-20 sm:w-40" style={{ ['--r' as string]: '12deg', ['--d' as string]: '9s' }}>
-        <img src={img('el-pen.webp')} alt="" loading="lazy" className="floaty w-full" />
+      <div data-from="-1" className="about-obj pointer-events-none absolute top-[34%] left-[-4%] w-28 sm:w-[16vw]">
+        <img src={img('el-pen.webp')} alt="" loading="lazy" className="floaty w-full" style={{ ['--r' as string]: '14deg', ['--d' as string]: '9s' }} />
       </div>
-      <div className="parallax pointer-events-none absolute top-[48%] right-[2%] w-32 sm:right-[2%] sm:w-60" style={{ ['--r' as string]: '-14deg', ['--d' as string]: '7s' }}>
-        <img src={img('ace-pad.webp')} alt="" loading="lazy" className="floaty w-full drop-shadow-[0_20px_40px_rgba(122,77,255,0.35)]" />
+      <div data-from="1" className="about-obj pointer-events-none absolute top-[36%] right-[-4%] w-36 sm:w-[22vw]">
+        <img src={img('ace-pad.webp')} alt="" loading="lazy" className="floaty w-full drop-shadow-[0_20px_40px_rgba(122,77,255,0.35)]" style={{ ['--r' as string]: '-14deg', ['--d' as string]: '7s' }} />
       </div>
 
       <div className="relative mx-auto max-w-[1100px] text-center">
