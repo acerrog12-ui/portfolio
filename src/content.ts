@@ -175,4 +175,16 @@ export const categories: Category[] = [
   },
 ]
 
-export const clients = ['Pepsi', 'Agrobank', 'MKBANK', 'FIDE', 'UZSL', 'Bliss', 'Tasnif Group', 'Oltin Chinor', 'Chiroqchi']
+// Client marquee. To show a logo instead of the name, put the file in public/img/logos/
+// and write its file name in logo (any colors: the site turns it white).
+export const clients: { name: string; logo?: string }[] = [
+  { name: 'Pepsi' },
+  { name: 'Agrobank' },
+  { name: 'MKBANK' },
+  { name: 'FIDE' },
+  { name: 'UZSL' },
+  { name: 'Bliss' },
+  { name: 'Tasnif Group' },
+  { name: 'Oltin Chinor' },
+  { name: 'Chiroqchi' },
+]

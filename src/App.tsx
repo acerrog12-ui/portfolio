@@ -325,8 +325,8 @@ function Clients() {
       <div className="edge-fade flex overflow-hidden">
         <ul className="marquee flex shrink-0 items-center gap-14 pr-14 sm:gap-20 sm:pr-20" style={{ ['--speed' as string]: '35s' }}>
           {[...clients, ...clients].map((c, i) => (
-            <li key={i} className="font-display text-lg leading-none whitespace-nowrap text-white uppercase opacity-90 sm:text-2xl">
-              {c}
+            <li key={i} className="flex shrink-0 items-center font-display text-lg leading-none whitespace-nowrap text-white uppercase opacity-90 sm:text-2xl">
+              {c.logo ? <img src={img(`logos/${c.logo}`)} alt={c.name} className="h-7 w-auto max-w-[160px] object-contain brightness-0 invert sm:h-10 sm:max-w-[220px]" /> : c.name}
             </li>
           ))}
         </ul>
