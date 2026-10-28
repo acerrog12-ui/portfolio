@@ -158,7 +158,7 @@ function Clients() {
   const rows = [covers.slice(0, half), covers.slice(half)]
   return (
     <section aria-label="Clients" className="relative bg-ink py-10 sm:py-14">
-      <div className="flex overflow-hidden [mask-image:linear-gradient(90deg,transparent,#000_8%,#000_92%,transparent)]">
+      <div className="edge-fade flex overflow-hidden">
         <ul className="marquee flex shrink-0 items-center gap-14 pr-14 sm:gap-20 sm:pr-20" style={{ ['--speed' as string]: '35s' }}>
           {[...clients, ...clients].map((c, i) => (
             <li key={i} className="font-display text-lg leading-none whitespace-nowrap text-white uppercase opacity-90 sm:text-2xl">
@@ -171,8 +171,8 @@ function Clients() {
         {rows.map((r, ri) => (
           <div key={ri} className="flex overflow-hidden">
             <div className={`marquee flex shrink-0 gap-3 pr-3 sm:gap-4 sm:pr-4 ${ri ? 'marquee-reverse' : ''}`} style={{ ['--speed' as string]: ri ? '60s' : '50s' }}>
-              {[...r, ...r, ...r].map((id, i) => (
-                <img key={i} src={img(`${id}.jpg`)} alt="" loading="lazy" className="h-32 w-auto shrink-0 rounded-[1.25rem] object-cover sm:h-52" />
+              {[...r, ...r].map((id, i) => (
+                <img key={i} src={img(`${id}.jpg`)} alt="" width={370} height={208} className="h-32 w-[228px] shrink-0 rounded-[1.25rem] object-cover sm:h-52 sm:w-[370px]" />
               ))}
             </div>
           </div>
