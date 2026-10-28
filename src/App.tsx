@@ -344,6 +344,39 @@ function Clients() {
   )
 }
 
+/* ---------------- TAF! STATUETTE ---------------- */
+// A rendered 360° turn of the statuette on black, with the purple glow baked in.
+// Screen blending drops the black so it sits on any dark background.
+// It only plays while on screen.
+function TafSpin({ className = '' }: { className?: string }) {
+  const ref = useRef<HTMLVideoElement>(null)
+  useEffect(() => {
+    const v = ref.current
+    if (!v) return
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !reducedMotion()) v.play().catch(() => {})
+      else v.pause()
+    }, { rootMargin: '200px' })
+    io.observe(v)
+    return () => io.disconnect()
+  }, [])
+  return (
+    <video
+      ref={ref}
+      className={`pointer-events-none mix-blend-screen ${className}`}
+      poster={img('taf-spin-poster.webp')}
+      muted
+      loop
+      playsInline
+      preload="none"
+      aria-label="Tashkent Advertising Festival 2023"
+    >
+      <source src={img('taf-spin.mp4')} type="video/mp4" />
+      <source src={img('taf-spin.webm')} type="video/webm" />
+    </video>
+  )
+}
+
 /* ---------------- ABOUT ---------------- */
 function About() {
   const { t, lang } = useLang()
@@ -452,7 +485,7 @@ function About() {
         </div>
 
         <div className="mx-auto mt-28 flex max-w-[820px] sm:mt-40 flex-col items-center gap-8 sm:flex-row sm:items-stretch">
-          <img src={img('taf-trophy.webp')} alt="Tashkent Advertising Festival 2023" loading="lazy" className="award w-40 shrink-0 object-contain drop-shadow-[0_20px_40px_rgba(122,77,255,0.35)] sm:-ml-28 sm:w-56" />
+          <TafSpin className="award w-52 shrink-0 sm:-my-6 sm:-ml-36 sm:w-72" />
           <div className="award flex-1 rounded-[1.75rem] border-[1.5px] border-white/60 p-6 text-left sm:p-8">
             <div className="font-display text-4xl">{t(ui.about.award.title)}</div>
             <p className="mt-2 text-sm font-semibold text-white/60 uppercase">{t(ui.about.award.sub)}</p>
