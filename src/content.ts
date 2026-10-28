@@ -64,7 +64,7 @@ export const ui = {
     close: { uz: 'Yopish', en: 'Close' },
   },
   contact: {
-    title: { uz: "KELING, BIRGA ISHLAYMIZ", en: "LET'S WORK TOGETHER" },
+    title: { uz: "ISHLAYDIGAN BO'LIB KELING", en: "COME READY TO WORK" },
     form: {
       name: { uz: 'Ismingiz', en: 'Your name' },
       email: { uz: 'Email', en: 'Email' },

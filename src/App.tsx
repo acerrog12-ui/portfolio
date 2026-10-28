@@ -4,7 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Lenis from 'lenis'
 import { categories, clients, contacts, projects, services, team, ui, type Category, type Project } from './content'
 import { img, reducedMotion, SplitChars, useLang } from './lib'
-import { Flower, footerColors, footerShapes, Star } from './shapes'
+import { ChromeDefs, chromeFill, footerShapes } from './shapes'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -669,21 +669,28 @@ function Contact() {
   const root = useRef<HTMLElement>(null)
   useLayoutEffect(() => {
     if (reducedMotion()) return
-    const ctx = gsap.context(() => {
+const ctx = gsap.context(() => {
       gsap.from('.ct-panel', { y: 120, scale: 0.96, ease: 'none', scrollTrigger: { trigger: '.ct-panel', start: 'top bottom', end: 'top 40%', scrub: true } })
       gsap.from('.ct-title .char', { yPercent: 110, stagger: 0.03, duration: 1, ease: 'expo.out', scrollTrigger: { trigger: '.ct-title', start: 'top 85%' } })
       gsap.from('.ct-shape', { scale: 0, rotate: -40, duration: 1.4, ease: 'elastic.out(1,0.6)', stagger: 0.15, scrollTrigger: { trigger: '.ct-title', start: 'top 85%' } })
-      gsap.from('.foot-shape', {
-        y: 160,
-        rotate: () => gsap.utils.random(-90, 90),
-        stagger: 0.07,
-        duration: 1.2,
-        ease: 'back.out(1.6)',
-        scrollTrigger: { trigger: '.foot-shapes', start: 'top 98%' },
-      })
     }, root)
     return () => ctx.revert()
   }, [lang])
+
+  // the footer row sits at the very end of the page, so reveal it when it becomes visible
+  const footRow = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const row = footRow.current
+    if (!row) return
+    const io = new IntersectionObserver((es) => {
+      if (es.some((e) => e.isIntersecting)) {
+        row.classList.add('is-in')
+        io.disconnect()
+      }
+    })
+    io.observe(row)
+    return () => io.disconnect()
+  }, [])
 
   const socials = [
     { name: 'Telegram', href: contacts.telegram },
@@ -704,8 +711,12 @@ function Contact() {
   return (
     <footer id="contact" ref={root} className="relative z-30 -mt-24 px-2 sm:-mt-32 sm:px-3">
       <div className="ct-panel relative overflow-hidden rounded-[2rem] bg-paper px-5 pt-20 pb-40 text-black sm:rounded-[2.75rem] sm:px-14 sm:pt-28 sm:pb-52">
-        <Flower className="ct-shape pointer-events-none absolute bottom-28 left-[3%] w-20 sm:bottom-36 sm:w-32" color="#7a4dff" />
-        <Star className="ct-shape floaty pointer-events-none absolute top-8 right-[4%] w-16 sm:w-24" color="#b9f43c" />
+        <div className="ct-shape pointer-events-none absolute bottom-28 left-[1.5%] w-20 sm:bottom-40 sm:w-28">
+          <img src={img('el-3d.webp')} alt="" loading="lazy" className="floaty w-full drop-shadow-[0_18px_30px_rgba(0,0,0,0.25)]" style={{ ['--r' as string]: '-10deg' }} />
+        </div>
+        <div className="ct-shape pointer-events-none absolute top-8 right-[3%] w-20 sm:w-32">
+          <img src={img('el-pen.webp')} alt="" loading="lazy" className="floaty w-full drop-shadow-[0_18px_30px_rgba(0,0,0,0.25)]" style={{ ['--r' as string]: '14deg', ['--d' as string]: '8s' }} />
+        </div>
         <div className="relative mx-auto grid max-w-[1200px] gap-14 md:grid-cols-2 md:items-center">
           <div className="md:pl-10">
             <h2 className="ct-title font-display text-[clamp(2.1rem,3.6vw,4rem)] leading-[0.92] uppercase">
@@ -762,10 +773,11 @@ function Contact() {
             </div>
           </div>
 
-          <div className="foot-shapes mt-12 grid grid-cols-8 gap-1.5 sm:mt-16 sm:gap-3">
+          <ChromeDefs />
+          <div ref={footRow} className="foot-shapes mt-12 grid grid-cols-8 gap-1.5 sm:mt-16 sm:gap-3">
             {footerShapes.map((S, i) => (
-              <div key={i} className="foot-shape aspect-square transition-transform duration-500 hover:-rotate-12 hover:scale-110">
-                {S(footerColors[i])}
+              <div key={i} className="foot-shape aspect-square" style={{ ['--i' as string]: i, ['--fr' as string]: `${[-40, 60, -80, 30, -60, 80, -30, 50][i]}deg` }}>
+                {S(chromeFill)}
               </div>
             ))}
           </div>

@@ -103,6 +103,23 @@ export const Cube = ({ className }: P) => {
   )
 }
 
+// Shared chrome gradient for the footer row (rendered once, referenced by id)
+export const chromeFill = 'url(#chromeFoot)'
+export const ChromeDefs = () => (
+  <svg width="0" height="0" className="absolute" aria-hidden>
+    <defs>
+      <linearGradient id="chromeFoot" x1="0" y1="0" x2="0.4" y2="1">
+        <stop offset="0" stopColor="#ffffff" />
+        <stop offset="0.25" stopColor="#d7cdf2" />
+        <stop offset="0.45" stopColor="#5b5670" />
+        <stop offset="0.55" stopColor="#f6f3ff" />
+        <stop offset="0.78" stopColor="#a49cc0" />
+        <stop offset="1" stopColor="#2b2838" />
+      </linearGradient>
+    </defs>
+  </svg>
+)
+
 // Footer row shapes (flat, bold, like the reference)
 export const footerShapes = [
   (c: string) => <svg viewBox="0 0 100 100"><path d="M0 0h40v40H0zM60 0h40v40H60zM0 60h40v40H0zM60 60h40v40H60z" fill={c} /></svg>,
