@@ -72,8 +72,8 @@ export const ui = {
       send: { uz: 'Yuborish', en: 'Send' },
     },
     lead: {
-      uz: "Loyihangiz haqida qisqacha yozing: g'oya, muddat va format. Javob beraman va ishni birga rejalashtiramiz. Tanishlar orqali kelgan mijozlarga chegirma bor 😉",
-      en: "Tell me about your project: the idea, timeline and format. I'll reply and we'll plan the work together. Referred by a friend? You get a discount 😉",
+      uz: "Loyihangiz haqida qisqacha yozing: g'oya, muddat va format. Javob beraman va ishni birga rejalashtiramiz. Begona emas ekansiz, kelishtirib beramiz narxlarni 😉",
+      en: "Tell me about your project: the idea, timeline and format. I'll reply and we'll plan the work together. Not a stranger? We'll work out a friendly price 😉",
     },
     social: { uz: 'Ijtimoiy tarmoqlar', en: 'Social' },
     mail: { uz: 'Aloqa', en: 'Contact' },
