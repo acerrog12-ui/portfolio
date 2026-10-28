@@ -7,11 +7,12 @@ const LangCtx = createContext<Ctx>({ lang: 'uz', setLang: () => {}, t: (v) => v.
 function initialLang(): Lang {
   try {
     const saved = localStorage.getItem('lang')
-    if (saved === 'uz' || saved === 'en') return saved
+    if (saved === 'uz' || saved === 'ru' || saved === 'en') return saved
   } catch {
     /* storage blocked */
   }
-  return navigator.language?.startsWith('uz') || navigator.language?.startsWith('ru') ? 'uz' : 'en'
+  const nl = navigator.language || ''
+  return nl.startsWith('ru') ? 'ru' : nl.startsWith('uz') ? 'uz' : 'en'
 }
 
 export function LangProvider({ children }: { children: ReactNode }) {

@@ -1,7 +1,7 @@
-// All site text lives here, in both languages.
+// All site text lives here, in all three languages (uz, ru, en).
 // To change a word on the site, edit it here.
 
-export type Lang = 'uz' | 'en'
+export type Lang = 'uz' | 'ru' | 'en'
 type T = Record<Lang, string>
 
 export const contacts = {
@@ -13,105 +13,106 @@ export const contacts = {
 
 export const ui = {
   nav: {
-    about: { uz: 'Men haqimda', en: 'About' },
-    services: { uz: 'Xizmatlar', en: 'Services' },
-    projects: { uz: 'Loyihalar', en: 'Projects' },
-    contact: { uz: 'Aloqa', en: 'Contact' },
+    about: { uz: 'Men haqimda', ru: "Обо мне", en: 'About' },
+    services: { uz: 'Xizmatlar', ru: "Услуги", en: 'Services' },
+    projects: { uz: 'Loyihalar', ru: "Проекты", en: 'Projects' },
+    contact: { uz: 'Aloqa', ru: "Контакты", en: 'Contact' },
   },
   hero: {
-    // Headline stays in English in both languages: it's the brand line.
-    hi: { uz: 'ACE OF', en: 'ACE OF' },
-    name: { uz: 'VISUALS', en: 'VISUALS' },
-    kicker: { uz: 'Doston «Ace» Daminov · Art director va dizayner', en: 'Doston «Ace» Daminov · Art director & designer' },
+    // Headline stays in English in all three languages (uz, ru, en): it's the brand line.
+    hi: { uz: 'ACE OF', ru: "ACE OF", en: 'ACE OF' },
+    name: { uz: 'VISUALS', ru: "VISUALS", en: 'VISUALS' },
+    kicker: { uz: 'Doston «Ace» Daminov · Art director va dizayner', ru: "Достон «Ace» Даминов · Арт-директор и дизайнер", en: 'Doston «Ace» Daminov · Art director & designer' },
     tagline: {
       uz: "Brendlar uçun vizual olamlar quraman: kampaniyadan sahnagaça, ğoyadan 3Dʼgaça ✦",
-      en: 'I build visual worlds for brands: from campaign to stage, from idea to 3D ✦',
+      ru: "Создаю визуальные миры для брендов: от кампании до сцены, от идеи до 3D ✦", en: 'I build visual worlds for brands: from campaign to stage, from idea to 3D ✦',
     },
-    cta: { uz: "Boğlaniş", en: 'Contact me' },
-    scroll: { uz: 'Pastga suring', en: 'Scroll down' },
+    cta: { uz: "Boğlaniş", ru: "Связаться", en: 'Contact me' },
+    scroll: { uz: 'Pastga suring', ru: "Листайте вниз", en: 'Scroll down' },
   },
   about: {
-    title: { uz: 'MEN HAQIMDA', en: 'ABOUT ME' },
+    title: { uz: 'MEN HAQIMDA', ru: "ОБО МНЕ", en: 'ABOUT ME' },
     text: {
       uz: "5 yildan ortiq tajribaga ega dizaynerman, şundan 2 yildan ortiği lead designer sifatida. Reklama kampaniyalari, brending, 3D vizuallar va katta tadbirlar sahnasi ustida işlayman. Pepsi, Agrobank, FIDE va Ōzbekiston Superligasi kabi brendlar bilan işlaganman. Keling, birga ajoyib narsa yaratamiz!",
-      en: "I'm a designer with 5+ years of experience, 2+ of them as a lead designer. I work on ad campaigns, branding, 3D visuals and stage design for large events, for brands like Pepsi, Agrobank, FIDE and the Uzbekistan Superleague. Let's create something amazing together!",
+      ru: "Я дизайнер с опытом более 5 лет, из них больше 2 лет — в роли ведущего дизайнера. Работаю над рекламными кампаниями, брендингом, 3D-визуалами и сценографией крупных мероприятий. Среди брендов, с которыми я работал, — Pepsi, Agrobank, FIDE и Суперлига Узбекистана. Давайте создадим что-то крутое вместе!", en: "I'm a designer with 5+ years of experience, 2+ of them as a lead designer. I work on ad campaigns, branding, 3D visuals and stage design for large events, for brands like Pepsi, Agrobank, FIDE and the Uzbekistan Superleague. Let's create something amazing together!",
     },
     stats: [
-      { value: 5, suffix: '+', label: { uz: 'Tajriba', en: 'Experience' }, unit: { uz: 'yil', en: 'years' } },
-      { value: 2, suffix: '+', label: { uz: 'Lead dizayner', en: 'Lead designer' }, unit: { uz: 'yil', en: 'years' } },
-      { value: 23, suffix: '', label: { uz: 'Yoş', en: 'Age' }, unit: { uz: 'yoş', en: 'y/o' } },
+      { value: 5, suffix: '+', label: { uz: 'Tajriba', ru: "Опыт", en: 'Experience' }, unit: { uz: 'yil', ru: "лет", en: 'years' } },
+      { value: 2, suffix: '+', label: { uz: 'Lead dizayner', ru: "Ведущий дизайнер", en: 'Lead designer' }, unit: { uz: 'yil', ru: "года", en: 'years' } },
+      { value: 23, suffix: '', label: { uz: 'Yoş', ru: "Возраст", en: 'Age' }, unit: { uz: 'yoş', ru: "года", en: 'y/o' } },
     ],
     award: {
-      title: { uz: 'TAF!23', en: 'TAF!23' },
+      title: { uz: 'TAF!23', ru: "TAF!23", en: 'TAF!23' },
       sub: {
         uz: 'Tashkent Advertising Festival 2023. Teplo Market tadbiri uçun immersiv kōrgazma kontenti.',
-        en: 'Tashkent Advertising Festival 2023. Immersive exhibition content for the Teplo Market event.',
+        ru: "Tashkent Advertising Festival 2023. Иммерсивный выставочный контент для мероприятия Teplo Market.", en: 'Tashkent Advertising Festival 2023. Immersive exhibition content for the Teplo Market event.',
       },
-      note: { uz: 'Tasnif Group bilan hamkorlikda', en: 'In collaboration with Tasnif Group' },
+      note: { uz: 'Tasnif Group bilan hamkorlikda', ru: "Совместно с Tasnif Group", en: 'In collaboration with Tasnif Group' },
     },
   },
   services: {
-    title: { uz: 'XIZMATLAR', en: 'SERVICES' },
+    title: { uz: 'XIZMATLAR', ru: "УСЛУГИ", en: 'SERVICES' },
   },
   projects: {
-    title: { uz: 'LOYIHALAR', en: 'PROJECTS' },
-    client: { uz: 'Mijoz', en: 'Client' },
-    view: { uz: "Kōriş", en: 'View project' },
-    all: { uz: "Barça işlar Behanceʼda", en: 'All works on Behance' },
-    open: { uz: "Bōlimga ōtiş", en: 'Open' },
-    count: { uz: 'ta loyiha', en: 'projects' },
-    back: { uz: 'Orqaga', en: 'Back' },
-    close: { uz: 'Yopiş', en: 'Close' },
+    title: { uz: 'LOYIHALAR', ru: "ПРОЕКТЫ", en: 'PROJECTS' },
+    client: { uz: 'Mijoz', ru: "Клиент", en: 'Client' },
+    view: { uz: "Kōriş", ru: "Смотреть", en: 'View project' },
+    all: { uz: "Barça işlar Behanceʼda", ru: "Все работы на Behance", en: 'All works on Behance' },
+    open: { uz: "Bōlimga ōtiş", ru: "Открыть раздел", en: 'Open' },
+    count: { uz: 'ta loyiha', ru: "проекта", en: 'projects' },
+    back: { uz: 'Orqaga', ru: "Назад", en: 'Back' },
+    close: { uz: 'Yopiş', ru: "Закрыть", en: 'Close' },
   },
   contact: {
-    title: { uz: "IŞLAYDIGAN BŌLIB KELING", en: "COME READY TO WORK" },
+    title: { uz: "IŞLAYDIGAN BŌLIB KELING", ru: "ПРИХОДИТЕ ГОТОВЫМИ К\u00a0РАБОТЕ", en: "COME READY TO WORK" },
     form: {
-      name: { uz: 'Ismingiz', en: 'Your name' },
-      email: { uz: 'Email', en: 'Email' },
-      message: { uz: "Loyiha, muddat va format haqida", en: 'Project, timeline and format' },
-      send: { uz: 'Yuboriş', en: 'Send' },
+      name: { uz: 'Ismingiz', ru: "Ваше имя", en: 'Your name' },
+      email: { uz: 'Email', ru: "Email", en: 'Email' },
+      message: { uz: "Loyiha, muddat va format haqida", ru: "Проект, сроки и формат", en: 'Project, timeline and format' },
+      send: { uz: 'Yuboriş', ru: "Отправить", en: 'Send' },
     },
     lead: {
       uz: "Loyihangiz haqida qisqaça yozing: ğoya, muddat va format. Javob beraman va işni birga rejalaştiramiz. Begona emas ekansiz, keliştirib beramiz narxlarni 😉",
-      en: "Tell me about your project: the idea, timeline and format. I'll reply and we'll plan the work together. Not a stranger? We'll work out a friendly price 😉",
+      ru: "Коротко опишите проект: идею, сроки и формат. Я отвечу, и мы вместе спланируем работу. Для своих — договоримся о цене 😉", en: "Tell me about your project: the idea, timeline and format. I'll reply and we'll plan the work together. Not a stranger? We'll work out a friendly price 😉",
     },
-    social: { uz: 'Ijtimoiy tarmoqlar', en: 'Social' },
-    mail: { uz: 'Aloqa', en: 'Contact' },
-    rights: { uz: 'Barça huquqlar himoyalangan', en: 'All rights reserved' },
+    social: { uz: 'Ijtimoiy tarmoqlar', ru: "Соцсети", en: 'Social' },
+    mail: { uz: 'Aloqa', ru: "Контакты", en: 'Contact' },
+    rights: { uz: 'Barça huquqlar himoyalangan', ru: "Все права защищены", en: 'All rights reserved' },
   },
 } satisfies Record<string, unknown>
 
-const svc = (uz: string, en: string, tuz: string, ten: string) => ({ title: { uz, en }, text: { uz: tuz, en: ten } })
+// svc(title uz, title en, text uz, text en, title ru, text ru)
+const svc = (uz: string, en: string, tuz: string, ten: string, ru: string, tru: string) => ({ title: { uz, ru, en }, text: { uz: tuz, ru: tru, en: ten } })
 
 export const services: { title: T; text: T }[] = [
-  svc('Art direction', 'Art direction', "3D va reklama kampaniyalarini ğoyadan tayyor natijagaça boşqariş.", '3D and ad campaigns led from idea to final delivery.'),
-  svc('Key visual va kampaniyalar', 'Key visuals & campaigns', 'Festival, konsert va aksiyalar uçun asosiy vizual va uning barça formatlari.', 'Key visuals for festivals, shows and promos, adapted to every format.'),
-  svc('Brending va brendbuk', 'Branding & brand book', "Brendning tōliq vizual tili: ranglar, şriftlar, qoidalar.", 'A complete visual language: colors, type and rules.'),
-  svc('Logotip dizayni', 'Logo design', 'Esda qoladigan, har qanday ōlçamda işlaydigan logotiplar.', 'Memorable logos that work at any size.'),
-  svc('Sport va klub identifikatsiyasi', 'Sports & club identity', "Ligalar, klublar va sport tadbirlari uçun brending. Masalan, Ōzbekiston Superligasi.", 'Branding for leagues, clubs and sports events, like the Uzbekistan Superleague.'),
-  svc('SMM dizayn', 'Social media design', 'Ijtimoiy tarmoqlar uçun post, story va kampaniya dizayni.', 'Posts, stories and campaign content for social media.'),
-  svc('Motion dizayn va animatsiya', 'Motion design & animation', 'Logotip animatsiyasi, reklama roliklari va LED ekran kontenti.', 'Logo animation, ad spots and LED screen content.'),
-  svc('Poligrafiya', 'Print design', 'Afişa, billbord, flayer, bannerlar va boşqa bosma materiallar.', 'Posters, billboards, flyers, banners and other print.'),
-  svc('Qadoq dizayni', 'Packaging design', 'Javonda ajralib turadigan qadoqlar.', 'Packaging that stands out on the shelf.'),
-  svc('Illyustratsiya', 'Illustration', 'Brend va kampaniyalar uçun noyob illyustratsiyalar.', 'Original illustrations for brands and campaigns.'),
-  svc('Prezentatsiya dizayni', 'Presentation design', "Investor, brend va tadbirlar uçun taʼsirli prezentatsiyalar.", 'Pitch, brand and event decks that make an impact.'),
+  svc('Art direction', 'Art direction', "3D va reklama kampaniyalarini ğoyadan tayyor natijagaça boşqariş.", '3D and ad campaigns led from idea to final delivery.', "Арт-дирекшн", "Руковожу 3D- и рекламными кампаниями от идеи до готового результата."),
+  svc('Key visual va kampaniyalar', 'Key visuals & campaigns', 'Festival, konsert va aksiyalar uçun asosiy vizual va uning barça formatlari.', 'Key visuals for festivals, shows and promos, adapted to every format.', "Key visual и кампании", "Ключевой визуал для фестивалей, концертов и промоакций и все его адаптации."),
+  svc('Brending va brendbuk', 'Branding & brand book', "Brendning tōliq vizual tili: ranglar, şriftlar, qoidalar.", 'A complete visual language: colors, type and rules.', "Брендинг и брендбук", "Полный визуальный язык бренда: цвета, шрифты, правила."),
+  svc('Logotip dizayni', 'Logo design', 'Esda qoladigan, har qanday ōlçamda işlaydigan logotiplar.', 'Memorable logos that work at any size.', "Дизайн логотипа", "Запоминающиеся логотипы, которые работают в любом размере."),
+  svc('Sport va klub identifikatsiyasi', 'Sports & club identity', "Ligalar, klublar va sport tadbirlari uçun brending. Masalan, Ōzbekiston Superligasi.", 'Branding for leagues, clubs and sports events, like the Uzbekistan Superleague.', "Спортивная айдентика", "Брендинг для лиг, клубов и спортивных событий, например Суперлиги Узбекистана."),
+  svc('SMM dizayn', 'Social media design', 'Ijtimoiy tarmoqlar uçun post, story va kampaniya dizayni.', 'Posts, stories and campaign content for social media.', "SMM-дизайн", "Посты, сторис и кампании для соцсетей."),
+  svc('Motion dizayn va animatsiya', 'Motion design & animation', 'Logotip animatsiyasi, reklama roliklari va LED ekran kontenti.', 'Logo animation, ad spots and LED screen content.', "Моушн-дизайн и анимация", "Анимация логотипов, рекламные ролики и контент для LED-экранов."),
+  svc('Poligrafiya', 'Print design', 'Afişa, billbord, flayer, bannerlar va boşqa bosma materiallar.', 'Posters, billboards, flyers, banners and other print.', "Полиграфия", "Афиши, билборды, флаеры, баннеры и другая печатная продукция."),
+  svc('Qadoq dizayni', 'Packaging design', 'Javonda ajralib turadigan qadoqlar.', 'Packaging that stands out on the shelf.', "Дизайн упаковки", "Упаковка, которая выделяется на полке."),
+  svc('Illyustratsiya', 'Illustration', 'Brend va kampaniyalar uçun noyob illyustratsiyalar.', 'Original illustrations for brands and campaigns.', "Иллюстрация", "Авторские иллюстрации для брендов и кампаний."),
+  svc('Prezentatsiya dizayni', 'Presentation design', "Investor, brend va tadbirlar uçun taʼsirli prezentatsiyalar.", 'Pitch, brand and event decks that make an impact.', "Дизайн презентаций", "Сильные презентации для инвесторов, брендов и мероприятий."),
 ]
 
 // "Big projects" block: Doston leads a team across these directions.
 export const team = {
-  title: { uz: 'KATTA LOYIHALAR', en: 'BIG PROJECTS' },
+  title: { uz: 'KATTA LOYIHALAR', ru: "БОЛЬШИЕ ПРОЕКТЫ", en: 'BIG PROJECTS' },
   lead: {
     uz: "Bu mening şaxsiy portfoliom, lekin har bir yōnalişda ōz jamoam bor. Şuning uçun istalgan hajmdagi loyihani, ğoyadan to sahnagaça, tōliq olib çiqa olamiz.",
-    en: "This is my personal portfolio, but I also lead a team with specialists in every direction. That means we can take on a project of any size and deliver it end to end, from idea to stage.",
+    ru: "Это моё личное портфолио, но в каждом направлении у меня есть своя команда. Поэтому мы берём проекты любого масштаба и ведём их полностью — от идеи до сцены.", en: "This is my personal portfolio, but I also lead a team with specialists in every direction. That means we can take on a project of any size and deliver it end to end, from idea to stage.",
   },
-  cta: { uz: 'Loyihani muhokama qiliş', en: "Let's discuss your project" },
+  cta: { uz: 'Loyihani muhokama qiliş', ru: "Обсудить проект", en: "Let's discuss your project" },
   directions: [
-    { uz: 'Art direction', en: 'Art direction' },
-    { uz: '3D dizayn', en: '3D design' },
-    { uz: 'Motion va animatsiya', en: 'Motion & animation' },
-    { uz: 'Videografiya', en: 'Videography' },
-    { uz: 'Event va sahna dizayni', en: 'Event & stage design' },
-    { uz: 'Brending', en: 'Branding' },
+    { uz: 'Art direction', ru: "Арт-дирекшн", en: 'Art direction' },
+    { uz: '3D dizayn', ru: "3D-дизайн", en: '3D design' },
+    { uz: 'Motion va animatsiya', ru: "Моушн и анимация", en: 'Motion & animation' },
+    { uz: 'Videografiya', ru: "Видеосъёмка", en: 'Videography' },
+    { uz: 'Event va sahna dizayni', ru: "Ивент и сценография", en: 'Event & stage design' },
+    { uz: 'Brending', ru: "Брендинг", en: 'Branding' },
   ] as T[],
 }
 
@@ -125,19 +126,19 @@ export type Project = {
 
 // Order = order on the site. Images: public/img/<id>.jpg (cover) and <id>-full.jpg (full layout).
 export const projects: Project[] = [
-  { id: 'pepsi', client: 'Pepsi', title: { uz: 'Pepsi Lazzatli Fest', en: 'Pepsi Lazzatli Fest' }, tags: { uz: 'Key visual · Festival', en: 'Key visual · Festival' } },
-  { id: 'chempion', client: 'Mirshakar Fayzullayev', title: { uz: 'Çempion şousi', en: 'Chempion show' }, tags: { uz: 'Key visual · Konsert', en: 'Key visual · Concert' } },
-  { id: 'agrobank', client: 'Agrobank', title: { uz: 'Ipoteka kampaniyasi', en: 'Mortgage campaign' }, tags: { uz: '3D · Reklama', en: '3D · Advertising' } },
-  { id: 'fide', client: 'FIDE', title: { uz: 'Rapid va blits bōyiça jahon çempionati', en: 'World Rapid & Blitz Championships' }, tags: { uz: 'Event · Key visual', en: 'Event · Key visual' }, year: '2023' },
-  { id: 'istedodlar-zamini', client: 'Yoshlar harakati', title: { uz: "Ōzbekiston — Isteʼdodlar zamini", en: "Uzbekistan — Land of Talents" }, tags: { uz: 'Sahna dizayni', en: 'Stage design' }, year: '2025' },
-  { id: 'superleague', client: 'UZSL', title: { uz: "Ōzbekiston Superligasi", en: 'Uzbekistan Superleague' }, tags: { uz: 'Brending · Sport', en: 'Branding · Sports' } },
-  { id: 'uzsl-awards', client: 'UZSL', title: { uz: "Yilning eng zōrlari", en: 'Best of the Year awards' }, tags: { uz: 'Sport · SMM', en: 'Sports · Social' } },
-  { id: 'chiroqchi', client: 'Chiroqchi', title: { uz: 'Çiroqçi tumani brendi', en: 'Chiroqchi district identity' }, tags: { uz: 'Brending · Şahar', en: 'Branding · Place' } },
-  { id: 'amir-temur', client: "O'zbekistondagi Islom sivilizatsiyasi markazi", title: { uz: 'Sohibqiron Amir Temur', en: 'Sohibqiron Amir Temur' }, tags: { uz: 'Vizual · Kōrgazma', en: 'Visuals · Exhibition' } },
-  { id: 'violence', client: 'Tasnif Group', title: { uz: 'Violence kōrgazmasi', en: 'Violence exhibition' }, tags: { uz: 'Immersiv · 3D mapping', en: 'Immersive · 3D mapping' }, year: '2023' },
-  { id: 'oltin-chinor', client: 'Oltin Chinor', title: { uz: 'Oltin Çinor milliy mukofoti', en: 'Oltin Chinor national award' }, tags: { uz: 'Sahna dizayni', en: 'Stage design' }, year: '2024' },
-  { id: 'mkbank', client: 'MKBANK', title: { uz: 'Omonat kampaniyasi', en: 'Deposit campaign' }, tags: { uz: '3D · Reklama', en: '3D · Advertising' } },
-  { id: 'bliss', client: 'Bliss', title: { uz: 'BAAga sayohat aksiyasi', en: 'Trip to the UAE promo' }, tags: { uz: 'Key visual · Aksiya', en: 'Key visual · Promo' } },
+  { id: 'pepsi', client: 'Pepsi', title: { uz: 'Pepsi Lazzatli Fest', ru: "Pepsi Lazzatli Fest", en: 'Pepsi Lazzatli Fest' }, tags: { uz: 'Key visual · Festival', ru: "Key visual · Фестиваль", en: 'Key visual · Festival' } },
+  { id: 'chempion', client: 'Mirshakar Fayzullayev', title: { uz: 'Çempion şousi', ru: "Шоу «Чемпион»", en: 'Chempion show' }, tags: { uz: 'Key visual · Konsert', ru: "Key visual · Концерт", en: 'Key visual · Concert' } },
+  { id: 'agrobank', client: 'Agrobank', title: { uz: 'Ipoteka kampaniyasi', ru: "Ипотечная кампания", en: 'Mortgage campaign' }, tags: { uz: '3D · Reklama', ru: "3D · Реклама", en: '3D · Advertising' } },
+  { id: 'fide', client: 'FIDE', title: { uz: 'Rapid va blits bōyiça jahon çempionati', ru: "Чемпионат мира по рапиду и блицу", en: 'World Rapid & Blitz Championships' }, tags: { uz: 'Event · Key visual', ru: "Ивент · Key visual", en: 'Event · Key visual' }, year: '2023' },
+  { id: 'istedodlar-zamini', client: 'Yoshlar harakati', title: { uz: "Ōzbekiston — Isteʼdodlar zamini", ru: "Узбекистан — земля талантов", en: "Uzbekistan — Land of Talents" }, tags: { uz: 'Sahna dizayni', ru: "Сценография", en: 'Stage design' }, year: '2025' },
+  { id: 'superleague', client: 'UZSL', title: { uz: "Ōzbekiston Superligasi", ru: "Суперлига Узбекистана", en: 'Uzbekistan Superleague' }, tags: { uz: 'Brending · Sport', ru: "Брендинг · Спорт", en: 'Branding · Sports' } },
+  { id: 'uzsl-awards', client: 'UZSL', title: { uz: "Yilning eng zōrlari", ru: "Лучшие игроки года", en: 'Best of the Year awards' }, tags: { uz: 'Sport · SMM', ru: "Спорт · SMM", en: 'Sports · Social' } },
+  { id: 'chiroqchi', client: 'Chiroqchi', title: { uz: 'Çiroqçi tumani brendi', ru: "Бренд Чиракчинского района", en: 'Chiroqchi district identity' }, tags: { uz: 'Brending · Şahar', ru: "Брендинг · Территория", en: 'Branding · Place' } },
+  { id: 'amir-temur', client: "O'zbekistondagi Islom sivilizatsiyasi markazi", title: { uz: 'Sohibqiron Amir Temur', ru: "Сохибкиран Амир Темур", en: 'Sohibqiron Amir Temur' }, tags: { uz: 'Vizual · Kōrgazma', ru: "Визуалы · Выставка", en: 'Visuals · Exhibition' } },
+  { id: 'violence', client: 'Tasnif Group', title: { uz: 'Violence kōrgazmasi', ru: "Выставка Violence", en: 'Violence exhibition' }, tags: { uz: 'Immersiv · 3D mapping', ru: "Иммерсив · 3D-мэппинг", en: 'Immersive · 3D mapping' }, year: '2023' },
+  { id: 'oltin-chinor', client: 'Oltin Chinor', title: { uz: 'Oltin Çinor milliy mukofoti', ru: "Национальная премия «Олтин Чинор»", en: 'Oltin Chinor national award' }, tags: { uz: 'Sahna dizayni', ru: "Сценография", en: 'Stage design' }, year: '2024' },
+  { id: 'mkbank', client: 'MKBANK', title: { uz: 'Omonat kampaniyasi', ru: "Кампания по вкладам", en: 'Deposit campaign' }, tags: { uz: '3D · Reklama', ru: "3D · Реклама", en: '3D · Advertising' } },
+  { id: 'bliss', client: 'Bliss', title: { uz: 'BAAga sayohat aksiyasi', ru: "Акция «Поездка в ОАЭ»", en: 'Trip to the UAE promo' }, tags: { uz: 'Key visual · Aksiya', ru: "Key visual · Промо", en: 'Key visual · Promo' } },
 ]
 
 // Work directions shown as big cards in the Projects section.
@@ -147,26 +148,26 @@ export type Category = { id: string; title: T; text: T; projects: string[] }
 export const categories: Category[] = [
   {
     id: 'key-visual',
-    title: { uz: 'Key visual va kampaniyalar', en: 'Key visuals & campaigns' },
-    text: { uz: 'Festival, konsert va aksiyalar uçun asosiy vizuallar', en: 'Key visuals for festivals, shows and promos' },
+    title: { uz: 'Key visual va kampaniyalar', ru: "Key visual и кампании", en: 'Key visuals & campaigns' },
+    text: { uz: 'Festival, konsert va aksiyalar uçun asosiy vizuallar', ru: "Ключевые визуалы для фестивалей, концертов и промоакций", en: 'Key visuals for festivals, shows and promos' },
     projects: ['pepsi', 'chempion', 'bliss', 'uzsl-awards'],
   },
   {
     id: '3d',
-    title: { uz: '3D va reklama', en: '3D & advertising' },
-    text: { uz: 'Banklar va brendlar uçun 3D reklama hamda immersiv kontent', en: '3D ads and immersive content for banks and brands' },
+    title: { uz: '3D va reklama', ru: "3D и реклама", en: '3D & advertising' },
+    text: { uz: 'Banklar va brendlar uçun 3D reklama hamda immersiv kontent', ru: "3D-реклама и иммерсивный контент для банков и брендов", en: '3D ads and immersive content for banks and brands' },
     projects: ['agrobank', 'mkbank', 'violence'],
   },
   {
     id: 'event',
-    title: { uz: 'Event va sahna dizayni', en: 'Event & stage design' },
-    text: { uz: "Katta tadbirlar uçun sahna, ekran va kōrgazma dizayni", en: 'Stage, screen and exhibition design for large events' },
+    title: { uz: 'Event va sahna dizayni', ru: "Ивент и сценография", en: 'Event & stage design' },
+    text: { uz: "Katta tadbirlar uçun sahna, ekran va kōrgazma dizayni", ru: "Дизайн сцены, экранов и выставок для крупных мероприятий", en: 'Stage, screen and exhibition design for large events' },
     projects: ['fide', 'istedodlar-zamini', 'oltin-chinor', 'amir-temur'],
   },
   {
     id: 'branding',
-    title: { uz: 'Brending va sport', en: 'Branding & sports' },
-    text: { uz: 'Klublar, ligalar va hududlar uçun vizual identifikatsiya', en: 'Visual identity for clubs, leagues and places' },
+    title: { uz: 'Brending va sport', ru: "Брендинг и спорт", en: 'Branding & sports' },
+    text: { uz: 'Klublar, ligalar va hududlar uçun vizual identifikatsiya', ru: "Айдентика для клубов, лиг и территорий", en: 'Visual identity for clubs, leagues and places' },
     projects: ['superleague', 'chiroqchi'],
   },
 ]

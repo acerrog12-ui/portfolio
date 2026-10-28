@@ -9,8 +9,8 @@
   --color-violet: #7a4dff;
   --color-lime: #b9f43c;
   --color-orange: #ff9d4d;
-  --font-display: 'Archivo', system-ui, sans-serif;
-  --font-sans: 'Archivo', system-ui, sans-serif;
+  --font-display: 'Archivo', 'Roboto Flex', system-ui, sans-serif;
+  --font-sans: 'Archivo', 'Roboto Flex', system-ui, sans-serif;
 }
 
 html {

@@ -116,7 +116,7 @@ function Nav() {
           ACE<span className="text-pink">.</span>
         </button>
         <div className="ml-auto flex overflow-hidden rounded-full border border-white/50 md:ml-0">
-          {(['uz', 'en'] as const).map((l) => (
+          {(['uz', 'ru', 'en'] as const).map((l) => (
             <button key={l} onClick={() => setLang(l)} className={`px-2.5 py-1 transition-colors ${lang === l ? 'bg-white text-black' : 'text-white'}`}>
               {l}
             </button>
