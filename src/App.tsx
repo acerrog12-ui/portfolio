@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState, type FormEvent } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState, type FormEvent, type ReactNode } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Lenis from 'lenis'
@@ -200,6 +200,88 @@ function Hero() {
 }
 
 /* ---------------- CLIENT LOGOS + IMAGE STRIP ---------------- */
+// An endlessly moving row that can also be grabbed and thrown left or right.
+// speed is in px per second; negative moves left. Children must be the item list repeated twice.
+function DragRow({ speed, children }: { speed: number; children: ReactNode }) {
+  const wrap = useRef<HTMLDivElement>(null)
+  const track = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const el = track.current
+    const box = wrap.current
+    if (!el || !box) return
+    const auto = reducedMotion() ? 0 : speed
+    let x = 0
+    let vel = auto
+    let dragging = false
+    let lastX = 0
+    let lastT = 0
+    let raf = 0
+    let prev = performance.now()
+
+    const wrapX = () => {
+      const half = el.scrollWidth / 2
+      if (half <= 0) return
+      x = ((x % half) - half) % half // keep x in (-half, 0]
+    }
+    const loop = (now: number) => {
+      const dt = Math.min(0.05, (now - prev) / 1000)
+      prev = now
+      if (!dragging) {
+        vel += (auto - vel) * Math.min(1, dt * 2.5) // ease back to the normal drift after a throw
+        x += vel * dt
+      }
+      wrapX()
+      el.style.transform = `translate3d(${x}px,0,0)`
+      raf = requestAnimationFrame(loop)
+    }
+    raf = requestAnimationFrame(loop)
+
+    const down = (e: PointerEvent) => {
+      dragging = true
+      lastX = e.clientX
+      lastT = performance.now()
+      vel = 0
+      box.setPointerCapture(e.pointerId)
+      box.classList.add('cursor-grabbing')
+    }
+    const move = (e: PointerEvent) => {
+      if (!dragging) return
+      const now = performance.now()
+      const dx = e.clientX - lastX
+      x += dx
+      vel = (dx / Math.max(1, now - lastT)) * 1000
+      lastX = e.clientX
+      lastT = now
+    }
+    const up = () => {
+      if (!dragging) return
+      dragging = false
+      vel = Math.max(-3000, Math.min(3000, vel))
+      box.classList.remove('cursor-grabbing')
+    }
+    box.addEventListener('pointerdown', down)
+    box.addEventListener('pointermove', move)
+    box.addEventListener('pointerup', up)
+    box.addEventListener('pointercancel', up)
+    return () => {
+      cancelAnimationFrame(raf)
+      box.removeEventListener('pointerdown', down)
+      box.removeEventListener('pointermove', move)
+      box.removeEventListener('pointerup', up)
+      box.removeEventListener('pointercancel', up)
+    }
+  }, [speed])
+
+  return (
+    <div ref={wrap} className="flex cursor-grab touch-pan-y overflow-hidden select-none">
+      <div ref={track} className="flex shrink-0 gap-3 pr-3 will-change-transform sm:gap-4 sm:pr-4">
+        {children}
+      </div>
+    </div>
+  )
+}
+
 function Clients() {
   const covers = projects.map((p) => p.id)
   const half = Math.ceil(covers.length / 2)
@@ -217,13 +299,11 @@ function Clients() {
       </div>
       <div className="mt-10 space-y-3 sm:mt-14 sm:space-y-4">
         {rows.map((r, ri) => (
-          <div key={ri} className="flex overflow-hidden">
-            <div className={`marquee flex shrink-0 gap-3 pr-3 sm:gap-4 sm:pr-4 ${ri ? 'marquee-reverse' : ''}`} style={{ ['--speed' as string]: ri ? '60s' : '50s' }}>
-              {[...r, ...r].map((id, i) => (
-                <img key={i} src={img(`${id}.jpg`)} alt="" width={370} height={208} className="h-32 w-[228px] shrink-0 rounded-[1.25rem] object-cover sm:h-52 sm:w-[370px]" />
-              ))}
-            </div>
-          </div>
+          <DragRow key={ri} speed={ri ? 40 : -48}>
+            {[...r, ...r].map((id, i) => (
+              <img key={i} src={img(`${id}.jpg`)} alt="" width={370} height={208} draggable={false} className="pointer-events-none h-32 w-[228px] shrink-0 rounded-[1.25rem] object-cover select-none sm:h-52 sm:w-[370px]" />
+            ))}
+          </DragRow>
         ))}
       </div>
     </section>
@@ -309,10 +389,7 @@ function About() {
           <div className="award flex-1 rounded-[1.75rem] border-[1.5px] border-white/60 p-6 text-left sm:p-8">
             <div className="font-display text-4xl">{t(ui.about.award.title)}</div>
             <p className="mt-2 text-sm font-semibold text-white/60 uppercase">{t(ui.about.award.sub)}</p>
-            <div className="mt-5 grid grid-cols-2 gap-3">
-              <img src={img('violence.jpg')} alt="Violence" loading="lazy" className="aspect-video w-full rounded-xl object-cover" />
-              <img src={img('istedodlar-zamini.jpg')} alt="" loading="lazy" className="aspect-video w-full rounded-xl object-cover" />
-            </div>
+            <img src={img('violence.jpg')} alt="Violence" loading="lazy" className="mt-5 aspect-video w-full rounded-xl object-cover" />
             <p className="mt-4 text-xs text-white/40">{t(ui.about.award.note)}</p>
           </div>
         </div>
