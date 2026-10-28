@@ -344,10 +344,7 @@ function About() {
       <div className="parallax pointer-events-none absolute top-16 right-[6%] w-24 sm:w-44" style={{ ['--r' as string]: '8deg', ['--d' as string]: '8s' }}>
         <img src={img('el-3d.webp')} alt="" loading="lazy" className="floaty w-full" />
       </div>
-      <div className="parallax pointer-events-none absolute top-[36%] left-[3%] w-24 sm:w-48" style={{ ['--r' as string]: '-6deg', ['--d' as string]: '7s' }}>
-        <img src={img('el-cs2.webp')} alt="" loading="lazy" className="floaty w-full" />
-      </div>
-      <div className="parallax pointer-events-none absolute top-[62%] left-[5%] w-20 sm:w-36" style={{ ['--r' as string]: '12deg', ['--d' as string]: '9s' }}>
+      <div className="parallax pointer-events-none absolute top-[36%] left-[4%] w-20 sm:w-40" style={{ ['--r' as string]: '12deg', ['--d' as string]: '9s' }}>
         <img src={img('el-pen.webp')} alt="" loading="lazy" className="floaty w-full" />
       </div>
       <div className="parallax pointer-events-none absolute top-[48%] right-[2%] w-32 sm:right-[2%] sm:w-60" style={{ ['--r' as string]: '-14deg', ['--d' as string]: '7s' }}>
