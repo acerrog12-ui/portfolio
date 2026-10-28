@@ -214,7 +214,7 @@ function Hero() {
             {t(ui.hero.tagline)}
           </p>
           <div className="hero-fade">
-            <a href={`mailto:${contacts.email}`} className="pill-grad hero-pill px-7 py-3.5 text-[14px] sm:mt-[-0.4vw] sm:px-[2.4vw] sm:py-[1.15vw] sm:text-[1.3vw]">
+            <a href={contacts.telegram} target="_blank" rel="noreferrer" className="pill-grad hero-pill px-7 py-3.5 text-[14px] sm:mt-[-0.4vw] sm:px-[2.4vw] sm:py-[1.15vw] sm:text-[1.3vw]">
             {t(ui.hero.cta)}
           </a>
           </div>
@@ -397,7 +397,7 @@ function About() {
               </span>
             ))}
         </p>
-        <a href={`mailto:${contacts.email}`} className="pill-grad mt-10 px-7 py-3 text-[12px]">
+        <a href={contacts.telegram} target="_blank" rel="noreferrer" className="pill-grad mt-10 px-7 py-3 text-[12px]">
           {t(ui.hero.cta)} <span aria-hidden>•</span>
         </a>
 
@@ -674,9 +674,9 @@ function Team() {
               </span>
             ))}
           </div>
-          <button onClick={() => scrollTo('contact')} className="pill-grad mt-12 px-8 py-4 text-[13px]">
+          <a href={contacts.telegram} target="_blank" rel="noreferrer" className="pill-grad mt-12 px-8 py-4 text-[13px]">
             {t(team.cta)} <span aria-hidden>•</span>
-          </button>
+          </a>
         </div>
         <div className="relative mx-auto aspect-square w-full max-w-[460px]">
           <svg viewBox="0 0 200 200" className="team-ring absolute inset-0 h-full w-full" aria-hidden>
@@ -693,6 +693,14 @@ function Team() {
         </div>
       </div>
     </section>
+  )
+}
+
+function TgIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-[1.2em] w-[1.2em] fill-current" aria-hidden>
+      <path d="M21.9 4.3 18.8 19c-.2 1-.9 1.3-1.7.8l-4.7-3.5-2.3 2.2c-.3.3-.5.5-1 .5l.3-4.8 8.8-7.9c.4-.3-.1-.5-.6-.2L6.7 13l-4.6-1.4c-1-.3-1-1 .2-1.5L20.5 3c.9-.3 1.6.2 1.4 1.3Z" />
+    </svg>
   )
 }
 
@@ -767,9 +775,18 @@ const ctx = gsap.context(() => {
                   <SplitChars key={i} text={w} />
                 ))}
             </h2>
-            <a href={`mailto:${contacts.email}`} className="mt-6 inline-block text-lg font-semibold break-all text-violet underline underline-offset-4 hover:text-pink sm:text-xl">
-              {contacts.email}
+            {/* Telegram is the main way to reach Doston */}
+            <a href={contacts.telegram} target="_blank" rel="noreferrer" className="pill-grad mt-7 gap-3 px-7 py-4 text-[15px] sm:text-lg">
+              <TgIcon /> {contacts.telegramHandle}
             </a>
+            <div className="mt-5 flex flex-col gap-1 text-base font-semibold sm:text-lg">
+              <a href={contacts.phoneHref} className="w-fit text-black transition-colors hover:text-violet">
+                {contacts.phone}
+              </a>
+              <a href={`mailto:${contacts.email}`} className="w-fit text-sm font-medium break-all text-black/55 transition-colors hover:text-violet">
+                {contacts.email}
+              </a>
+            </div>
             <p className="mt-4 max-w-sm text-sm text-black/55">{t(ui.contact.lead)}</p>
           </div>
           <form onSubmit={send} className="flex flex-col gap-4">
@@ -806,6 +823,12 @@ const ctx = gsap.context(() => {
             <div className="text-sm">
               <div className="mb-3 text-[11px] font-extrabold tracking-wide uppercase">{t(ui.contact.mail)}</div>
               <div className="space-y-1.5 text-white/70">
+                <a href={contacts.telegram} target="_blank" rel="noreferrer" className="block font-semibold text-white transition-colors hover:text-pink">
+                  Telegram {contacts.telegramHandle}
+                </a>
+                <a href={contacts.phoneHref} className="block transition-colors hover:text-white">
+                  {contacts.phone}
+                </a>
                 <a href={`mailto:${contacts.email}`} className="block transition-colors hover:text-white">
                   {contacts.email}
                 </a>

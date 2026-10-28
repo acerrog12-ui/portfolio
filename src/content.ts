@@ -7,6 +7,9 @@ type T = Record<Lang, string>
 export const contacts = {
   email: 'acerrog12@gmail.com',
   telegram: 'https://t.me/thedaminoff',
+  telegramHandle: '@thedaminoff',
+  phone: '+998 90 332 03 11',
+  phoneHref: 'tel:+998903320311',
   instagram: 'https://www.instagram.com/daminov_dostonbek1/',
   behance: 'https://www.behance.net/daminovdostonbek',
 }
