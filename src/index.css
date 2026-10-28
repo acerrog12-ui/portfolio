@@ -50,7 +50,7 @@ body {
 
 .outline-text {
   color: transparent;
-  -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.9);
+  -webkit-text-stroke: max(1.5px, 0.012em) rgba(255, 255, 255, 0.95);
 }
 
 /* Split-text masks used by the reveal animation */

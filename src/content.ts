@@ -19,8 +19,10 @@ export const ui = {
     contact: { uz: 'Aloqa', en: 'Contact' },
   },
   hero: {
-    hi: { uz: 'SALOM,', en: 'HI,' },
-    name: { uz: 'MEN DOSTON', en: "I'M DOSTON" },
+    // Headline stays in English in both languages: it's the brand line.
+    hi: { uz: 'ACE OF', en: 'ACE OF' },
+    name: { uz: 'VISUALS', en: 'VISUALS' },
+    kicker: { uz: 'Doston «Ace» Daminov · Art director va dizayner', en: 'Doston «Ace» Daminov · Art director & designer' },
     tagline: {
       uz: 'Grafik, 3D va event dizayner. Brendlar uchun jasur va esda qoladigan vizuallar yarataman.',
       en: 'Graphic, 3D and event designer crafting bold, memorable visuals for brands.',

@@ -132,11 +132,15 @@ function Hero() {
       <div className="pointer-events-none absolute right-[-10%] bottom-[-20%] h-[500px] w-[500px] rounded-full bg-pink/15 blur-[120px]" />
 
       <div className="relative mx-auto w-full max-w-[1400px]">
-        <h1 className="hero-title font-display leading-[0.86] font-black tracking-[-0.04em] text-[clamp(2.6rem,11vw,11rem)]">
+        <p className="hero-fade mb-6 text-[11px] font-semibold tracking-[0.3em] text-white/60 uppercase sm:text-xs">
+          <span className="mr-2 inline-block h-2 w-2 rounded-full bg-pink align-middle" />
+          {t(ui.hero.kicker)}
+        </p>
+        <h1 className="hero-title font-display leading-[0.86] font-black tracking-[-0.04em] text-[clamp(3.4rem,14vw,14rem)]">
           <span className="hero-l1 block">
             <SplitChars text={t(ui.hero.hi)} />
           </span>
-          <span className="hero-l2 block text-right">
+          <span className="hero-l2 outline-text block text-right">
             <SplitChars text={t(ui.hero.name)} />
           </span>
         </h1>
