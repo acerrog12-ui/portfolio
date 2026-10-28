@@ -132,6 +132,31 @@ function Hero() {
   const { t } = useLang()
   const root = useRef<HTMLElement>(null)
   const avatar = useRef<HTMLDivElement>(null)
+  const title = useRef<HTMLHeadingElement>(null)
+
+  // Make the headline as big as possible: scale it so its widest line fills the screen width
+  useLayoutEffect(() => {
+    const h = title.current
+    if (!h) return
+    const fit = () => {
+      h.style.fontSize = ''
+      // width of the widest text line, measured from the letters themselves
+      const lines = new Map<number, [number, number]>()
+      h.querySelectorAll<HTMLElement>('.char').forEach((c) => {
+        const b = c.getBoundingClientRect()
+        const key = Math.round(c.offsetTop / 10)
+        const cur = lines.get(key)
+        lines.set(key, cur ? [Math.min(cur[0], b.left), Math.max(cur[1], b.right)] : [b.left, b.right])
+      })
+      const widest = Math.max(...[...lines.values()].map(([l, r]) => r - l))
+      const room = h.clientWidth
+      if (widest > 0) h.style.fontSize = `${(parseFloat(getComputedStyle(h).fontSize) * room * 0.995) / widest}px`
+    }
+    fit()
+    document.fonts?.ready.then(fit)
+    window.addEventListener('resize', fit)
+    return () => window.removeEventListener('resize', fit)
+  }, [])
 
   useLayoutEffect(() => {
     if (reducedMotion()) return
@@ -166,8 +191,8 @@ function Hero() {
   }, [])
 
   return (
-    <section ref={root} className="relative flex min-h-[100svh] flex-col overflow-hidden bg-ink px-4 pt-14 pb-8 sm:px-8 sm:pt-16">
-      <h1 className="hero-title silver relative z-0 text-center font-display text-[16.5vw] leading-[0.84] uppercase sm:text-[10vw]" style={{ fontStretch: '96%', letterSpacing: '-0.025em' }}>
+    <section ref={root} className="relative flex min-h-[100svh] flex-col overflow-hidden bg-ink px-3 pt-[72px] pb-8 sm:px-4 sm:pt-[78px]">
+      <h1 ref={title} className="hero-title silver relative z-0 text-center font-display text-[16.5vw] leading-[0.84] uppercase sm:text-[10vw]" style={{ fontStretch: '96%', letterSpacing: '-0.025em' }}>
         <span className="block sm:inline-block">
           <SplitChars text={t(ui.hero.hi)} className="inline-block" />
         </span>{' '}
