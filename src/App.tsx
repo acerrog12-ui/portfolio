@@ -4,7 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Lenis from 'lenis'
 import { categories, clients, contacts, projects, services, team, ui, type Category, type Project } from './content'
 import { img, reducedMotion, SplitChars, useLang } from './lib'
-import { Cube, Flower, footerColors, footerShapes, Heart, Star } from './shapes'
+import { Flower, footerColors, footerShapes, Star } from './shapes'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -338,19 +338,19 @@ function About() {
 
   return (
     <section id="about" ref={root} className="relative overflow-hidden bg-ink px-4 pt-28 pb-40 sm:px-8 sm:pt-40 sm:pb-56">
-      <div className="parallax pointer-events-none absolute top-20 left-[5%] w-16 sm:w-32">
-        <Star className="floaty w-full" />
+      <div className="parallax pointer-events-none absolute top-20 left-[5%] w-20 sm:w-36" style={{ ['--r' as string]: '-10deg' }}>
+        <img src={img('el-ae.webp')} alt="" loading="lazy" className="floaty w-full" />
       </div>
-      <div className="parallax pointer-events-none absolute top-16 right-[6%] w-16 sm:w-28">
-        <Cube className="floaty w-full" />
+      <div className="parallax pointer-events-none absolute top-16 right-[6%] w-24 sm:w-44" style={{ ['--r' as string]: '8deg', ['--d' as string]: '8s' }}>
+        <img src={img('el-3d.webp')} alt="" loading="lazy" className="floaty w-full" />
       </div>
-      <div className="parallax pointer-events-none absolute top-[40%] left-[4%] w-16 sm:w-28" style={{ ['--r' as string]: '-12deg' }}>
-        <Heart className="floaty w-full" />
+      <div className="parallax pointer-events-none absolute top-[36%] left-[3%] w-24 sm:w-48" style={{ ['--r' as string]: '-6deg', ['--d' as string]: '7s' }}>
+        <img src={img('el-cs2.webp')} alt="" loading="lazy" className="floaty w-full" />
       </div>
-      <div className="parallax pointer-events-none absolute top-[30%] right-[5%] w-14 sm:w-28" style={{ ['--d' as string]: '8s' }}>
-        <Flower className="floaty w-full" />
+      <div className="parallax pointer-events-none absolute top-[62%] left-[5%] w-20 sm:w-36" style={{ ['--r' as string]: '12deg', ['--d' as string]: '9s' }}>
+        <img src={img('el-pen.webp')} alt="" loading="lazy" className="floaty w-full" />
       </div>
-      <div className="parallax pointer-events-none absolute top-[50%] right-[2%] w-32 sm:right-[2%] sm:w-60" style={{ ['--r' as string]: '-14deg', ['--d' as string]: '7s' }}>
+      <div className="parallax pointer-events-none absolute top-[48%] right-[2%] w-32 sm:right-[2%] sm:w-60" style={{ ['--r' as string]: '-14deg', ['--d' as string]: '7s' }}>
         <img src={img('ace-pad.webp')} alt="" loading="lazy" className="floaty w-full drop-shadow-[0_20px_40px_rgba(122,77,255,0.35)]" />
       </div>
 
