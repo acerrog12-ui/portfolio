@@ -114,19 +114,28 @@ function Nav() {
     <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-black">
       <nav className="mx-auto flex max-w-[1500px] items-center gap-4 px-4 py-4 text-[11px] font-bold tracking-wide uppercase sm:px-8 sm:text-[13px]">
         <ul className="hidden flex-1 justify-around md:flex">
-          {links.map((l) => (
-            <li key={l}>
-              <button onClick={() => scrollTo(l)} className="group relative">
-                {t(ui.nav[l])}
-                <span className="absolute -bottom-1 left-0 h-[1.5px] w-full origin-right scale-x-0 bg-white transition-transform duration-500 group-hover:origin-left group-hover:scale-x-100" />
-              </button>
-            </li>
-          ))}
+          {links.map((l) =>
+            l === 'projects' ? (
+              <li key={l}>
+                <ProjectsMenu label={t(ui.nav[l])} />
+              </li>
+            ) : (
+              <li key={l}>
+                <button onClick={() => scrollTo(l)} className="group relative">
+                  {t(ui.nav[l])}
+                  <span className="absolute -bottom-1 left-0 h-[1.5px] w-full origin-right scale-x-0 bg-white transition-transform duration-500 group-hover:origin-left group-hover:scale-x-100" />
+                </button>
+              </li>
+            ),
+          )}
         </ul>
         <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="font-display text-base md:hidden">
           ACE<span className="text-pink">.</span>
         </button>
-        <div className="ml-auto flex overflow-hidden rounded-full border border-white/50 md:ml-0">
+        <span className="ml-auto md:hidden">
+          <ProjectsMenu label={t(ui.nav.projects)} />
+        </span>
+        <div className="flex overflow-hidden rounded-full border border-white/50">
           {(['uz', 'ru', 'en'] as const).map((l) => (
             <button key={l} onClick={() => setLang(l)} className={`px-2.5 py-1 transition-colors ${lang === l ? 'bg-white text-black' : 'text-white'}`}>
               {l}
@@ -135,6 +144,44 @@ function Nav() {
         </div>
       </nav>
     </header>
+  )
+}
+
+// "Projects" in the nav with a small arrow: opens a list of All works and every direction.
+// Opens on hover with a mouse and on tap on phones.
+function ProjectsMenu({ label }: { label: string }) {
+  const { t } = useLang()
+  const [open, setOpen] = useState(false)
+  const box = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (!open) return
+    const close = (e: PointerEvent) => { if (!box.current?.contains(e.target as Node)) setOpen(false) }
+    const onHash = () => setOpen(false)
+    document.addEventListener('pointerdown', close)
+    window.addEventListener('hashchange', onHash)
+    return () => { document.removeEventListener('pointerdown', close); window.removeEventListener('hashchange', onHash) }
+  }, [open])
+  const hover = (v: boolean) => (e: React.PointerEvent) => { if (e.pointerType === 'mouse') setOpen(v) }
+  const items = [allWorks, ...categories]
+  return (
+    <div ref={box} className="relative" onPointerEnter={hover(true)} onPointerLeave={hover(false)}>
+      <button onClick={() => setOpen((o) => !o)} aria-expanded={open} className="group relative flex items-center gap-1.5 uppercase">
+        {label}
+        <svg width="9" height="6" viewBox="0 0 9 6" aria-hidden className={`transition-transform duration-300 ${open ? 'rotate-180' : ''}`}><path d="M1 1l3.5 3.5L8 1" fill="none" stroke="currentColor" strokeWidth="1.6" /></svg>
+      </button>
+      <div className={`absolute top-full right-0 z-50 pt-3 md:right-auto md:left-1/2 md:-translate-x-1/2 ${open ? '' : 'pointer-events-none'}`}>
+        <ul className={`w-64 overflow-hidden rounded-2xl border border-white/15 bg-[#0b0b0e] p-2 shadow-2xl transition duration-200 ${open ? 'translate-y-0 opacity-100' : '-translate-y-1 opacity-0'}`}>
+          {items.map((c) => (
+            <li key={c.id}>
+              <a href={`#/work/${c.id}`} onClick={() => setOpen(false)} className={`flex items-center justify-between rounded-xl px-4 py-3 text-[12px] font-bold tracking-wide normal-case hover:bg-white/10 ${c.id === 'all' ? 'text-lime' : 'text-white'}`}>
+                {t(c.title)}
+                <span className="text-white/40">→</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
   )
 }
 
@@ -376,7 +423,10 @@ function Clients({ onOpen }: { onOpen: (p: Project) => void }) {
         {rows.map((r, ri) => (
           <DragRow key={ri} speed={ri ? 40 : -48} onTap={(id) => { const p = projects.find((q) => q.id === id); if (p) onOpen(p) }}>
             {[...r, ...r].map((id, i) => (
-              <img key={i} data-id={id} data-cursor src={img(`${id}-s.webp`)} decoding="async" alt="" width={370} height={208} draggable={false} className="h-32 w-[228px] shrink-0 rounded-[1.25rem] object-cover transition-transform duration-500 select-none hover:scale-[1.03] sm:h-52 sm:w-[370px]" />
+              <div key={i} data-id={id} data-cursor className="relative h-32 w-[228px] shrink-0 overflow-hidden rounded-[1.25rem] transition-transform duration-500 select-none hover:scale-[1.03] sm:h-52 sm:w-[370px]">
+                <img src={img(`${id}-s.webp`)} decoding="async" alt="" width={370} height={208} draggable={false} className="h-full w-full object-cover" />
+                <CoverText p={projects.find((q) => q.id === id)!} small />
+              </div>
             ))}
           </DragRow>
         ))}
@@ -730,7 +780,7 @@ const coverLabels = {
   year: { uz: 'Yil', ru: 'Год', en: 'Year' },
   work: { uz: 'Ish', ru: 'Работа', en: 'Work' },
 }
-function CoverText({ p }: { p: Project }) {
+function CoverText({ p, small }: { p: Project; small?: boolean }) {
   const { t } = useLang()
   const title = t(p.title)
   const cut = title.lastIndexOf(' · ') >= 0 ? title.lastIndexOf(' · ') + 3 : title.lastIndexOf(' ') + 1
@@ -742,12 +792,12 @@ function CoverText({ p }: { p: Project }) {
   return (
     <>
       <span aria-hidden className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(6,7,10,.9)_0%,rgba(6,7,10,.55)_45%,rgba(6,7,10,0)_80%),linear-gradient(0deg,rgba(6,7,10,.92)_0%,rgba(6,7,10,.6)_35%,rgba(6,7,10,0)_72%)]" />
-      <span className="pointer-events-none absolute inset-x-0 bottom-0 block p-4 sm:p-6 lg:p-7">
-        <span className="block max-w-[85%] font-display text-[clamp(1.25rem,2.6vw,2.3rem)] leading-[1.02] text-white normal-case">
+      <span className={`pointer-events-none absolute inset-x-0 bottom-0 block ${small ? 'p-3 sm:p-4' : 'p-4 sm:p-6 lg:p-7'}`}>
+        <span className={`block max-w-[85%] font-display leading-[1.02] text-white normal-case ${small ? 'text-[13px] sm:text-lg' : 'text-[clamp(1.25rem,2.6vw,2.3rem)]'}`}>
           {head}
           <span style={{ color: p.accent || '#f39a4a' }}>{tail}</span>
         </span>
-        <span className="mt-3 hidden gap-6 sm:flex">
+        <span className={`mt-3 hidden gap-6 ${small ? '' : 'sm:flex'}`}>
           {meta.map(([k, v]) => (
             <span key={k} className="min-w-0">
               <span className="block text-[9px] font-bold tracking-[0.18em] text-white/50 uppercase">{k}</span>
