@@ -843,13 +843,31 @@ function EmbedDeck({ src, title }: { src: string; title: string }) {
         watched = doc
       }
     }
-    const poll = window.setInterval(attach, 100)
+    // Safari does not always fire the deck's own scroll observers inside a frame this tall,
+    // which left its slides blank and still: reveal slides from here as they scroll into view.
+    let raf = 0
+    const reveal = () => {
+      raf = 0
+      const doc = deckDoc()
+      if (!doc) return
+      const top = f.getBoundingClientRect().top
+      const vh = window.innerHeight
+      doc.querySelectorAll<HTMLElement>('.frame:not(.in)').forEach((fr) => {
+        const r = fr.getBoundingClientRect()
+        if (top + r.top < vh * 0.85 && top + r.bottom > vh * 0.1) fr.classList.add('in')
+      })
+    }
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(reveal) }
+    window.addEventListener('scroll', onScroll, true)
+    const poll = window.setInterval(() => { attach(); onScroll() }, 100)
     const stop = window.setTimeout(() => window.clearInterval(poll), 15000)
     f.addEventListener('load', attach)
     window.addEventListener('resize', measure)
     return () => {
       window.clearInterval(poll)
       window.clearTimeout(stop)
+      window.removeEventListener('scroll', onScroll, true)
+      cancelAnimationFrame(raf)
       f.removeEventListener('load', attach)
       window.removeEventListener('resize', measure)
       ro?.disconnect()
