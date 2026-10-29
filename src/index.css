@@ -47,6 +47,15 @@ body {
   color: #fff;
 }
 
+/* Hero headline font (Six Caps), self-hosted */
+@font-face {
+  font-family: 'Six Caps';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('/portfolio/fonts/six-caps.woff2') format('woff2');
+}
+
 /* Heavy display type, like the reference */
 .font-display {
   font-weight: 900;

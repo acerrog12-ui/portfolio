@@ -197,7 +197,7 @@ const HEAD_SMILE = false
 
 /* ---------------- HERO ---------------- */
 function Hero() {
-  const { t } = useLang()
+  const { t, lang } = useLang()
   const root = useRef<HTMLElement>(null)
   const avatar = useRef<HTMLDivElement>(null)
   const title = useRef<HTMLHeadingElement>(null)
@@ -263,6 +263,26 @@ function Hero() {
       window.removeEventListener('mousemove', move)
     }
   }, [])
+
+  // Keep the headline on one line inside the screen whatever font actually rendered
+  // (a fallback font is much wider and would be cut off at the sides).
+  useEffect(() => {
+    const h = title.current
+    if (!h) return
+    const fitTitle = () => {
+      h.style.fontSize = ''
+      const r = document.createRange()
+      r.selectNodeContents(h)
+      const w = r.getBoundingClientRect().width
+      const room = h.clientWidth
+      if (w > room + 1) h.style.fontSize = `${(parseFloat(getComputedStyle(h).fontSize) * room) / w}px`
+    }
+    fitTitle()
+    document.fonts?.ready.then(fitTitle)
+    document.fonts?.load("1em 'Six Caps'").then(fitTitle).catch(() => {})
+    window.addEventListener('resize', fitTitle)
+    return () => window.removeEventListener('resize', fitTitle)
+  }, [lang])
 
   // Hovering the contact button sends a flash of light across the character's glasses
   // (and fades in the smiling render once that file is added, see HEAD_SMILE).
