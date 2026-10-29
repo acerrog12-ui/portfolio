@@ -709,6 +709,7 @@ function CategoryPage({ cat, onOpen }: { cat: Category; onOpen: (p: Project) => 
 function EmbedDeck({ src, title }: { src: string; title: string }) {
   const frame = useRef<HTMLIFrameElement>(null)
   const [h, setH] = useState(0)
+  const [compact] = useState(() => window.matchMedia('(max-width: 1023px), (pointer: coarse)').matches)
   useEffect(() => {
     const f = frame.current
     if (!f) return
@@ -736,7 +737,13 @@ function EmbedDeck({ src, title }: { src: string; title: string }) {
   const url = `${import.meta.env.BASE_URL}${src}`
   return (
     <div className="mx-auto w-full max-w-[1100px] px-3 pb-10 sm:px-8">
-      <iframe ref={frame} src={url} title={title} scrolling="no" className="block w-full rounded-2xl bg-black" style={{ height: h || '56vw', border: 0 }} />
+      {/* phones: the deck scrolls inside a screen-high frame, so the phone only draws the slides on screen
+          (drawing all 18 at once ran out of memory and Safari reloaded the page) */}
+      {compact ? (
+        <iframe src={url} title={title} className="block w-full rounded-2xl bg-black" style={{ height: 'calc(100svh - 150px)', border: 0 }} />
+      ) : (
+        <iframe ref={frame} src={url} title={title} scrolling="no" className="block w-full rounded-2xl bg-black" style={{ height: h || '56vw', border: 0 }} />
+      )}
       <a href={url} target="_blank" rel="noreferrer" className="mx-auto mt-5 block w-fit rounded-full border-[1.5px] border-white/60 px-6 py-3 text-xs font-bold tracking-widest uppercase">
         ↗ Full screen
       </a>
@@ -787,7 +794,11 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
         {project.embed && <EmbedDeck src={project.embed} title={t(project.title)} />}
         {project.full !== false &&
           (project.parts ? Array.from({ length: project.parts }, (_, i) => `${project.id}-full-${i + 1}.webp`) : [`${project.id}-full.webp`]).map((f, i, all) => (
-            <img key={f} src={img(f)} alt={i ? '' : t(project.title)} loading="lazy" decoding="async" className={`mx-auto block w-full max-w-[1100px] px-3 sm:px-8 ${i === all.length - 1 ? 'pb-10' : ''}`} />
+            // phones get a 1080px copy: the full-size layouts are huge to decode and can crash mobile Safari
+            <picture key={f}>
+              <source media="(max-width: 900px)" srcSet={img(f.replace('.webp', '-m.webp'))} />
+              <img src={img(f)} alt={i ? '' : t(project.title)} loading="lazy" decoding="async" className={`mx-auto block w-full max-w-[1100px] px-3 sm:px-8 ${i === all.length - 1 ? 'pb-10' : ''}`} />
+            </picture>
           ))}
       </div>
     </div>
