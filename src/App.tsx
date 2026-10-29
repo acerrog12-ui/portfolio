@@ -765,9 +765,6 @@ function EmbedDeck({ src, title }: { src: string; title: string }) {
       ) : (
         <iframe ref={frame} src={url} title={title} scrolling="no" className="block w-full rounded-2xl bg-black" style={{ height: h || '56vw', border: 0 }} />
       )}
-      <a href={url} target="_blank" rel="noreferrer" className="mx-auto mt-5 block w-fit rounded-full border-[1.5px] border-white/60 px-6 py-3 text-xs font-bold tracking-widest uppercase">
-        ↗ Full screen
-      </a>
     </div>
   )
 }
