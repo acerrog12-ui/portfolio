@@ -212,8 +212,14 @@ body {
     cursor: -webkit-image-set(url('/portfolio/img/cursor-hot-40.png') 1x, url('/portfolio/img/cursor-hot-80.png') 2x) 1 1, pointer;
     cursor: image-set(url('/portfolio/img/cursor-hot-40.png') 1x, url('/portfolio/img/cursor-hot-80.png') 2x) 1 1, pointer;
   }
+  /* keep the chrome cursor over form fields too, instead of the system I-beam */
   input,
-  textarea {
-    cursor: text;
+  textarea,
+  select,
+  input::placeholder,
+  textarea::placeholder {
+    cursor: url('/portfolio/img/cursor-32.png') 1 1, auto;
+    cursor: -webkit-image-set(url('/portfolio/img/cursor-32.png') 1x, url('/portfolio/img/cursor-64.png') 2x) 1 1, auto;
+    cursor: image-set(url('/portfolio/img/cursor-32.png') 1x, url('/portfolio/img/cursor-64.png') 2x) 1 1, auto;
   }
 }
