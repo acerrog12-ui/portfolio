@@ -795,7 +795,7 @@ function CoverText({ p, small }: { p: Project; small?: boolean }) {
       <span className={`pointer-events-none absolute inset-x-0 bottom-0 block ${small ? 'p-3 sm:p-4' : 'p-4 sm:p-6 lg:p-7'}`}>
         <span className={`block max-w-[85%] font-display leading-[1.02] text-white normal-case ${small ? 'text-[13px] sm:text-lg' : 'text-[clamp(1.25rem,2.6vw,2.3rem)]'}`}>
           {head}
-          <span style={{ color: p.accent || '#f39a4a' }}>{tail}</span>
+          <span style={{ color: p.accent || '#b9f43c' }}>{tail}</span>
         </span>
         <span className={`mt-3 hidden gap-6 ${small ? '' : 'sm:flex'}`}>
           {meta.map(([k, v]) => (
