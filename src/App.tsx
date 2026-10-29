@@ -688,27 +688,72 @@ function Services() {
       gsap.from('.svc-card', { y: 120, scale: 0.96, ease: 'none', scrollTrigger: { trigger: root.current, start: 'top bottom', end: 'top 35%', scrub: true } })
       // the title starts pale grey and fills in black
       gsap.fromTo('.svc-title', { color: '#c4c7cb' }, { color: '#000', ease: 'none', scrollTrigger: { trigger: '.svc-title', start: 'top 85%', end: 'top 35%', scrub: true } })
-      gsap.utils.toArray<HTMLElement>('.svc-row').forEach((row) => {
-        gsap.from(row, { y: 60, autoAlpha: 0, duration: 1, ease: 'expo.out', scrollTrigger: { trigger: row, start: 'top 92%' } })
-      })
     }, root)
     return () => ctx.revert()
+  }, [lang])
+
+  // Like fido.studio: the title stays pinned at the top while the list scrolls under it.
+  // Each row comes up from below faded and blurred, is sharp in the middle of the screen,
+  // then blurs and fades away before it reaches the title. Worked out from where each row
+  // is on screen right now (not from positions measured once), so images loading higher
+  // up the page can't push the effect out of place.
+  useEffect(() => {
+    const sec = root.current
+    if (!sec || reducedMotion()) return
+    const rows = Array.from(sec.querySelectorAll<HTMLElement>('.svc-row'))
+    const desk = window.matchMedia('(min-width: 640px)')
+    const shift = new Map<HTMLElement, number>()
+    const clamp = (v: number) => Math.max(0, Math.min(1, v))
+    let raf = 0
+    let on = false
+    const draw = () => {
+      raf = 0
+      const vh = window.innerHeight
+      const d = desk.matches
+      const blurMax = d ? 8 : 0 // no animated filters on phones (too slow there)
+      const exitStart = d ? 0.5 : 0.48
+      const exitEnd = d ? 0.3 : 0.28 // just below the pinned title
+      rows.forEach((r) => {
+        const b = r.getBoundingClientRect()
+        const c = (b.top - (shift.get(r) ?? 0) + b.height / 2) / vh
+        const tin = clamp((1 - c) / 0.36)
+        const e = 1 - Math.pow(1 - tin, 2)
+        const out = clamp((exitStart - c) / (exitStart - exitEnd))
+        const y = 70 * (1 - e) - 40 * out
+        shift.set(r, y)
+        r.style.opacity = String((0.08 + 0.92 * e) * (1 - out))
+        r.style.transform = `translate3d(0,${y.toFixed(1)}px,0)`
+        if (blurMax) r.style.filter = `blur(${(blurMax * Math.min(1, 1 - e + out)).toFixed(2)}px)`
+        else r.style.filter = ''
+      })
+    }
+    const tick = () => { if (on && !raf) raf = requestAnimationFrame(draw) }
+    const io = new IntersectionObserver(([en]) => { on = en.isIntersecting; tick() }, { rootMargin: '20% 0px' })
+    io.observe(sec)
+    window.addEventListener('scroll', tick, { passive: true })
+    window.addEventListener('resize', tick)
+    return () => {
+      io.disconnect()
+      cancelAnimationFrame(raf)
+      window.removeEventListener('scroll', tick)
+      window.removeEventListener('resize', tick)
+      rows.forEach((r) => { r.style.opacity = ''; r.style.transform = ''; r.style.filter = '' })
+    }
   }, [lang])
 
   return (
     <section id="services" ref={root} className="relative z-10 -mt-24 bg-transparent px-2 sm:-mt-32 sm:px-3">
       <div className="svc-card rounded-[2rem] bg-paper px-5 pt-20 pb-40 text-black sm:rounded-[2.75rem] sm:px-12 sm:pt-28 sm:pb-56">
-        <h2 className="svc-title text-center font-display text-[clamp(2.6rem,10vw,10rem)] leading-none uppercase">{t(ui.services.title)}</h2>
-        <ol className="mx-auto mt-16 max-w-[1000px] sm:mt-24">
+        {/* pinned under the nav while the list below scrolls */}
+        <h2 className="svc-title sticky top-[72px] z-10 text-center font-display text-[clamp(2.6rem,9vw,8.5rem)] leading-none uppercase sm:top-[84px]">{t(ui.services.title)}</h2>
+        <ol className="mx-auto mt-[22vh] max-w-[1100px] pb-[18vh] sm:mt-[30vh]">
           {services.map((s, i) => (
-            <li key={i} className="svc-row group grid grid-cols-[70px_1fr] items-start gap-x-4 border-b border-black/15 py-7 sm:grid-cols-[150px_1fr] sm:py-10">
-              <span className="font-display text-[2.6rem] leading-[0.85] transition-colors duration-300 group-hover:text-violet sm:text-[4.5rem]">
+            <li key={i} className="svc-row group grid grid-cols-[56px_1fr] items-start gap-x-4 py-[7vh] will-change-transform sm:grid-cols-[120px_1fr_1fr] sm:gap-x-10 sm:py-[9vh]">
+              <span className="font-display text-[2.2rem] leading-[0.85] transition-colors duration-300 group-hover:text-violet sm:text-[4rem]">
                 {String(i + 1).padStart(2, '0')}
               </span>
-              <div className="transition-transform duration-500 group-hover:translate-x-2">
-                <h3 className="font-cond text-base font-extrabold uppercase sm:text-xl">{t(s.title)}</h3>
-                <p className="mt-2 max-w-[640px] text-sm leading-relaxed text-black/50 sm:text-base">{t(s.text)}</p>
-              </div>
+              <h3 className="font-cond text-lg font-extrabold uppercase transition-transform duration-500 group-hover:translate-x-2 sm:pt-2 sm:text-[1.7rem] sm:leading-tight">{t(s.title)}</h3>
+              <p className="col-start-2 mt-2 max-w-[520px] text-sm leading-relaxed text-black/55 sm:col-start-3 sm:mt-0 sm:pt-2 sm:text-base">{t(s.text)}</p>
             </li>
           ))}
         </ol>
