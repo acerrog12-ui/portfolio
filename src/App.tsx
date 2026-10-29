@@ -263,18 +263,19 @@ function Hero() {
 
   return (
     <section ref={root} className="relative flex min-h-[100svh] flex-col overflow-hidden bg-ink px-3 pt-[72px] pb-8 sm:px-4 sm:pt-[78px]">
-      <h1 ref={title} className="hero-title silver relative z-0 text-center font-display text-[16.5vw] leading-[0.84] uppercase sm:text-[10vw]" style={{ fontStretch: '96%', letterSpacing: '-0.025em' }}>
-        <span className="block sm:inline-block">
+      {/* tall condensed Six Caps across the full width (Doston picked it), one line on every screen */}
+      <h1 ref={title} className="hero-title silver relative z-0 text-center text-[38vw] leading-[0.9] whitespace-nowrap uppercase" style={{ fontFamily: "'Six Caps', 'Archivo', sans-serif", fontWeight: 400, fontSynthesis: 'none', letterSpacing: '-0.02em' }}>
+        <span className="inline-block">
           <SplitChars text={t(ui.hero.hi)} className="inline-block" />
         </span>{' '}
-        <span className="block sm:inline-block">
+        <span className="inline-block">
           <SplitChars text={t(ui.hero.name)} className="inline-block" />
         </span>
       </h1>
 
       <div className="relative flex flex-1 flex-col items-center sm:block">
         {/* the head sits on top of the headline, touching the letters like in the reference */}
-        <div ref={avatar} className="relative z-10 mx-auto -mt-[7vw] w-[min(58vw,46svh)] max-w-[440px] sm:absolute sm:top-0 sm:left-1/2 sm:mt-[-6.6vw] sm:w-[29vw] sm:max-w-[560px] sm:-translate-x-1/2">
+        <div ref={avatar} className="hero-avatar relative z-10 mx-auto -mt-[16vw] w-[min(58vw,46svh)] max-w-[440px] sm:absolute sm:top-0 sm:left-1/2 sm:mt-[-25vw] sm:w-[27vw] sm:max-w-[620px] sm:-translate-x-1/2">
           <div>
             <img src={img('ace-head.webp')} srcSet={`${img('ace-head-s.webp')} 640w, ${img('ace-head.webp')} 1000w`} sizes="(max-width: 640px) 64vw, 29vw" fetchPriority="high" alt="Doston «Ace» Daminov" className="hero-head w-full" />
           </div>
