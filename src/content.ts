@@ -135,7 +135,7 @@ export type Project = {
 
 // Order = order on the site. Images: public/img/<id>.webp (cover), <id>-s.webp (640px, phones) and <id>-full.webp (full layout).
 export const projects: Project[] = [
-  { id: 'pepsi', client: 'Pepsi', title: { uz: 'Pepsi Lazzatli Fest', ru: "Pepsi Lazzatli Fest", en: 'Pepsi Lazzatli Fest' }, tags: { uz: 'Key visual · Festival', ru: "Key visual · Фестиваль", en: 'Key visual · Festival' } },
+  { id: 'pepsi', client: 'Pepsi', title: { uz: 'Pepsi Lazzatli Fest', ru: "Pepsi Lazzatli Fest", en: 'Pepsi Lazzatli Fest' }, tags: { uz: 'Key visual · Festival', ru: "Key visual · Фестиваль", en: 'Key visual · Festival' }, videos: ['pepsi-video'] },
   { id: 'chempion', client: 'Mirshakar Fayzullayev', title: { uz: 'Çempion şousi', ru: "Шоу «Чемпион»", en: 'Chempion show' }, tags: { uz: 'Key visual · Konsert', ru: "Key visual · Концерт", en: 'Key visual · Concert' } },
   { id: 'agrobank', client: 'Agrobank', title: { uz: 'Ipoteka kampaniyasi', ru: "Ипотечная кампания", en: 'Mortgage campaign' }, tags: { uz: '3D · Reklama', ru: "3D · Реклама", en: '3D · Advertising' } },
   { id: 'fide', client: 'FIDE', title: { uz: 'Rapid va blits bōyiça jahon çempionati', ru: "Чемпионат мира по рапиду и блицу", en: 'World Rapid & Blitz Championships' }, tags: { uz: 'Event · Key visual', ru: "Ивент · Key visual", en: 'Event · Key visual' }, year: '2023', videos: ['fide-video'] },
@@ -160,6 +160,7 @@ export const projects: Project[] = [
     videos: ['intro-video'],
     full: false,
   },
+  { id: 'logipro', client: 'Logi Pro', title: { uz: 'Logi Pro logistika akademiyasi', ru: 'Логистическая академия Logi Pro', en: 'Logi Pro logistics academy' }, tags: { uz: 'Brending · Taʼlim', ru: 'Брендинг · Образование', en: 'Branding · Education' } },
   { id: 'chust', client: 'Chust', title: { uz: 'Çust şahar brendi', ru: "Бренд города Чуст", en: 'Chust city branding' }, tags: { uz: 'Brending · Şahar', ru: "Брендинг · Город", en: 'Branding · City' } },
 ]
 
@@ -191,7 +192,7 @@ export const categories: Category[] = [
     id: 'branding',
     title: { uz: 'Brending va sport', ru: "Брендинг и спорт", en: 'Branding & sports' },
     text: { uz: 'Klublar, ligalar va hududlar uçun vizual identifikatsiya', ru: "Айдентика для клубов, лиг и территорий", en: 'Visual identity for clubs, leagues and places' },
-    projects: ['chust', 'superleague', 'chiroqchi'],
+    projects: ['chust', 'superleague', 'logipro', 'chiroqchi'],
   },
   {
     id: 'ai',
