@@ -111,7 +111,8 @@ function Nav() {
   const { t, lang, setLang, classic, setClassic } = useLang()
   const links = ['about', 'services', 'projects', 'contact'] as const
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-black">
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-black before:pointer-events-none before:absolute before:inset-x-0 before:bottom-full before:h-[300px] before:bg-black before:content-['']">
+      {/* the black strip above the bar covers the iPhone status and address bar area, so scrolled content never shows above the menu */}
       <nav className="mx-auto flex max-w-[1500px] items-center gap-4 px-4 py-4 text-[11px] font-bold tracking-wide uppercase sm:px-8 sm:text-[13px]">
         <ul className="hidden flex-1 justify-around md:flex">
           {links.map((l) =>
@@ -295,7 +296,7 @@ function Hero() {
   }
 
   return (
-    <section ref={root} className="relative flex min-h-[100svh] flex-col overflow-hidden bg-ink px-3 pt-[72px] pb-8 sm:px-4 sm:pt-[78px]">
+    <section ref={root} className="relative flex flex-col overflow-hidden bg-ink sm:min-h-[100svh] px-3 pt-[72px] pb-8 sm:px-4 sm:pt-[78px]">
       {/* tall condensed Six Caps across the full width (Doston picked it), one line on every screen */}
       <h1 ref={title} className="hero-title silver relative z-0 -mt-[1.5vw] text-center text-[38vw] leading-[0.9] whitespace-nowrap uppercase sm:-mt-[1.9vw]" style={{ fontFamily: "'Six Caps', 'Archivo', sans-serif", fontWeight: 400, fontSynthesis: 'none', letterSpacing: '-0.02em' }}>
         <span className="inline-block">
