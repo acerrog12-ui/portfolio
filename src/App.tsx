@@ -476,19 +476,24 @@ function Clients({ onOpen }: { onOpen: (p: Project) => void }) {
   const rows = [covers.slice(0, half), covers.slice(half)]
   return (
     <section aria-label="Clients" className="relative bg-ink py-10 sm:py-14">
-      <div className="edge-fade flex overflow-hidden [--logo-k:0.68] sm:[--logo-k:1]">
-        <ul className="marquee flex shrink-0 items-center gap-14 pr-14 sm:gap-20 sm:pr-20" style={{ ['--speed' as string]: '35s' }}>
-          {[...clients, ...clients].map((c, i) => (
-            <li key={i} className="flex shrink-0 items-center font-display text-lg leading-none whitespace-nowrap text-white uppercase opacity-90 sm:text-2xl">
-              {c.logo ? (
-                // same visual weight for every logo: wide ones get shorter, square ones taller
-                <img src={img(`logos/${c.logo}`)} alt={c.name} loading="lazy" decoding="async" draggable={false}
-                  className="w-auto"
-                  style={{ height: `calc(${Math.min(52, 62 / Math.pow(c.ratio ?? 3, 0.42)).toFixed(1)}px * var(--logo-k, 1))` }} />
-              ) : c.name}
-            </li>
-          ))}
-        </ul>
+      {/* client logos: drifts on its own, and can be dragged or swiped sideways like the project rows */}
+      <div className="edge-fade [--logo-k:0.68] sm:[--logo-k:1]">
+        <DragRow speed={-40}>
+          {/* 6 sets of logos (two identical halves) so the loop has no gap even on very wide screens */}
+          {[0, 1, 2, 3, 4, 5].flatMap((k) =>
+            clients.map((c, i) => (
+              <div key={`${k}-${i}`} className="flex h-16 shrink-0 items-center px-6 font-display text-lg leading-none whitespace-nowrap text-white uppercase opacity-90 sm:h-20 sm:px-9 sm:text-2xl">
+                {c.logo ? (
+                  // same visual weight for every logo: wide ones get shorter, square ones taller
+                  <img src={img(`logos/${c.logo}`)} alt={k ? '' : c.name} decoding="async" draggable={false}
+                    width={Math.round(100 * (c.ratio ?? 3))} height={100}
+                    className="pointer-events-none w-auto"
+                    style={{ height: `calc(${Math.min(52, 62 / Math.pow(c.ratio ?? 3, 0.42)).toFixed(1)}px * var(--logo-k, 1))` }} />
+                ) : c.name}
+              </div>
+            )),
+          )}
+        </DragRow>
       </div>
       <div className="mt-10 space-y-3 sm:mt-14 sm:space-y-4">
         {rows.map((r, ri) => (
