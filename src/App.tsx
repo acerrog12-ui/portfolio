@@ -287,7 +287,7 @@ function Hero() {
   return (
     <section ref={root} className="relative flex min-h-[100svh] flex-col overflow-hidden bg-ink px-3 pt-[72px] pb-8 sm:px-4 sm:pt-[78px]">
       {/* tall condensed Six Caps across the full width (Doston picked it), one line on every screen */}
-      <h1 ref={title} className="hero-title silver relative z-0 text-center text-[38vw] leading-[0.9] whitespace-nowrap uppercase" style={{ fontFamily: "'Six Caps', 'Archivo', sans-serif", fontWeight: 400, fontSynthesis: 'none', letterSpacing: '-0.02em' }}>
+      <h1 ref={title} className="hero-title silver relative z-0 -mt-[1.5vw] text-center text-[38vw] leading-[0.9] whitespace-nowrap uppercase sm:-mt-[1.9vw]" style={{ fontFamily: "'Six Caps', 'Archivo', sans-serif", fontWeight: 400, fontSynthesis: 'none', letterSpacing: '-0.02em' }}>
         <span className="inline-block">
           <SplitChars text={t(ui.hero.hi)} className="inline-block" />
         </span>{' '}
@@ -308,7 +308,7 @@ function Hero() {
           </div>
         </div>
 
-        <div className="relative z-20 mt-4 flex w-full flex-row items-center justify-between gap-3 sm:absolute sm:top-[3.4vw] sm:mt-0 sm:items-start sm:gap-6 sm:px-[3vw]">
+        <div className="relative z-20 mt-4 flex w-full flex-row items-center justify-between gap-3 sm:absolute sm:top-[0.6vw] sm:mt-0 sm:items-start sm:gap-6 sm:px-[3vw]">
           <p className="hero-fade min-w-0 flex-1 text-[12px] leading-[1.5] font-semibold uppercase sm:max-w-[23vw] sm:flex-none sm:text-[1.3vw]">
             {t(ui.hero.tagline)}
           </p>
