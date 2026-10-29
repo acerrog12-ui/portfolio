@@ -192,6 +192,9 @@ function ProjectsMenu({ label }: { label: string }) {
   )
 }
 
+// Turn on once public/img/ace-head-smile.webp (same framing as ace-head.webp) is added
+const HEAD_SMILE = false
+
 /* ---------------- HERO ---------------- */
 function Hero() {
   const { t } = useLang()
@@ -261,6 +264,26 @@ function Hero() {
     }
   }, [])
 
+  // Hovering the contact button makes the character happy: a quick cheerful wiggle,
+  // and the smiling render fades in once that file is added (HEAD_SMILE).
+  const happy = (on: boolean) => {
+    if (reducedMotion()) return
+    const head = root.current?.querySelector('.hero-head')
+    const smile = root.current?.querySelector('.hero-smile')
+    if (!head) return
+    gsap.killTweensOf(head, 'rotate,scale')
+    if (on) {
+      gsap.timeline()
+        .to(head, { rotate: -6, scale: 1.05, duration: 0.14, ease: 'power2.out' })
+        .to(head, { rotate: 5, duration: 0.14, ease: 'power1.inOut' })
+        .to(head, { rotate: -3, duration: 0.12, ease: 'power1.inOut' })
+        .to(head, { rotate: 0, scale: 1.03, duration: 0.35, ease: 'back.out(3)' })
+    } else {
+      gsap.to(head, { rotate: 0, scale: 1, duration: 0.5, ease: 'power3.out' })
+    }
+    if (smile) gsap.to(smile, { opacity: on ? 1 : 0, duration: 0.25, overwrite: true })
+  }
+
   return (
     <section ref={root} className="relative flex min-h-[100svh] flex-col overflow-hidden bg-ink px-3 pt-[72px] pb-8 sm:px-4 sm:pt-[78px]">
       {/* tall condensed Six Caps across the full width (Doston picked it), one line on every screen */}
@@ -277,7 +300,11 @@ function Hero() {
         {/* the head sits on top of the headline, touching the letters like in the reference */}
         <div ref={avatar} className="hero-avatar relative z-10 mx-auto -mt-[16vw] w-[min(58vw,46svh)] max-w-[440px] sm:absolute sm:top-0 sm:left-1/2 sm:mt-[-25vw] sm:w-[27vw] sm:max-w-[620px] sm:-translate-x-1/2">
           <div>
-            <img src={img('ace-head.webp')} srcSet={`${img('ace-head-s.webp')} 640w, ${img('ace-head.webp')} 1000w`} sizes="(max-width: 640px) 64vw, 29vw" fetchPriority="high" alt="Doston «Ace» Daminov" className="hero-head w-full" />
+            <div className="hero-head relative">
+              <img src={img('ace-head.webp')} srcSet={`${img('ace-head-s.webp')} 640w, ${img('ace-head.webp')} 1000w`} sizes="(max-width: 640px) 64vw, 29vw" fetchPriority="high" alt="Doston «Ace» Daminov" className="w-full" />
+              {/* the same head smiling, shown while the contact button is hovered */}
+              {HEAD_SMILE && <img src={img('ace-head-smile.webp')} alt="" aria-hidden decoding="async" className="hero-smile pointer-events-none absolute inset-0 w-full opacity-0" />}
+            </div>
           </div>
         </div>
 
@@ -286,7 +313,7 @@ function Hero() {
             {t(ui.hero.tagline)}
           </p>
           <div className="hero-fade shrink-0">
-            <a href={contacts.telegram} target="_blank" rel="noreferrer" className="pill-grad hero-pill px-5 py-3 text-[13px] sm:mt-[-0.4vw] sm:px-[2.4vw] sm:py-[1.15vw] sm:text-[1.3vw]">
+            <a href={contacts.telegram} target="_blank" rel="noreferrer" onPointerEnter={(e) => e.pointerType === 'mouse' && happy(true)} onPointerLeave={(e) => e.pointerType === 'mouse' && happy(false)} className="pill-grad hero-pill px-5 py-3 text-[13px] sm:mt-[-0.4vw] sm:px-[2.4vw] sm:py-[1.15vw] sm:text-[1.3vw]">
             {t(ui.hero.cta)}
           </a>
           </div>
