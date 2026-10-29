@@ -305,8 +305,7 @@ p{margin:0}
 #s17 .t{position:absolute;left:120px;bottom:90px;display:flex;gap:40px;align-items:baseline}
 
 /* 18 outro */
-#s18 .big{position:absolute;left:110px;top:240px;font:900 360px/.85 var(--f-display);letter-spacing:.03em}
-#s18 .big em{font-style:normal;color:var(--blue)}
+#s18 .big{position:absolute;left:110px;top:300px;width:1290px;height:auto;overflow:visible}
 #s18 .cr{position:absolute;left:120px;bottom:130px;display:grid;grid-template-columns:repeat(4,auto);gap:12px 90px}
 #s18 .cr span:nth-child(-n+4){font:500 14px/1 var(--f-mono);letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
 #s18 .cr span{font:500 22px/1.2 var(--f-body)}
@@ -321,7 +320,6 @@ p{margin:0}
 .anim .rv.rv-z{translate:0 0;scale:.94}
 .anim .frame.in .rv{opacity:1;translate:0 0;clip-path:inset(0 0 0 0);scale:1}
 .anim .rv.rv-z{transition-property:opacity,translate,scale}
-#s18 .big span{display:inline-block}
 .zr{animation:zz 16s linear infinite}
 .zr.rev{animation-direction:reverse}
 @keyframes zz{to{transform:translateX(-280px)}}
@@ -658,7 +656,7 @@ p{margin:0}
 
 <!-- 18 OUTRO -->
 <div class="frame"><div class="slide glow-both grain" id="s18">
-  <div class="big">Salom<em>!</em></div>
+  <svg class="big" viewBox="520 236 1300 240" role="img" aria-label="SALOM!"><g fill="var(--white)"><path class="gl" d="M527.7,311.5c0-13.9,3-25.1,9-33.8c6-8.6,13.7-15.4,23.2-20.3c9.5-4.9,20.1-8.3,31.8-10.1c11.7-1.8,23.4-2.7,34.9-2.7c12.2,0,24.2,0.7,36,2.1c11.8,1.4,22.5,4.4,31.8,9.1c9.4,4.7,17,11.4,22.7,20.2c5.8,8.8,8.6,20.5,8.6,35.2h-47c0-6.6-1.9-11.6-5.6-15c-3.7-3.4-8.3-5.8-13.8-7.2c-5.4-1.4-11.2-2.1-17.3-2.2c-6.1-0.1-11.5-0.2-16.2-0.2c-4.1,0-9,0.1-14.9,0.2c-5.9,0.1-11.5,0.9-16.8,2.2c-5.3,1.4-9.9,3.7-13.6,6.9c-3.7,3.2-5.6,7.8-5.6,13.8c0,6.8,1.9,12.2,5.8,16.2c3.8,4,9.2,6.2,16,6.9l75.5,6.7c17.3,1.5,31.1,7.6,41.4,18.4c10.3,10.8,15.5,24.8,15.5,42.1c0,15.2-3.2,27.3-9.6,36.3c-6.4,9.1-14.7,16-25,20.8c-10.2,4.8-21.7,8-34.2,9.4c-12.6,1.5-25,2.2-37.1,2.2c-11.7,0-23.5-0.8-35.2-2.4c-11.7-1.6-22.4-4.8-31.8-9.6c-9.5-4.8-17.2-11.5-23-20.2c-5.9-8.6-8.8-20.1-8.8-34.4h47c0,6.4,1.9,11.3,5.6,14.7c3.7,3.4,8.3,5.9,13.6,7.4c5.3,1.5,11,2.3,17,2.4c6,0.1,11.3,0.2,16,0.2c4.1,0,9.4,0,16,0c6.6,0,13-0.6,19.2-1.9c6.2-1.3,11.6-3.5,16.2-6.6c4.6-3.1,6.9-7.7,6.9-13.9c0-6.8-1.8-11.7-5.3-14.7c-3.5-3-8.4-5-14.6-6.1l-75.9-7c-9-0.9-17-3.1-24.2-6.7c-7.2-3.6-13.3-8.3-18.4-13.9c-5.1-5.6-9.1-12.3-11.8-19.8C529.1,328.4,527.7,320.3,527.7,311.5z"/><path class="gl" d="M909.2,244.6l73.3,224h-53.1l-14.4-47.4H804.8l-15,47.4h-52.5l73.6-224h49.3l-42.9,135.7h84.8l-41.9-135.7H909.2z"/><path class="gl" d="M1052.2,244.6v178.6h123.5v45.4h-172.5v-224H1052.2z"/><path class="gl" d="M1424.1,356.6c0,36.5-10.4,64.3-31,83.4c-20.7,19.1-50.5,28.6-89.3,28.6c-39.3,0-69.1-9.5-89.5-28.6c-20.4-19.1-30.6-46.9-30.6-83.4c0-36.9,10.5-64.8,31.4-83.7c20.9-18.9,50.6-28.3,89-28.3s68,9.2,88.8,27.7C1413.7,290.8,1424.1,318.9,1424.1,356.6z M1374.2,356c0-10-1.6-19-4.6-27c-3.1-8-7.6-14.9-13.6-20.6c-6-5.8-13.3-10.2-21.9-13.3c-8.6-3.1-18.5-4.6-29.6-4.6c-22.6,0-40.1,6-52.3,17.9c-12.3,12-18.4,28.1-18.4,48.3c0,21.1,6.1,37.4,18.4,49c12.3,11.5,29.7,17.3,52.3,17.3c23.9,0,41.5-6.1,52.8-18.2C1368.5,392.5,1374.2,376.3,1374.2,356z"/><path class="gl" d="M1495.8,468.6h-47.7v-224h95.7l39.4,224l39.4-224h95.1v224h-47.4V246.5h-0.3l-39,222.1h-95.4l-39.4-223.4h-0.3V468.6z"/></g><g class="gl" fill="var(--blue)"><rect x="1762" y="244.6" width="49" height="160"/><circle cx="1786.5" cy="441.8" r="27.8"/></g></svg>
   <svg class="mk" viewBox="70 48 345 670" aria-hidden="true"><use href="#mark" x="70" y="48" width="345" height="670"/></svg>
   <div class="cr">
     <span>Mijoz</span><span>Yil</span><span>Ish</span><span>Sayt</span>
@@ -718,9 +716,6 @@ p{margin:0}
   var root=document.documentElement;
   if(root.classList.contains('export')) return;
   if(!matchMedia('(prefers-reduced-motion: reduce)').matches) root.classList.add('anim');
-  // split outro word into letters
-  var big=document.querySelector('#s18 .big');
-  if(big){var em=big.querySelector('em');var t='Salom';big.innerHTML=t.split('').map(function(c){return '<span>'+c+'</span>'}).join('')+'<span><em>'+(em?em.textContent:'!')+'</em></span>';}
   var plan={
     s1:[['.left>*','',.12]],
     s2:[['.txt','',0],['.note','',.15],['.bigmark','rv-r',.1]],
@@ -739,7 +734,7 @@ p{margin:0}
     s15:[['.gift','rv-l',0],['.bc','rv-r',.12],['.ticket','',.2]],
     s16:[['.post','',.14]],
     s17:[['.win','',.2],['.t','',.1]],
-    s18:[['.big span','',.07],['.mk','rv-r',.2],['.cr','',.3]]
+    s18:[['.big .gl','',.08],['.mk','rv-r',.2],['.cr','',.3]]
   };
   Object.keys(plan).forEach(function(id){var sl=document.getElementById(id);if(!sl)return;var base=0;
     plan[id].forEach(function(p){var els=sl.querySelectorAll(p[0]);els.forEach(function(el,i){el.classList.add('rv');if(p[1])el.classList.add(p[1]);el.style.setProperty('--d',(base+i*p[2]).toFixed(2)+'s')});base+=Math.min(els.length,6)*p[2]+.1;});});
