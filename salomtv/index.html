@@ -350,6 +350,11 @@ p{margin:0}
 .export *{animation:none!important;transition:none!important}
 @media (prefers-reduced-motion:reduce){*{animation:none!important}}
 </style>
+<style id="site-perf">/* added for the portfolio site: skip drawing slides that are off screen, lighter on phones */
+.frame{content-visibility:auto;contain-intrinsic-size:auto 56vw}
+@media (max-width:900px),(pointer:coarse){.grain::after{display:none}}
+</style>
+
 
 <!-- Logo symbols (vector from salomtv.uz) -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
