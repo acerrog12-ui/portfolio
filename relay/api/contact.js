@@ -23,11 +23,12 @@ export default async function handler(req, res) {
   const b = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : req.body || {}
   if (b.website) return res.status(200).json({ ok: true }) // honeypot: bots fill it, people don't see it
   const name = String(b.name || '').trim().slice(0, 100)
+  const phone = String(b.phone || '').trim().slice(0, 30)
   const email = String(b.email || '').trim().slice(0, 120)
   const message = String(b.message || '').trim().slice(0, 3000)
-  if (!name || (!message && !email)) return res.status(400).json({ ok: false })
+  if (!name || (!message && !phone && !email)) return res.status(400).json({ ok: false })
 
-  const text = `📩 <b>Portfolio: yangi xabar</b>\n\n<b>Ism:</b> ${esc(name)}\n<b>Email:</b> ${esc(email || '—')}\n\n${esc(message || '—')}`
+  const text = `📩 <b>Portfolio: yangi xabar</b>\n\n<b>Ism:</b> ${esc(name)}\n<b>Telefon:</b> ${esc(phone || '—')}${email ? `\n<b>Email:</b> ${esc(email)}` : ''}\n\n${esc(message || '—')}`
   const r = await fetch(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

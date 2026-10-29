@@ -72,7 +72,7 @@ export const ui = {
     title: { uz: "IŞLAYDIGAN BŌLIB KELING", ru: "ПРИХОДИТЕ ГОТОВЫМИ К\u00a0РАБОТЕ", en: "COME READY TO WORK" },
     form: {
       name: { uz: 'Ismingiz', ru: "Ваше имя", en: 'Your name' },
-      email: { uz: 'Email', ru: "Email", en: 'Email' },
+      phone: { uz: 'Telefon raqamingiz', ru: 'Ваш номер телефона', en: 'Your phone number' },
       message: { uz: "Loyiha, muddat va format haqida", ru: "Проект, сроки и формат", en: 'Project, timeline and format' },
       send: { uz: 'Yuboriş', ru: "Отправить", en: 'Send' },
       sending: { uz: 'Yuborilmoqda…', ru: 'Отправляю…', en: 'Sending…' },

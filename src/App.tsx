@@ -861,7 +861,7 @@ const ctx = gsap.context(() => {
     const f = new FormData(form)
     if (!contacts.relay) {
       const subject = `Portfolio: ${f.get('name') || ''}`
-      const body = `${f.get('message') || ''}\n\n${f.get('name') || ''} · ${f.get('email') || ''}`
+      const body = `${f.get('message') || ''}\n\n${f.get('name') || ''} · ${f.get('phone') || ''}`
       window.location.href = `mailto:${contacts.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
       return
     }
@@ -912,7 +912,7 @@ const ctx = gsap.context(() => {
           </div>
           <form onSubmit={send} className="flex flex-col gap-4">
             <input name="name" required placeholder={t(ui.contact.form.name)} className={field} />
-            <input name="email" type="email" placeholder={t(ui.contact.form.email)} className={field} />
+            <input name="phone" type="tel" inputMode="tel" autoComplete="tel" required minLength={7} maxLength={20} placeholder={t(ui.contact.form.phone)} className={field} />
             <textarea name="message" rows={3} placeholder={t(ui.contact.form.message)} className={`${field} resize-none`} />
             {/* honeypot: hidden from people, bots fill it */}
             <input name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 opacity-0" />
