@@ -179,6 +179,7 @@ export const projects: Project[] = [
   { id: 'yonda-awards', client: 'Yonda Awards', title: { uz: 'Yonda Awards 2025', ru: 'Yonda Awards 2025', en: 'Yonda Awards 2025' }, tags: { uz: 'Key visual · 3D · Mukofot', ru: 'Key visual · 3D · Премия', en: 'Key visual · 3D · Awards' }, year: '2025' },
   { id: 'logipro', client: 'Logi Pro', title: { uz: 'Logi Pro logistika akademiyasi', ru: 'Логистическая академия Logi Pro', en: 'Logi Pro logistics academy' }, tags: { uz: 'Brending · Taʼlim', ru: 'Брендинг · Образование', en: 'Branding · Education' } },
   { id: 'salomtv', client: 'Salom TV', title: { uz: 'Salom TV brendingi', ru: 'Брендинг Salom TV', en: 'Salom TV branding' }, tags: { uz: 'Brending · Onlayn kinoteatr · Motion', ru: 'Брендинг · Онлайн-кинотеатр · Моушн', en: 'Branding · Online cinema · Motion' }, year: '2026', embed: 'salomtv/index.html', full: false },
+  { id: 'arch-design', client: 'Arch Design', title: { uz: 'Arch Design arxitektura studiyasi brendbuki', ru: 'Брендбук архитектурной студии Arch Design', en: 'Arch Design architecture studio brandbook' }, tags: { uz: 'Brending · Brendbuk · Arxitektura', ru: 'Брендинг · Брендбук · Архитектура', en: 'Branding · Brandbook · Architecture' }, year: '2024', parts: 2 },
   { id: 'chust', client: 'Chust', title: { uz: 'Çust şahar brendi', ru: "Бренд города Чуст", en: 'Chust city branding' }, tags: { uz: 'Brending · Şahar', ru: "Брендинг · Город", en: 'Branding · City' } },
 ]
 
@@ -210,7 +211,7 @@ export const categories: Category[] = [
     id: 'branding',
     title: { uz: 'Brending va sport', ru: "Брендинг и спорт", en: 'Branding & sports' },
     text: { uz: 'Klublar, ligalar va hududlar uçun vizual identifikatsiya', ru: "Айдентика для клубов, лиг и территорий", en: 'Visual identity for clubs, leagues and places' },
-    projects: ['salomtv', 'chust', 'superleague', 'logipro', 'chiroqchi'],
+    projects: ['salomtv', 'arch-design', 'chust', 'superleague', 'logipro', 'chiroqchi'],
   },
   {
     id: 'ai',
