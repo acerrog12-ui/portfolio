@@ -178,6 +178,7 @@ export const projects: Project[] = [
   },
   { id: 'yonda-awards', client: 'Yonda Awards', title: { uz: 'Yonda Awards 2025', ru: 'Yonda Awards 2025', en: 'Yonda Awards 2025' }, tags: { uz: 'Key visual · 3D · Mukofot', ru: 'Key visual · 3D · Премия', en: 'Key visual · 3D · Awards' }, year: '2025' },
   { id: 'logipro', client: 'Logi Pro', title: { uz: 'Logi Pro logistika akademiyasi', ru: 'Логистическая академия Logi Pro', en: 'Logi Pro logistics academy' }, tags: { uz: 'Brending · Taʼlim', ru: 'Брендинг · Образование', en: 'Branding · Education' } },
+  { id: 'khiva-ethnosport', client: 'Ethnosport Khiva', title: { uz: 'Ethnosport Khiva 2023', ru: 'Ethnosport Khiva 2023', en: 'Ethnosport Khiva 2023' }, tags: { uz: 'Festival identifikatsiyasi · Key visual · Motion', ru: 'Айдентика фестиваля · Key visual · Моушн', en: 'Festival identity · Key visual · Motion' }, year: '2023', embed: 'khiva/index.html', full: false },
   { id: 'salomtv', client: 'Salom TV', title: { uz: 'Salom TV brendingi', ru: 'Брендинг Salom TV', en: 'Salom TV branding' }, tags: { uz: 'Brending · Onlayn kinoteatr · Motion', ru: 'Брендинг · Онлайн-кинотеатр · Моушн', en: 'Branding · Online cinema · Motion' }, year: '2026', embed: 'salomtv/index.html', full: false },
   { id: 'arch-design', client: 'Arch Design', title: { uz: 'Arch Design arxitektura studiyasi brendbuki', ru: 'Брендбук архитектурной студии Arch Design', en: 'Arch Design architecture studio brandbook' }, tags: { uz: 'Brending · Brendbuk · Arxitektura', ru: 'Брендинг · Брендбук · Архитектура', en: 'Branding · Brandbook · Architecture' }, year: '2024', parts: 2 },
   { id: 'chust', client: 'Chust', title: { uz: 'Çust şahar brendi', ru: "Бренд города Чуст", en: 'Chust city branding' }, tags: { uz: 'Brending · Şahar', ru: "Брендинг · Город", en: 'Branding · City' } },
@@ -193,7 +194,7 @@ export const categories: Category[] = [
     id: 'key-visual',
     title: { uz: 'Key visual va kampaniyalar', ru: "Key visual и кампании", en: 'Key visuals & campaigns' },
     text: { uz: 'Festival, konsert va aksiyalar uçun asosiy vizuallar', ru: "Ключевые визуалы для фестивалей, концертов и промоакций", en: 'Key visuals for festivals, shows and promos' },
-    projects: ['pepsi', 'yonda-awards', 'chempion', 'bliss'],
+    projects: ['khiva-ethnosport', 'pepsi', 'yonda-awards', 'chempion', 'bliss'],
   },
   {
     id: '3d',
