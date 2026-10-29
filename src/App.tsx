@@ -668,7 +668,7 @@ function CategoryPage({ cat, onOpen }: { cat: Category; onOpen: (p: Project) => 
           {ps.map((p, i) => (
             <button key={p.id} onClick={() => onOpen(p)} className={`cat-item group block overflow-hidden rounded-[1.75rem] border-[1.5px] border-white/70 p-3 text-left sm:p-4 ${ps.length % 2 && i === 0 ? 'md:col-span-2' : ''}`}>
               <span className="relative block aspect-video overflow-hidden rounded-[1.25rem]">
-                {p.videos && <span className="absolute top-3 left-3 z-10 rounded-full bg-black/70 px-3 py-1 text-[10px] font-bold tracking-wide text-white uppercase">▶ Video</span>}
+                {(p.videos || p.embed) && <span className="absolute top-3 left-3 z-10 rounded-full bg-black/70 px-3 py-1 text-[10px] font-bold tracking-wide text-white uppercase">{p.videos ? "▶ Video" : "▶ Motion"}</span>}
                 <img src={img(`${p.id}.webp`)} srcSet={`${img(`${p.id}-s.webp`)} 640w, ${img(`${p.id}.webp`)} 1200w`} sizes="(max-width: 640px) 95vw, 50vw" alt={t(p.title)} loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-105" />
               </span>
               <span className="flex items-center gap-4 px-1 pt-4 pb-1">
@@ -697,6 +697,46 @@ function CategoryPage({ cat, onOpen }: { cat: Category; onOpen: (p: Project) => 
         </div>
       </div>
     </main>
+  )
+}
+
+// An animated HTML presentation shown at its full height, so the modal does the scrolling.
+// Its slides still animate as they reach the screen (IntersectionObserver sees the real viewport).
+function EmbedDeck({ src, title }: { src: string; title: string }) {
+  const frame = useRef<HTMLIFrameElement>(null)
+  const [h, setH] = useState(0)
+  useEffect(() => {
+    const f = frame.current
+    if (!f) return
+    let ro: ResizeObserver | undefined
+    const measure = () => {
+      const doc = f.contentDocument
+      if (doc?.body) setH(doc.documentElement.scrollHeight)
+    }
+    const onLoad = () => {
+      measure()
+      const doc = f.contentDocument
+      if (doc?.body && 'ResizeObserver' in window) {
+        ro = new ResizeObserver(measure)
+        ro.observe(doc.body)
+      }
+    }
+    f.addEventListener('load', onLoad)
+    window.addEventListener('resize', measure)
+    return () => {
+      f.removeEventListener('load', onLoad)
+      window.removeEventListener('resize', measure)
+      ro?.disconnect()
+    }
+  }, [])
+  const url = `${import.meta.env.BASE_URL}${src}`
+  return (
+    <div className="mx-auto w-full max-w-[1100px] px-3 pb-10 sm:px-8">
+      <iframe ref={frame} src={url} title={title} scrolling="no" className="block w-full rounded-2xl bg-black" style={{ height: h || '56vw', border: 0 }} />
+      <a href={url} target="_blank" rel="noreferrer" className="mx-auto mt-5 block w-fit rounded-full border-[1.5px] border-white/60 px-6 py-3 text-xs font-bold tracking-widest uppercase">
+        ↗ Full screen
+      </a>
+    </div>
   )
 }
 
@@ -740,6 +780,7 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
             preload="metadata"
           />
         ))}
+        {project.embed && <EmbedDeck src={project.embed} title={t(project.title)} />}
         {project.full !== false &&
           (project.parts ? Array.from({ length: project.parts }, (_, i) => `${project.id}-full-${i + 1}.webp`) : [`${project.id}-full.webp`]).map((f, i, all) => (
             <img key={f} src={img(f)} alt={i ? '' : t(project.title)} loading="lazy" decoding="async" className={`mx-auto block w-full max-w-[1100px] px-3 sm:px-8 ${i === all.length - 1 ? 'pb-10' : ''}`} />
