@@ -125,6 +125,8 @@ export const team = {
 }
 
 export type Project = {
+  /** color of the last word of the title on the cover (default orange) */
+  accent?: string
   /** an animated HTML presentation under public/, shown in the project view instead of images */
   embed?: string
   id: string

@@ -695,14 +695,12 @@ function CategoryPage({ cat, onOpen }: { cat: Category; onOpen: (p: Project) => 
               <span className="relative block aspect-video overflow-hidden rounded-[1.25rem]">
                 {(p.videos || p.embed) && <span className="absolute top-3 left-3 z-10 rounded-full bg-black/70 px-3 py-1 text-[10px] font-bold tracking-wide text-white uppercase">{p.videos ? "▶ Video" : "▶ Motion"}</span>}
                 <img src={img(`${p.id}.webp`)} srcSet={`${img(`${p.id}-s.webp`)} 640w, ${img(`${p.id}.webp`)} 1200w`} sizes="(max-width: 640px) 95vw, 50vw" alt={t(p.title)} loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-105" />
+                <CoverText p={p} />
               </span>
               <span className="flex items-center gap-4 px-1 pt-4 pb-1">
                 <span className="min-w-0 flex-1">
                   <span className="block font-cond text-base font-extrabold uppercase sm:text-lg">{p.client}</span>
-                  <span className="block truncate text-xs text-white/50 sm:text-sm">
-                    {t(p.title)}
-                    {p.year && ` · ${p.year}`} · {t(p.tags)}
-                  </span>
+                  <span className="block truncate text-xs text-white/50 sm:hidden">{t(p.tags)}</span>
                 </span>
                 <span className="pill-line shrink-0 px-4 py-2 text-[10px] group-hover:bg-white group-hover:text-black sm:text-xs">{t(ui.projects.view)}</span>
               </span>
@@ -722,6 +720,43 @@ function CategoryPage({ cat, onOpen }: { cat: Category; onOpen: (p: Project) => 
         </div>
       </div>
     </main>
+  )
+}
+
+// Title over a project cover, like the deck covers: dark shade from the left and bottom,
+// the title with its last part in the accent color, and a small info row.
+const coverLabels = {
+  client: { uz: 'Mijoz', ru: 'Клиент', en: 'Client' },
+  year: { uz: 'Yil', ru: 'Год', en: 'Year' },
+  work: { uz: 'Ish', ru: 'Работа', en: 'Work' },
+}
+function CoverText({ p }: { p: Project }) {
+  const { t } = useLang()
+  const title = t(p.title)
+  const cut = title.lastIndexOf(' · ') >= 0 ? title.lastIndexOf(' · ') + 3 : title.lastIndexOf(' ') + 1
+  const head = title.slice(0, cut)
+  const tail = title.slice(cut)
+  const meta: [string, string][] = [[t(coverLabels.client), p.client]]
+  if (p.year) meta.push([t(coverLabels.year), p.year])
+  meta.push([t(coverLabels.work), t(p.tags)])
+  return (
+    <>
+      <span aria-hidden className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(6,7,10,.9)_0%,rgba(6,7,10,.55)_45%,rgba(6,7,10,0)_80%),linear-gradient(0deg,rgba(6,7,10,.92)_0%,rgba(6,7,10,.6)_35%,rgba(6,7,10,0)_72%)]" />
+      <span className="pointer-events-none absolute inset-x-0 bottom-0 block p-4 sm:p-6 lg:p-7">
+        <span className="block max-w-[85%] font-display text-[clamp(1.25rem,2.6vw,2.3rem)] leading-[1.02] text-white normal-case">
+          {head}
+          <span style={{ color: p.accent || '#f39a4a' }}>{tail}</span>
+        </span>
+        <span className="mt-3 hidden gap-6 sm:flex">
+          {meta.map(([k, v]) => (
+            <span key={k} className="min-w-0">
+              <span className="block text-[9px] font-bold tracking-[0.18em] text-white/50 uppercase">{k}</span>
+              <span className="block truncate text-[11px] font-semibold text-white/90 lg:text-xs">{v}</span>
+            </span>
+          ))}
+        </span>
+      </span>
+    </>
   )
 }
 
