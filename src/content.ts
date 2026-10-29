@@ -10,6 +10,8 @@ export const contacts = {
   telegramHandle: '@thedaminoff',
   phone: '+998 90 332 03 11',
   phoneHref: 'tel:+998903320311',
+  // Telegram relay for the contact form (empty = fall back to email)
+  relay: '',
   instagram: 'https://www.instagram.com/daminov_dostonbek1/',
   behance: 'https://www.behance.net/daminovdostonbek',
 }
@@ -73,6 +75,9 @@ export const ui = {
       email: { uz: 'Email', ru: "Email", en: 'Email' },
       message: { uz: "Loyiha, muddat va format haqida", ru: "Проект, сроки и формат", en: 'Project, timeline and format' },
       send: { uz: 'Yuboriş', ru: "Отправить", en: 'Send' },
+      sending: { uz: 'Yuborilmoqda…', ru: 'Отправляю…', en: 'Sending…' },
+      sent: { uz: 'Rahmat! Xabaringiz yetib keldi, tez orada javob beraman.', ru: 'Спасибо! Сообщение получено, скоро отвечу.', en: "Thanks! Your message arrived, I'll reply soon." },
+      error: { uz: 'Yuborib boʻlmadi. Iltimos, Telegram orqali yozing.', ru: 'Не удалось отправить. Напишите, пожалуйста, в Telegram.', en: "Couldn't send. Please message me on Telegram." },
     },
     lead: {
       uz: "Loyihangiz haqida qisqaça yozing: ğoya, muddat va format. Javob beraman va işni birga rejalaştiramiz. Begona emas ekansiz, keliştirib beramiz narxlarni 😉",

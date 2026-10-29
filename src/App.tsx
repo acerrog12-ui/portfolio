@@ -853,13 +853,27 @@ const ctx = gsap.context(() => {
     { name: 'Behance', href: contacts.behance },
   ]
 
-  // The form opens the visitor's mail app with the message filled in
-  const send = (e: FormEvent<HTMLFormElement>) => {
+  // The form goes to Doston's Telegram bot through the relay; without one it opens the mail app
+  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
+  const send = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const f = new FormData(e.currentTarget)
-    const subject = `Portfolio: ${f.get('name') || ''}`
-    const body = `${f.get('message') || ''}\n\n${f.get('name') || ''} · ${f.get('email') || ''}`
-    window.location.href = `mailto:${contacts.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+    const form = e.currentTarget
+    const f = new FormData(form)
+    if (!contacts.relay) {
+      const subject = `Portfolio: ${f.get('name') || ''}`
+      const body = `${f.get('message') || ''}\n\n${f.get('name') || ''} · ${f.get('email') || ''}`
+      window.location.href = `mailto:${contacts.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+      return
+    }
+    setStatus('sending')
+    try {
+      const r = await fetch(contacts.relay, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(Object.fromEntries(f)) })
+      if (!r.ok) throw new Error()
+      form.reset()
+      setStatus('sent')
+    } catch {
+      setStatus('error')
+    }
   }
   const field = 'w-full border-b border-black/25 bg-transparent py-3 text-base text-black outline-none placeholder:text-black/40 focus:border-black'
 
@@ -900,9 +914,18 @@ const ctx = gsap.context(() => {
             <input name="name" required placeholder={t(ui.contact.form.name)} className={field} />
             <input name="email" type="email" placeholder={t(ui.contact.form.email)} className={field} />
             <textarea name="message" rows={3} placeholder={t(ui.contact.form.message)} className={`${field} resize-none`} />
-            <button type="submit" className="mt-4 rounded-full border-[1.5px] border-black/30 py-3 text-sm font-extrabold tracking-wide text-violet uppercase transition-colors hover:border-violet hover:bg-violet hover:text-white">
-              {t(ui.contact.form.send)}
+            {/* honeypot: hidden from people, bots fill it */}
+            <input name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 opacity-0" />
+            <button type="submit" disabled={status === 'sending'} className="mt-4 disabled:opacity-60 rounded-full border-[1.5px] border-black/30 py-3 text-sm font-extrabold tracking-wide text-violet uppercase transition-colors hover:border-violet hover:bg-violet hover:text-white">
+              {t(status === 'sending' ? ui.contact.form.sending : ui.contact.form.send)}
             </button>
+            {status === 'sent' && <p role="status" className="text-sm font-semibold text-violet">{t(ui.contact.form.sent)}</p>}
+            {status === 'error' && (
+              <p role="alert" className="text-sm font-semibold text-red-600">
+                {t(ui.contact.form.error)}{' '}
+                <a href={contacts.telegram} target="_blank" rel="noreferrer" className="underline">{contacts.telegramHandle}</a>
+              </p>
+            )}
           </form>
         </div>
       </div>
