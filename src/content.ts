@@ -145,15 +145,15 @@ export type Project = {
 // Order = order on the site. Images: public/img/<id>.webp (cover), <id>-s.webp (640px, phones) and <id>-full.webp (full layout).
 export const projects: Project[] = [
   { id: 'pepsi', client: 'Pepsi', title: { uz: 'Pepsi Lazzatli Fest', ru: "Pepsi Lazzatli Fest", en: 'Pepsi Lazzatli Fest' }, tags: { uz: 'Key visual · Festival', ru: "Key visual · Фестиваль", en: 'Key visual · Festival' }, videos: ['pepsi-video'] },
-  { id: 'chempion', client: 'Mirshakar Fayzullayev', title: { uz: 'Çempion şousi', ru: "Шоу «Чемпион»", en: 'Chempion show' }, tags: { uz: 'Key visual · Konsert', ru: "Key visual · Концерт", en: 'Key visual · Concert' } },
+  { id: 'chempion', client: 'Mirshakar Fayzullayev', title: { uz: 'Çempion şousi', ru: "Шоу «Чемпион»", en: 'Chempion show' }, tags: { uz: 'Key visual · Konsert', ru: "Key visual · Концерт", en: 'Key visual · Concert' }, videos: ['chempion-video', 'chempion-humo', 'chempion-story'], embed: 'chempion/index.html', full: false },
   { id: 'agrobank', client: 'Agrobank', title: { uz: 'Ipoteka kampaniyasi', ru: "Ипотечная кампания", en: 'Mortgage campaign' }, tags: { uz: '3D · Reklama', ru: "3D · Реклама", en: '3D · Advertising' } },
   { id: 'fide', client: 'FIDE', title: { uz: 'Rapid va blits bōyiça jahon çempionati', ru: "Чемпионат мира по рапиду и блицу", en: 'World Rapid & Blitz Championships' }, tags: { uz: 'Event · Key visual', ru: "Ивент · Key visual", en: 'Event · Key visual' }, year: '2023', videos: ['fide-video', 'fide-video-2'] },
-  { id: 'istedodlar-zamini', client: 'Yoshlar harakati', title: { uz: "Ōzbekiston — Isteʼdodlar zamini", ru: "Узбекистан — земля талантов", en: "Uzbekistan — Land of Talents" }, tags: { uz: 'Sahna dizayni', ru: "Сценография", en: 'Stage design' }, year: '2025' },
+  { id: 'istedodlar-zamini', client: 'Yoshlar harakati', title: { uz: "Ōzbekiston — Isteʼdodlar zamini", ru: "Узбекистан — земля талантов", en: "Uzbekistan — Land of Talents" }, tags: { uz: 'Sahna dizayni', ru: "Сценография", en: 'Stage design' }, year: '2025' , embed: 'ucfutbol/index.html' },
   { id: 'superleague', client: 'UZSL', title: { uz: "Ōzbekiston Superligasi", ru: "Суперлига Узбекистана", en: 'Uzbekistan Superleague' }, tags: { uz: 'Brending · Sport', ru: "Брендинг · Спорт", en: 'Branding · Sports' }, videos: ['superleague-video'] },
   { id: 'chiroqchi', client: 'Chiroqchi', title: { uz: 'Çiroqçi tumani brendi', ru: "Бренд Чиракчинского района", en: 'Chiroqchi district identity' }, tags: { uz: 'Brending · Şahar', ru: "Брендинг · Территория", en: 'Branding · Place' } },
   { id: 'amir-temur', client: "O'zbekistondagi Islom sivilizatsiyasi markazi", title: { uz: 'Sohibqiron Amir Temur', ru: "Сохибкиран Амир Темур", en: 'Sohibqiron Amir Temur' }, tags: { uz: 'Vizual · Kōrgazma', ru: "Визуалы · Выставка", en: 'Visuals · Exhibition' }, videos: ['immersive-video'] },
-  { id: 'violence', client: 'Tasnif Group', title: { uz: 'Violence kōrgazmasi', ru: "Выставка Violence", en: 'Violence exhibition' }, tags: { uz: 'Immersiv · 3D mapping', ru: "Иммерсив · 3D-мэппинг", en: 'Immersive · 3D mapping' }, year: '2023' },
-  { id: 'oltin-chinor', client: 'Oltin Chinor', title: { uz: 'Oltin Çinor milliy mukofoti', ru: "Национальная премия «Олтин Чинор»", en: 'Oltin Chinor national award' }, tags: { uz: 'Sahna dizayni', ru: "Сценография", en: 'Stage design' }, year: '2024' },
+  { id: 'violence', client: 'Tasnif Group', title: { uz: 'Zōravonlik — immersiv kōrgazma', ru: 'Насилие — иммерсивная выставка', en: 'Violence — immersive exhibition' }, tags: { uz: 'Immersiv · 3D mapping', ru: "Иммерсив · 3D-мэппинг", en: 'Immersive · 3D mapping' }, year: '2023' , embed: 'violence/index.html' },
+  { id: 'oltin-chinor', client: 'Oltin Chinor', title: { uz: 'Oltin Çinor milliy mukofoti', ru: "Национальная премия «Олтин Чинор»", en: 'Oltin Chinor national award' }, tags: { uz: 'Sahna dizayni', ru: "Сценография", en: 'Stage design' }, year: '2024' , embed: 'oltinchinor/index.html' },
   { id: 'mkbank', client: 'MKBANK', title: { uz: 'Omonat kampaniyasi', ru: "Кампания по вкладам", en: 'Deposit campaign' }, tags: { uz: '3D · Reklama', ru: "3D · Реклама", en: '3D · Advertising' }, videos: ['mkbank-video'] },
   { id: 'bliss', client: 'Bliss', title: { uz: 'BAAga sayohat aksiyasi', ru: "Акция «Поездка в ОАЭ»", en: 'Trip to the UAE promo' }, tags: { uz: 'Key visual · Aksiya', ru: "Key visual · Промо", en: 'Key visual · Promo' }, videos: ['bliss-video'] },
   {
@@ -182,6 +182,8 @@ export const projects: Project[] = [
   { id: 'salomtv', client: 'Salom TV', title: { uz: 'Salom TV brendingi', ru: 'Брендинг Salom TV', en: 'Salom TV branding' }, tags: { uz: 'Brending · Onlayn kinoteatr · Motion', ru: 'Брендинг · Онлайн-кинотеатр · Моушн', en: 'Branding · Online cinema · Motion' }, year: '2026', embed: 'salomtv/index.html', full: false },
   { id: 'arch-design', client: 'Arch Design', title: { uz: 'Arch Design arxitektura studiyasi brendbuki', ru: 'Брендбук архитектурной студии Arch Design', en: 'Arch Design architecture studio brandbook' }, tags: { uz: 'Brending · Brendbuk · Arxitektura', ru: 'Брендинг · Брендбук · Архитектура', en: 'Branding · Brandbook · Architecture' }, year: '2024', parts: 2 },
   { id: 'chust', client: 'Chust', title: { uz: 'Çust şahar brendi', ru: "Бренд города Чуст", en: 'Chust city branding' }, tags: { uz: 'Brending · Şahar', ru: "Брендинг · Город", en: 'Branding · City' } },
+  { id: 'samad', client: 'Samad', title: { uz: 'Samad qadoq dizayni', ru: 'Дизайн упаковки Samad', en: 'Samad packaging design' }, tags: { uz: 'Qadoq · Plombir, sorbet, çuçvara', ru: 'Упаковка · Пломбир, сорбет, пельмени', en: 'Packaging · Ice cream, sorbet, dumplings' }, embed: 'samad/index.html', full: false },
+  { id: 'talaba-fest', client: 'Talaba Fest', title: { uz: 'Talaba Fest festivali', ru: 'Фестиваль Talaba Fest', en: 'Talaba Fest festival' }, tags: { uz: 'Identifikatsiya · 3D hudud dizayni', ru: 'Айдентика · 3D-дизайн территории', en: 'Identity · 3D venue design' }, videos: ['talaba-video'], embed: 'talabafest/index.html', full: false },
 ]
 
 // Work directions shown as big cards in the Projects section.
@@ -194,25 +196,25 @@ export const categories: Category[] = [
     id: 'key-visual',
     title: { uz: 'Key visual va kampaniyalar', ru: "Key visual и кампании", en: 'Key visuals & campaigns' },
     text: { uz: 'Festival, konsert va aksiyalar uçun asosiy vizuallar', ru: "Ключевые визуалы для фестивалей, концертов и промоакций", en: 'Key visuals for festivals, shows and promos' },
-    projects: ['khiva-ethnosport', 'pepsi', 'yonda-awards', 'chempion', 'bliss'],
+    projects: ['khiva-ethnosport', 'chempion', 'pepsi', 'yonda-awards', 'bliss'],
   },
   {
     id: '3d',
     title: { uz: '3D va reklama', ru: "3D и реклама", en: '3D & advertising' },
     text: { uz: 'Banklar va brendlar uçun 3D reklama hamda immersiv kontent', ru: "3D-реклама и иммерсивный контент для банков и брендов", en: '3D ads and immersive content for banks and brands' },
-    projects: ['agrobank', 'mkbank', 'violence'],
+    projects: ['violence', 'agrobank', 'mkbank'],
   },
   {
     id: 'event',
     title: { uz: 'Event va sahna dizayni', ru: "Ивент и сценография", en: 'Event & stage design' },
     text: { uz: "Katta tadbirlar uçun sahna, ekran va kōrgazma dizayni", ru: "Дизайн сцены, экранов и выставок для крупных мероприятий", en: 'Stage, screen and exhibition design for large events' },
-    projects: ['fide', 'istedodlar-zamini', 'qahramonlar', 'oltin-chinor', 'amir-temur'],
+    projects: ['fide', 'talaba-fest', 'istedodlar-zamini', 'oltin-chinor', 'qahramonlar', 'amir-temur'],
   },
   {
     id: 'branding',
     title: { uz: 'Brending va sport', ru: "Брендинг и спорт", en: 'Branding & sports' },
     text: { uz: 'Klublar, ligalar va hududlar uçun vizual identifikatsiya', ru: "Айдентика для клубов, лиг и территорий", en: 'Visual identity for clubs, leagues and places' },
-    projects: ['salomtv', 'arch-design', 'chust', 'superleague', 'logipro', 'chiroqchi'],
+    projects: ['salomtv', 'arch-design', 'samad', 'chust', 'superleague', 'logipro', 'chiroqchi'],
   },
   {
     id: 'ai',

@@ -804,7 +804,7 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
         {project.videos?.map((v) => (
           <video
             key={v}
-            className="mx-auto mb-6 block w-full max-w-[1100px] rounded-2xl bg-black px-3 sm:px-8"
+            className="mx-auto mb-6 block max-h-[85svh] w-full max-w-[1100px] rounded-2xl bg-black object-contain px-3 sm:px-8"
             src={`${import.meta.env.BASE_URL}video/${v}.mp4`}
             poster={`${import.meta.env.BASE_URL}video/${v}.jpg`}
             controls
