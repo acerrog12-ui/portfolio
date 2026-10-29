@@ -49,6 +49,14 @@ export default function App() {
     }
   }, [cat])
 
+  // Endless CSS animations (floating objects, marquees) only run while on screen
+  useEffect(() => {
+    const els = document.querySelectorAll<HTMLElement>('.floaty, .marquee')
+    const io = new IntersectionObserver((es) => es.forEach((e) => ((e.target as HTMLElement).style.animationPlayState = e.isIntersecting ? 'running' : 'paused')), { rootMargin: '100px' })
+    els.forEach((el) => io.observe(el))
+    return () => io.disconnect()
+  }, [cat])
+
   // Smooth scrolling, synced with ScrollTrigger
   useEffect(() => {
     if (reducedMotion()) return
@@ -259,8 +267,11 @@ function DragRow({ speed, children, onTap }: { speed: number; children: ReactNod
     let startT = 0
     let moved = 0
 
+    // the track width is measured once (and on resize), not every frame: reading it per frame forced a layout each frame
+    let half = el.scrollWidth / 2
+    const ro = new ResizeObserver(() => (half = el.scrollWidth / 2))
+    ro.observe(el)
     const wrapX = () => {
-      const half = el.scrollWidth / 2
       if (half <= 0) return
       x = ((x % half) - half) % half // keep x in (-half, 0]
     }
@@ -275,7 +286,15 @@ function DragRow({ speed, children, onTap }: { speed: number; children: ReactNod
       el.style.transform = `translate3d(${x}px,0,0)`
       raf = requestAnimationFrame(loop)
     }
-    raf = requestAnimationFrame(loop)
+    // only run while the row is on screen
+    const io = new IntersectionObserver(([e]) => {
+      cancelAnimationFrame(raf)
+      if (e.isIntersecting) {
+        prev = performance.now()
+        raf = requestAnimationFrame(loop)
+      }
+    })
+    io.observe(box)
 
     const down = (e: PointerEvent) => {
       dragging = true
@@ -320,6 +339,8 @@ function DragRow({ speed, children, onTap }: { speed: number; children: ReactNod
     box.addEventListener('pointercancel', up)
     return () => {
       cancelAnimationFrame(raf)
+      io.disconnect()
+      ro.disconnect()
       box.removeEventListener('pointerdown', down)
       box.removeEventListener('pointermove', move)
       box.removeEventListener('pointerup', up)
