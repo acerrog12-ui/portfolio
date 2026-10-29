@@ -441,17 +441,21 @@ function About() {
   return (
     <section id="about" ref={root} className="relative overflow-hidden bg-ink px-4 pt-28 pb-40 sm:px-8 sm:pt-40 sm:pb-56">
       {/* big chrome objects that fly in from the screen edges while scrolling, like the reference */}
-      <div data-from="-1" className="about-obj pointer-events-none absolute hidden sm:block top-24 left-[-2%] w-28 sm:top-32 sm:w-[17vw]">
-        <img src={img('el-ae.webp')} alt="" loading="lazy" className="floaty w-full sm:drop-shadow-[0_20px_40px_rgba(122,77,255,0.35)]" style={{ ['--r' as string]: '-12deg' }} />
+      <div data-from="-1" className="about-obj pointer-events-none absolute will-change-transform hidden sm:block top-24 left-[-2%] w-28 sm:top-32 sm:w-[17vw]">
+        <span aria-hidden="true" className="obj-glow" />
+        <img src={img('el-ae.webp')} alt="" loading="lazy" className="floaty relative w-full" style={{ ['--r' as string]: '-12deg' }} />
       </div>
-      <div data-from="1" className="about-obj pointer-events-none absolute hidden sm:block top-20 right-[-3%] w-32 sm:top-28 sm:w-[19vw]">
-        <img src={img('el-3d.webp')} alt="" loading="lazy" className="floaty w-full sm:drop-shadow-[0_20px_40px_rgba(122,77,255,0.35)]" style={{ ['--r' as string]: '10deg', ['--d' as string]: '8s' }} />
+      <div data-from="1" className="about-obj pointer-events-none absolute will-change-transform hidden sm:block top-20 right-[-3%] w-32 sm:top-28 sm:w-[19vw]">
+        <span aria-hidden="true" className="obj-glow" />
+        <img src={img('el-3d.webp')} alt="" loading="lazy" className="floaty relative w-full" style={{ ['--r' as string]: '10deg', ['--d' as string]: '8s' }} />
       </div>
-      <div data-from="-1" className="about-obj pointer-events-none absolute hidden sm:block top-[34%] left-[-4%] w-28 sm:w-[16vw]">
-        <img src={img('el-pen.webp')} alt="" loading="lazy" className="floaty w-full sm:drop-shadow-[0_20px_40px_rgba(122,77,255,0.35)]" style={{ ['--r' as string]: '14deg', ['--d' as string]: '9s' }} />
+      <div data-from="-1" className="about-obj pointer-events-none absolute will-change-transform hidden sm:block top-[34%] left-[-4%] w-28 sm:w-[16vw]">
+        <span aria-hidden="true" className="obj-glow" />
+        <img src={img('el-pen.webp')} alt="" loading="lazy" className="floaty relative w-full" style={{ ['--r' as string]: '14deg', ['--d' as string]: '9s' }} />
       </div>
-      <div data-from="1" className="about-obj pointer-events-none absolute hidden sm:block top-[36%] right-[-4%] w-36 sm:w-[22vw]">
-        <img src={img('ace-pad.webp')} alt="" loading="lazy" className="floaty w-full sm:drop-shadow-[0_20px_40px_rgba(122,77,255,0.35)]" style={{ ['--r' as string]: '-14deg', ['--d' as string]: '7s' }} />
+      <div data-from="1" className="about-obj pointer-events-none absolute will-change-transform hidden sm:block top-[36%] right-[-4%] w-36 sm:w-[22vw]">
+        <span aria-hidden="true" className="obj-glow" />
+        <img src={img('ace-pad.webp')} alt="" loading="lazy" className="floaty relative w-full" style={{ ['--r' as string]: '-14deg', ['--d' as string]: '7s' }} />
       </div>
 
       {/* phones: two objects above the heading, two between the button and the stats */}
@@ -498,7 +502,7 @@ function About() {
                 {s.suffix}
               </div>
               <div className="mt-2 text-[11px] font-bold tracking-wide text-white/50 uppercase sm:text-xs">
-                {t(s.label)} · {t(s.unit)}
+                {t(s.label)}{s.unit && ` · ${t(s.unit)}`}
               </div>
             </div>
           ))}

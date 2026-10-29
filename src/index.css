@@ -155,6 +155,15 @@ body {
     transform: translateY(-18px) rotate(calc(var(--r, 0deg) + 6deg));
   }
 }
+/* soft purple glow behind the About objects: a plain gradient, no filter, so scrolling stays smooth */
+.obj-glow {
+  position: absolute;
+  inset: 5% 0 -5%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(122, 77, 255, 0.4), rgba(122, 77, 255, 0.12) 60%, transparent);
+  pointer-events: none;
+}
+
 .floaty {
   animation: floaty var(--d, 6s) ease-in-out infinite;
 }

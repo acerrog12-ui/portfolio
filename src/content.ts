@@ -44,7 +44,7 @@ export const ui = {
     stats: [
       { value: 5, suffix: '+', label: { uz: 'Tajriba', ru: "Опыт", en: 'Experience' }, unit: { uz: 'yil', ru: "лет", en: 'years' } },
       { value: 2, suffix: '+', label: { uz: 'Lead dizayner', ru: "Ведущий дизайнер", en: 'Lead designer' }, unit: { uz: 'yil', ru: "года", en: 'years' } },
-      { value: 23, suffix: '', label: { uz: 'Yoş', ru: "Возраст", en: 'Age' }, unit: { uz: 'yoş', ru: "года", en: 'y/o' } },
+      { value: 23, suffix: '', label: { uz: 'Yoş', ru: "Возраст", en: 'Age' } },
     ],
     award: {
       title: { uz: 'TAF!23', ru: "TAF!23", en: 'TAF!23' },
