@@ -131,6 +131,8 @@ export type Project = {
   full?: boolean
   // extra line shown under the title in the project view
   note?: T
+  // long layouts split into <id>-full-1.webp ... <id>-full-N.webp
+  parts?: number
 }
 
 // Order = order on the site. Images: public/img/<id>.webp (cover), <id>-s.webp (640px, phones) and <id>-full.webp (full layout).
@@ -160,6 +162,13 @@ export const projects: Project[] = [
     videos: ['intro-video'],
     full: false,
   },
+  {
+    id: 'qahramonlar',
+    client: 'Qahramonlar davri',
+    title: { uz: 'Bolalar bayrami makoni, 3D vizualizatsiya', ru: 'Праздничное пространство для детей, 3D-визуализация', en: "Kids' holiday venue, 3D visualization" },
+    tags: { uz: '3D · Event dizayn', ru: '3D · Ивент-дизайн', en: '3D · Event design' },
+    parts: 2,
+  },
   { id: 'logipro', client: 'Logi Pro', title: { uz: 'Logi Pro logistika akademiyasi', ru: 'Логистическая академия Logi Pro', en: 'Logi Pro logistics academy' }, tags: { uz: 'Brending · Taʼlim', ru: 'Брендинг · Образование', en: 'Branding · Education' } },
   { id: 'chust', client: 'Chust', title: { uz: 'Çust şahar brendi', ru: "Бренд города Чуст", en: 'Chust city branding' }, tags: { uz: 'Brending · Şahar', ru: "Брендинг · Город", en: 'Branding · City' } },
 ]
@@ -186,7 +195,7 @@ export const categories: Category[] = [
     id: 'event',
     title: { uz: 'Event va sahna dizayni', ru: "Ивент и сценография", en: 'Event & stage design' },
     text: { uz: "Katta tadbirlar uçun sahna, ekran va kōrgazma dizayni", ru: "Дизайн сцены, экранов и выставок для крупных мероприятий", en: 'Stage, screen and exhibition design for large events' },
-    projects: ['fide', 'istedodlar-zamini', 'oltin-chinor', 'amir-temur'],
+    projects: ['fide', 'istedodlar-zamini', 'qahramonlar', 'oltin-chinor', 'amir-temur'],
   },
   {
     id: 'branding',

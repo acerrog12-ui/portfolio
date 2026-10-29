@@ -740,7 +740,10 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
             preload="metadata"
           />
         ))}
-        {project.full !== false && <img src={img(`${project.id}-full.webp`)} alt={t(project.title)} loading="lazy" decoding="async" className="mx-auto block w-full max-w-[1100px] px-3 pb-10 sm:px-8" />}
+        {project.full !== false &&
+          (project.parts ? Array.from({ length: project.parts }, (_, i) => `${project.id}-full-${i + 1}.webp`) : [`${project.id}-full.webp`]).map((f, i, all) => (
+            <img key={f} src={img(f)} alt={i ? '' : t(project.title)} loading="lazy" decoding="async" className={`mx-auto block w-full max-w-[1100px] px-3 sm:px-8 ${i === all.length - 1 ? 'pb-10' : ''}`} />
+          ))}
       </div>
     </div>
   )
