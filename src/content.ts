@@ -125,6 +125,12 @@ export type Project = {
   title: T
   tags: T
   year?: string
+  // videos in public/video/<name>.mp4 (poster: <name>.jpg), shown above the layout
+  videos?: string[]
+  // false when the project has no full layout image (video only)
+  full?: boolean
+  // extra line shown under the title in the project view
+  note?: T
 }
 
 // Order = order on the site. Images: public/img/<id>.webp (cover), <id>-s.webp (640px, phones) and <id>-full.webp (full layout).
@@ -132,28 +138,42 @@ export const projects: Project[] = [
   { id: 'pepsi', client: 'Pepsi', title: { uz: 'Pepsi Lazzatli Fest', ru: "Pepsi Lazzatli Fest", en: 'Pepsi Lazzatli Fest' }, tags: { uz: 'Key visual · Festival', ru: "Key visual · Фестиваль", en: 'Key visual · Festival' } },
   { id: 'chempion', client: 'Mirshakar Fayzullayev', title: { uz: 'Çempion şousi', ru: "Шоу «Чемпион»", en: 'Chempion show' }, tags: { uz: 'Key visual · Konsert', ru: "Key visual · Концерт", en: 'Key visual · Concert' } },
   { id: 'agrobank', client: 'Agrobank', title: { uz: 'Ipoteka kampaniyasi', ru: "Ипотечная кампания", en: 'Mortgage campaign' }, tags: { uz: '3D · Reklama', ru: "3D · Реклама", en: '3D · Advertising' } },
-  { id: 'fide', client: 'FIDE', title: { uz: 'Rapid va blits bōyiça jahon çempionati', ru: "Чемпионат мира по рапиду и блицу", en: 'World Rapid & Blitz Championships' }, tags: { uz: 'Event · Key visual', ru: "Ивент · Key visual", en: 'Event · Key visual' }, year: '2023' },
+  { id: 'fide', client: 'FIDE', title: { uz: 'Rapid va blits bōyiça jahon çempionati', ru: "Чемпионат мира по рапиду и блицу", en: 'World Rapid & Blitz Championships' }, tags: { uz: 'Event · Key visual', ru: "Ивент · Key visual", en: 'Event · Key visual' }, year: '2023', videos: ['fide-video'] },
   { id: 'istedodlar-zamini', client: 'Yoshlar harakati', title: { uz: "Ōzbekiston — Isteʼdodlar zamini", ru: "Узбекистан — земля талантов", en: "Uzbekistan — Land of Talents" }, tags: { uz: 'Sahna dizayni', ru: "Сценография", en: 'Stage design' }, year: '2025' },
-  { id: 'superleague', client: 'UZSL', title: { uz: "Ōzbekiston Superligasi", ru: "Суперлига Узбекистана", en: 'Uzbekistan Superleague' }, tags: { uz: 'Brending · Sport', ru: "Брендинг · Спорт", en: 'Branding · Sports' } },
-  { id: 'uzsl-awards', client: 'UZSL', title: { uz: "Yilning eng zōrlari", ru: "Лучшие игроки года", en: 'Best of the Year awards' }, tags: { uz: 'Sport · SMM', ru: "Спорт · SMM", en: 'Sports · Social' } },
+  { id: 'superleague', client: 'UZSL', title: { uz: "Ōzbekiston Superligasi", ru: "Суперлига Узбекистана", en: 'Uzbekistan Superleague' }, tags: { uz: 'Brending · Sport', ru: "Брендинг · Спорт", en: 'Branding · Sports' }, videos: ['superleague-video'] },
   { id: 'chiroqchi', client: 'Chiroqchi', title: { uz: 'Çiroqçi tumani brendi', ru: "Бренд Чиракчинского района", en: 'Chiroqchi district identity' }, tags: { uz: 'Brending · Şahar', ru: "Брендинг · Территория", en: 'Branding · Place' } },
-  { id: 'amir-temur', client: "O'zbekistondagi Islom sivilizatsiyasi markazi", title: { uz: 'Sohibqiron Amir Temur', ru: "Сохибкиран Амир Темур", en: 'Sohibqiron Amir Temur' }, tags: { uz: 'Vizual · Kōrgazma', ru: "Визуалы · Выставка", en: 'Visuals · Exhibition' } },
+  { id: 'amir-temur', client: "O'zbekistondagi Islom sivilizatsiyasi markazi", title: { uz: 'Sohibqiron Amir Temur', ru: "Сохибкиран Амир Темур", en: 'Sohibqiron Amir Temur' }, tags: { uz: 'Vizual · Kōrgazma', ru: "Визуалы · Выставка", en: 'Visuals · Exhibition' }, videos: ['immersive-video'] },
   { id: 'violence', client: 'Tasnif Group', title: { uz: 'Violence kōrgazmasi', ru: "Выставка Violence", en: 'Violence exhibition' }, tags: { uz: 'Immersiv · 3D mapping', ru: "Иммерсив · 3D-мэппинг", en: 'Immersive · 3D mapping' }, year: '2023' },
   { id: 'oltin-chinor', client: 'Oltin Chinor', title: { uz: 'Oltin Çinor milliy mukofoti', ru: "Национальная премия «Олтин Чинор»", en: 'Oltin Chinor national award' }, tags: { uz: 'Sahna dizayni', ru: "Сценография", en: 'Stage design' }, year: '2024' },
-  { id: 'mkbank', client: 'MKBANK', title: { uz: 'Omonat kampaniyasi', ru: "Кампания по вкладам", en: 'Deposit campaign' }, tags: { uz: '3D · Reklama', ru: "3D · Реклама", en: '3D · Advertising' } },
-  { id: 'bliss', client: 'Bliss', title: { uz: 'BAAga sayohat aksiyasi', ru: "Акция «Поездка в ОАЭ»", en: 'Trip to the UAE promo' }, tags: { uz: 'Key visual · Aksiya', ru: "Key visual · Промо", en: 'Key visual · Promo' } },
+  { id: 'mkbank', client: 'MKBANK', title: { uz: 'Omonat kampaniyasi', ru: "Кампания по вкладам", en: 'Deposit campaign' }, tags: { uz: '3D · Reklama', ru: "3D · Реклама", en: '3D · Advertising' }, videos: ['mkbank-video'] },
+  { id: 'bliss', client: 'Bliss', title: { uz: 'BAAga sayohat aksiyasi', ru: "Акция «Поездка в ОАЭ»", en: 'Trip to the UAE promo' }, tags: { uz: 'Key visual · Aksiya', ru: "Key visual · Промо", en: 'Key visual · Promo' }, videos: ['bliss-video'] },
+  {
+    id: 'peace-intro',
+    client: 'AI film',
+    title: { uz: 'Let peace be our guide', ru: 'Let peace be our guide', en: 'Let peace be our guide' },
+    tags: { uz: 'AI · Art direction', ru: 'AI · Арт-дирекшн', en: 'AI · Art direction' },
+    note: {
+      uz: "Art direction: Doston Daminov. Loyiha 3-4 kişilik jamoa bilan birga qilingan.",
+      ru: 'Арт-дирекшн: Достон Даминов. Проект сделан вместе с командой из 3–4 человек.',
+      en: 'Art direction by Doston Daminov, made together with a team of 3–4 people.',
+    },
+    videos: ['intro-video'],
+    full: false,
+  },
+  { id: 'chust', client: 'Chust', title: { uz: 'Çust şahar brendi', ru: "Бренд города Чуст", en: 'Chust city branding' }, tags: { uz: 'Brending · Şahar', ru: "Брендинг · Город", en: 'Branding · City' } },
 ]
 
 // Work directions shown as big cards in the Projects section.
 // Clicking a card opens that direction's page with all its projects.
 // To move a project, put its id in another list.
-export type Category = { id: string; title: T; text: T; projects: string[] }
+// covers: optional image names for the 3 pictures on the big card (default: first projects)
+export type Category = { id: string; title: T; text: T; projects: string[]; covers?: string[] }
 export const categories: Category[] = [
   {
     id: 'key-visual',
     title: { uz: 'Key visual va kampaniyalar', ru: "Key visual и кампании", en: 'Key visuals & campaigns' },
     text: { uz: 'Festival, konsert va aksiyalar uçun asosiy vizuallar', ru: "Ключевые визуалы для фестивалей, концертов и промоакций", en: 'Key visuals for festivals, shows and promos' },
-    projects: ['pepsi', 'chempion', 'bliss', 'uzsl-awards'],
+    projects: ['pepsi', 'chempion', 'bliss'],
   },
   {
     id: '3d',
@@ -171,7 +191,14 @@ export const categories: Category[] = [
     id: 'branding',
     title: { uz: 'Brending va sport', ru: "Брендинг и спорт", en: 'Branding & sports' },
     text: { uz: 'Klublar, ligalar va hududlar uçun vizual identifikatsiya', ru: "Айдентика для клубов, лиг и территорий", en: 'Visual identity for clubs, leagues and places' },
-    projects: ['superleague', 'chiroqchi'],
+    projects: ['chust', 'superleague', 'chiroqchi'],
+  },
+  {
+    id: 'ai',
+    title: { uz: 'AI va art direction', ru: 'AI и арт-дирекшн', en: 'AI & art direction' },
+    text: { uz: "Jamoa bilan qilingan AI filmlar va vizual hikoyalar", ru: 'AI-фильмы и визуальные истории, сделанные с командой', en: 'AI films and visual stories made with a team' },
+    projects: ['peace-intro'],
+    covers: ['peace-intro', 'peace-intro-b', 'peace-intro-c'],
   },
 ]
 
@@ -187,4 +214,5 @@ export const clients: { name: string; logo?: string }[] = [
   { name: 'Tasnif Group' },
   { name: 'Oltin Chinor' },
   { name: 'Chiroqchi' },
+  { name: 'Chust' },
 ]

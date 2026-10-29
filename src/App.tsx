@@ -589,7 +589,7 @@ function Projects() {
       <div className="mx-auto max-w-[1180px]">
         {categories.map((c, i) => {
           const ps = c.projects.map((id) => projects.find((p) => p.id === id)!)
-          const pics = [ps[0], ps[1] ?? ps[0], ps[2] ?? ps[1] ?? ps[0]]
+          const pics = c.covers ?? [ps[0].id, (ps[1] ?? ps[0]).id, (ps[2] ?? ps[1] ?? ps[0]).id]
           return (
             <article key={c.id} className="proj-card sticky mb-[6vh]" style={{ top: `calc(9vh + ${i * 14}px)` }}>
               <a href={`#/work/${c.id}`} className="group relative block origin-top overflow-hidden rounded-[1.75rem] border-[1.5px] border-white/70 bg-ink p-3 will-change-transform sm:rounded-[2.25rem] sm:p-5">
@@ -609,7 +609,7 @@ function Projects() {
                 <div className="grid w-full grid-cols-3 gap-2 sm:h-[62vh] sm:max-h-[620px] sm:grid-rows-2 sm:gap-3">
                   {pics.map((p, k) => (
                     <span key={k} className={k === 0 ? 'col-span-3 aspect-video overflow-hidden rounded-[1.25rem] sm:col-span-2 sm:row-span-2 sm:aspect-auto sm:h-full' : 'hidden overflow-hidden rounded-[1.25rem] sm:block'}>
-                      <img src={img(`${p.id}.webp`)} srcSet={`${img(`${p.id}-s.webp`)} 640w, ${img(`${p.id}.webp`)} 1200w`} sizes="(max-width: 640px) 90vw, 40vw" alt={k === 0 ? t(c.title) : ''} loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-105" />
+                      <img src={img(`${p}.webp`)} srcSet={`${img(`${p}-s.webp`)} 640w, ${img(`${p}.webp`)} 1200w`} sizes="(max-width: 640px) 90vw, 40vw" alt={k === 0 ? t(c.title) : ''} loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-105" />
                     </span>
                   ))}
                 </div>
@@ -667,7 +667,8 @@ function CategoryPage({ cat, onOpen }: { cat: Category; onOpen: (p: Project) => 
         <div className="mt-14 grid gap-5 sm:mt-20 md:grid-cols-2 md:gap-6">
           {ps.map((p, i) => (
             <button key={p.id} onClick={() => onOpen(p)} className={`cat-item group block overflow-hidden rounded-[1.75rem] border-[1.5px] border-white/70 p-3 text-left sm:p-4 ${ps.length % 2 && i === 0 ? 'md:col-span-2' : ''}`}>
-              <span className="block aspect-video overflow-hidden rounded-[1.25rem]">
+              <span className="relative block aspect-video overflow-hidden rounded-[1.25rem]">
+                {p.videos && <span className="absolute top-3 left-3 z-10 rounded-full bg-black/70 px-3 py-1 text-[10px] font-bold tracking-wide text-white uppercase">▶ Video</span>}
                 <img src={img(`${p.id}.webp`)} srcSet={`${img(`${p.id}-s.webp`)} 640w, ${img(`${p.id}.webp`)} 1200w`} sizes="(max-width: 640px) 95vw, 50vw" alt={t(p.title)} loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-105" />
               </span>
               <span className="flex items-center gap-4 px-1 pt-4 pb-1">
@@ -722,12 +723,24 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
           <div className="min-w-0">
             <div className="text-[10px] tracking-[0.2em] text-white/50 uppercase">{project.client}{project.year && ` · ${project.year}`} · {t(project.tags)}</div>
             <h3 className="truncate font-display text-lg font-bold sm:text-2xl">{t(project.title)}</h3>
+            {project.note && <p className="mt-1 text-xs text-white/60 sm:text-sm">{t(project.note)}</p>}
           </div>
           <button onClick={onClose} className="shrink-0 rounded-full bg-white px-5 py-2 text-xs font-semibold tracking-widest text-black uppercase">
             {t(ui.projects.close)} ✕
           </button>
         </div>
-        <img src={img(`${project.id}-full.webp`)} alt={t(project.title)} className="mx-auto block w-full max-w-[1100px] px-3 pb-10 sm:px-8" />
+        {project.videos?.map((v) => (
+          <video
+            key={v}
+            className="mx-auto mb-6 block w-full max-w-[1100px] rounded-2xl bg-black px-3 sm:px-8"
+            src={`${import.meta.env.BASE_URL}video/${v}.mp4`}
+            poster={`${import.meta.env.BASE_URL}video/${v}.jpg`}
+            controls
+            playsInline
+            preload="metadata"
+          />
+        ))}
+        {project.full !== false && <img src={img(`${project.id}-full.webp`)} alt={t(project.title)} loading="lazy" decoding="async" className="mx-auto block w-full max-w-[1100px] px-3 pb-10 sm:px-8" />}
       </div>
     </div>
   )
