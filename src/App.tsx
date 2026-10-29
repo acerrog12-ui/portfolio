@@ -180,7 +180,7 @@ function ProjectsMenu({ label }: { label: string }) {
         <ul className={`w-64 overflow-hidden rounded-2xl border border-white/15 bg-[#0b0b0e] p-2 shadow-2xl transition duration-200 ${open ? 'translate-y-0 opacity-100' : '-translate-y-1 opacity-0'}`}>
           {items.map((c) => (
             <li key={c.id}>
-              <a href={`#/work/${c.id}`} onClick={() => setOpen(false)} className={`flex items-center justify-between rounded-xl px-4 py-3 text-[12px] font-bold tracking-wide normal-case hover:bg-white/10 ${c.id === 'all' ? 'text-lime' : 'text-white'}`}>
+              <a href={`#/work/${c.id}`} onClick={() => setOpen(false)} className={`flex items-center justify-between rounded-xl px-4 py-3 text-[12px] font-bold tracking-wide normal-case hover:bg-white/10 ${c.id === 'all' ? 'text-[#9b7bff]' : 'text-white'}`}>
                 {t(c.title)}
                 <span className="text-white/40">→</span>
               </a>
@@ -1085,7 +1085,7 @@ function Team() {
   }, [lang])
 
   const ring = `${t(team.title)} • ${t(team.title)} • `
-  const dots = ['bg-violet', 'bg-lime', 'bg-pink', 'bg-white', 'bg-violet', 'bg-lime']
+  const dots = ['bg-violet', 'bg-[#9b7bff]', 'bg-pink', 'bg-white', 'bg-violet', 'bg-[#9b7bff]']
   return (
     <section ref={root} className="relative z-20 overflow-hidden bg-ink px-4 pt-16 pb-48 sm:px-8 sm:pb-64">
       <div className="mx-auto grid max-w-[1300px] items-center gap-14 lg:grid-cols-[1.2fr_1fr]">

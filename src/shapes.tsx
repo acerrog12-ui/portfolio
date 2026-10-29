@@ -131,7 +131,7 @@ export const footerShapes = [
   (c: string) => <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill={c} /><circle cx="50" cy="50" r="22" fill="#000" /></svg>,
   (c: string) => <svg viewBox="0 0 100 100"><path d="M50 2c4 30 18 44 48 48-30 4-44 18-48 48-4-30-18-44-48-48C32 46 46 32 50 2z" fill={c} /></svg>,
 ]
-export const footerColors = ['#7a4dff', '#b9f43c', '#ffffff', '#7a4dff', '#ffffff', '#ff2bd1', '#b9f43c', '#ff2bd1']
+export const footerColors = ['#7a4dff', '#9b7bff', '#ffffff', '#7a4dff', '#ffffff', '#ff2bd1', '#9b7bff', '#ff2bd1']
 
 // Chrome gamepad with "ACE" lettering (like the PLAY controller reference)
 export const AcePad = ({ className }: P) => {
