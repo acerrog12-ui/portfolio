@@ -184,6 +184,7 @@ export const projects: Project[] = [
   { id: 'chust', client: 'Chust', title: { uz: 'Çust şahar brendi', ru: "Бренд города Чуст", en: 'Chust city branding' }, tags: { uz: 'Brending · Şahar', ru: "Брендинг · Город", en: 'Branding · City' } },
   { id: 'samad', client: 'Samad', title: { uz: 'Samad qadoq dizayni', ru: 'Дизайн упаковки Samad', en: 'Samad packaging design' }, tags: { uz: 'Qadoq · Plombir, sorbet, çuçvara', ru: 'Упаковка · Пломбир, сорбет, пельмени', en: 'Packaging · Ice cream, sorbet, dumplings' }, embed: 'samad/index.html', full: false },
   { id: 'talaba-fest', client: 'Talaba Fest', title: { uz: 'Talaba Fest festivali', ru: 'Фестиваль Talaba Fest', en: 'Talaba Fest festival' }, tags: { uz: 'Identifikatsiya · 3D hudud dizayni', ru: 'Айдентика · 3D-дизайн территории', en: 'Identity · 3D venue design' }, videos: ['talaba-video'], embed: 'talabafest/index.html', full: false },
+  { id: 'yoshlar-kuni', client: 'Yoshlar ishlari agentligi', title: { uz: '30-iyun · Yoshlar kuni', ru: '30 июня · День молодёжи', en: 'June 30 · Youth Day' }, tags: { uz: 'Identifikatsiya · Animatsiya · Key visual', ru: 'Айдентика · Анимация · Key visual', en: 'Identity · Animation · Key visual' }, embed: 'yoshlar/index.html', full: false },
 ]
 
 // Work directions shown as big cards in the Projects section.
@@ -196,7 +197,7 @@ export const categories: Category[] = [
     id: 'key-visual',
     title: { uz: 'Key visual va kampaniyalar', ru: "Key visual и кампании", en: 'Key visuals & campaigns' },
     text: { uz: 'Festival, konsert va aksiyalar uçun asosiy vizuallar', ru: "Ключевые визуалы для фестивалей, концертов и промоакций", en: 'Key visuals for festivals, shows and promos' },
-    projects: ['khiva-ethnosport', 'chempion', 'pepsi', 'yonda-awards', 'bliss'],
+    projects: ['khiva-ethnosport', 'chempion', 'yoshlar-kuni', 'pepsi', 'yonda-awards', 'bliss'],
   },
   {
     id: '3d',
