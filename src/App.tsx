@@ -469,11 +469,16 @@ function Clients({ onOpen }: { onOpen: (p: Project) => void }) {
   const rows = [covers.slice(0, half), covers.slice(half)]
   return (
     <section aria-label="Clients" className="relative bg-ink py-10 sm:py-14">
-      <div className="edge-fade flex overflow-hidden">
+      <div className="edge-fade flex overflow-hidden [--logo-k:0.68] sm:[--logo-k:1]">
         <ul className="marquee flex shrink-0 items-center gap-14 pr-14 sm:gap-20 sm:pr-20" style={{ ['--speed' as string]: '35s' }}>
           {[...clients, ...clients].map((c, i) => (
             <li key={i} className="flex shrink-0 items-center font-display text-lg leading-none whitespace-nowrap text-white uppercase opacity-90 sm:text-2xl">
-              {c.logo ? <img src={img(`logos/${c.logo}`)} alt={c.name} className="h-7 w-auto max-w-[160px] object-contain brightness-0 invert sm:h-10 sm:max-w-[220px]" /> : c.name}
+              {c.logo ? (
+                // same visual weight for every logo: wide ones get shorter, square ones taller
+                <img src={img(`logos/${c.logo}`)} alt={c.name} loading="lazy" decoding="async" draggable={false}
+                  className="w-auto"
+                  style={{ height: `calc(${Math.min(52, 62 / Math.pow(c.ratio ?? 3, 0.42)).toFixed(1)}px * var(--logo-k, 1))` }} />
+              ) : c.name}
             </li>
           ))}
         </ul>
@@ -1141,10 +1146,14 @@ const ctx = gsap.context(() => {
       <div className="ct-panel relative overflow-hidden rounded-[2rem] bg-paper px-5 pt-20 pb-40 text-black sm:rounded-[2.75rem] sm:px-14 sm:pt-28 sm:pb-52">
         {/* big chrome objects half off the panel edges, flying in on scroll like in About */}
         <div data-from="-1" className="ct-obj pointer-events-none absolute hidden sm:block bottom-14 left-[-8%] w-24 sm:bottom-[24%] sm:left-[-7%] sm:w-[16vw]">
-          <img src={img('el-3d.webp')} alt="" loading="lazy" className="floaty w-full" style={{ ['--r' as string]: '-12deg' }} />
+          <Grab>
+            <img src={img('el-3d.webp')} alt="" loading="lazy" className="floaty w-full" style={{ ['--r' as string]: '-12deg' }} />
+          </Grab>
         </div>
         <div data-from="1" className="ct-obj pointer-events-none absolute top-[-4%] right-[-3%] w-24 sm:right-[-2%] sm:w-[12vw]">
-          <img src={img('el-bolt.webp')} alt="" loading="lazy" className="floaty w-full" style={{ ['--r' as string]: '16deg', ['--d' as string]: '8s' }} />
+          <Grab>
+            <img src={img('el-bolt.webp')} alt="" loading="lazy" className="floaty w-full" style={{ ['--r' as string]: '16deg', ['--d' as string]: '8s' }} />
+          </Grab>
         </div>
         <div className="relative mx-auto grid max-w-[1200px] gap-14 md:grid-cols-2 md:items-center">
           <div className="md:pl-10">

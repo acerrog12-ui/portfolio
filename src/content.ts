@@ -230,17 +230,18 @@ export const categories: Category[] = [
 
 // Client marquee. To show a logo instead of the name, put the file in public/img/logos/
 // and write its file name in logo (any colors: the site turns it white).
-export const clients: { name: string; logo?: string }[] = [
-  { name: 'Pepsi' },
-  { name: 'Agrobank' },
-  { name: 'MKBANK' },
-  { name: 'FIDE' },
-  { name: 'UZSL' },
-  { name: 'Bliss' },
-  { name: 'Tasnif Group' },
-  { name: 'Oltin Chinor' },
-  { name: 'Chiroqchi' },
-  { name: 'Chust' },
+// White one-colour logos made from the project layouts; ratio = width / height
+export const clients: { name: string; logo?: string; ratio?: number }[] = [
+  { name: 'Pepsi', logo: 'pepsi.webp', ratio: 1.005 },
+  { name: 'Agrobank', logo: 'agrobank.webp', ratio: 4.979 },
+  { name: 'MKBANK', logo: 'mkbank.webp', ratio: 4.555 },
+  { name: 'FIDE', logo: 'fide.webp', ratio: 1.169 },
+  { name: 'UZSL', logo: 'uzsl.webp', ratio: 8.981 },
+  { name: 'Bliss', logo: 'bliss.webp', ratio: 1.057 },
+  { name: 'Tasnif Group', logo: 'tasnif-group.webp', ratio: 3.58 },
+  { name: 'Oltin Chinor', logo: 'oltin-chinor.webp', ratio: 2.045 },
+  { name: 'Chiroqchi', logo: 'chiroqchi.webp', ratio: 2.035 },
+  { name: 'Chust', logo: 'chust.webp', ratio: 5.053 },
 ]
 
 // "All works" page: every project from every direction, in the same order as the directions
