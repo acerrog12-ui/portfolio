@@ -820,22 +820,37 @@ function EmbedDeck({ src, title }: { src: string; title: string }) {
     const f = frame.current
     if (!f) return
     let ro: ResizeObserver | undefined
-    const measure = () => {
+    let watched: Document | undefined
+    // the deck's own document, once its HTML is parsed (not the blank page the iframe starts with)
+    const deckDoc = () => {
       const doc = f.contentDocument
-      if (doc?.body) setH(doc.documentElement.scrollHeight)
+      return doc?.body && doc.readyState !== 'loading' && doc.location.href !== 'about:blank' ? doc : undefined
     }
-    const onLoad = () => {
+    const measure = () => {
+      const doc = deckDoc()
+      if (doc) setH(doc.documentElement.scrollHeight)
+    }
+    // Size the frame as soon as the page structure exists, not after every image and video
+    // has loaded: waiting for 'load' left only the first slides visible for 5-10 seconds.
+    const attach = () => {
+      const doc = deckDoc()
+      if (!doc) return
       measure()
-      const doc = f.contentDocument
-      if (doc?.body && 'ResizeObserver' in window) {
+      if (watched !== doc && 'ResizeObserver' in window) {
+        ro?.disconnect()
         ro = new ResizeObserver(measure)
         ro.observe(doc.body)
+        watched = doc
       }
     }
-    f.addEventListener('load', onLoad)
+    const poll = window.setInterval(attach, 100)
+    const stop = window.setTimeout(() => window.clearInterval(poll), 15000)
+    f.addEventListener('load', attach)
     window.addEventListener('resize', measure)
     return () => {
-      f.removeEventListener('load', onLoad)
+      window.clearInterval(poll)
+      window.clearTimeout(stop)
+      f.removeEventListener('load', attach)
       window.removeEventListener('resize', measure)
       ro?.disconnect()
     }
