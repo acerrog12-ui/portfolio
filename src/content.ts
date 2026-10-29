@@ -242,6 +242,7 @@ export const clients: { name: string; logo?: string; ratio?: number }[] = [
   { name: 'Oltin Chinor', logo: 'oltin-chinor.webp', ratio: 2.045 },
   { name: 'Yoshlar ishlari agentligi', logo: 'yoshlar-ishlari.webp', ratio: 5.121 },
   { name: 'InnoWeek 2024', logo: 'innoweek.webp', ratio: 3.189 },
+  { name: 'Salom TV', logo: 'salomtv.svg', ratio: 3.321 },
   { name: 'CCI Uzbekistan · Next Talent', logo: 'cci-next-talent.webp', ratio: 3.648 },
 ]
 
