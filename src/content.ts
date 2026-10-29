@@ -236,12 +236,12 @@ export const clients: { name: string; logo?: string; ratio?: number }[] = [
   { name: 'Agrobank', logo: 'agrobank.webp', ratio: 4.979 },
   { name: 'MKBANK', logo: 'mkbank.webp', ratio: 4.555 },
   { name: 'FIDE', logo: 'fide.webp', ratio: 1.169 },
-  { name: 'UZSL', logo: 'uzsl.webp', ratio: 8.981 },
+  { name: 'Uzbekistan Superleague', logo: 'uzsl.webp', ratio: 3.663 },
   { name: 'Bliss', logo: 'bliss.webp', ratio: 1.057 },
   { name: 'Tasnif Group', logo: 'tasnif-group.webp', ratio: 3.58 },
   { name: 'Oltin Chinor', logo: 'oltin-chinor.webp', ratio: 2.045 },
-  { name: 'Chiroqchi', logo: 'chiroqchi.webp', ratio: 2.035 },
-  { name: 'Chust', logo: 'chust.webp', ratio: 5.053 },
+  { name: 'Yoshlar ishlari agentligi', logo: 'yoshlar-ishlari.webp', ratio: 5.121 },
+  { name: 'InnoWeek 2024', logo: 'innoweek.webp', ratio: 3.189 },
 ]
 
 // "All works" page: every project from every direction, in the same order as the directions
