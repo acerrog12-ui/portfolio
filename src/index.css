@@ -195,31 +195,25 @@ body {
   .foot-shape { transform: none; opacity: 1; }
 }
 
-/* Custom cursor (mouse only). The arrow tip sits at the pointer position. */
-.has-cursor,
-.has-cursor * {
-  cursor: none !important;
-}
-.site-cursor {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 9999;
-  pointer-events: none;
-  visibility: hidden;
-  opacity: 0;
-  margin: -1px 0 0 -1px;
-}
-.site-cursor img {
-  display: block;
-  width: 36px;
-  height: auto;
-  transform-origin: 1px 1px;
-  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-.site-cursor.is-hot img {
-  transform: scale(1.25) rotate(-8deg);
-}
-.site-cursor.is-down img {
-  transform: scale(0.85);
+/* Custom chrome cursor (mouse only). It is the browser's own cursor, so it never lags
+   and disappears by itself outside the site. The tip is the top-left corner (1px in). */
+@media (pointer: fine) {
+  html {
+    cursor: url('/portfolio/img/cursor-32.png') 1 1, auto;
+    cursor: -webkit-image-set(url('/portfolio/img/cursor-32.png') 1x, url('/portfolio/img/cursor-64.png') 2x) 1 1, auto;
+    cursor: image-set(url('/portfolio/img/cursor-32.png') 1x, url('/portfolio/img/cursor-64.png') 2x) 1 1, auto;
+  }
+  a,
+  button,
+  label,
+  [data-cursor],
+  .cursor-grab {
+    cursor: url('/portfolio/img/cursor-hot-40.png') 1 1, pointer;
+    cursor: -webkit-image-set(url('/portfolio/img/cursor-hot-40.png') 1x, url('/portfolio/img/cursor-hot-80.png') 2x) 1 1, pointer;
+    cursor: image-set(url('/portfolio/img/cursor-hot-40.png') 1x, url('/portfolio/img/cursor-hot-80.png') 2x) 1 1, pointer;
+  }
+  input,
+  textarea {
+    cursor: text;
+  }
 }

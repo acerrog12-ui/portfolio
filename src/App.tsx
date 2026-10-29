@@ -3,7 +3,6 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Lenis from 'lenis'
 import { categories, clients, contacts, projects, services, team, ui, type Category, type Project } from './content'
-import Cursor from './Cursor'
 import { img, reducedMotion, SplitChars, useLang } from './lib'
 import { ChromeDefs, chromeFill, footerShapes } from './shapes'
 
@@ -67,7 +66,6 @@ export default function App() {
 
   return (
     <div>
-      <Cursor />
       <Nav />
       {cat ? (
         <CategoryPage key={cat.id} cat={cat} onOpen={setOpen} />
