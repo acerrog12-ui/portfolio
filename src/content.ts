@@ -169,6 +169,7 @@ export const projects: Project[] = [
     tags: { uz: '3D · Event dizayn', ru: '3D · Ивент-дизайн', en: '3D · Event design' },
     parts: 2,
   },
+  { id: 'yonda-awards', client: 'Yonda Awards', title: { uz: 'Yonda Awards 2025', ru: 'Yonda Awards 2025', en: 'Yonda Awards 2025' }, tags: { uz: 'Key visual · 3D · Mukofot', ru: 'Key visual · 3D · Премия', en: 'Key visual · 3D · Awards' }, year: '2025' },
   { id: 'logipro', client: 'Logi Pro', title: { uz: 'Logi Pro logistika akademiyasi', ru: 'Логистическая академия Logi Pro', en: 'Logi Pro logistics academy' }, tags: { uz: 'Brending · Taʼlim', ru: 'Брендинг · Образование', en: 'Branding · Education' } },
   { id: 'chust', client: 'Chust', title: { uz: 'Çust şahar brendi', ru: "Бренд города Чуст", en: 'Chust city branding' }, tags: { uz: 'Brending · Şahar', ru: "Брендинг · Город", en: 'Branding · City' } },
 ]
@@ -183,7 +184,7 @@ export const categories: Category[] = [
     id: 'key-visual',
     title: { uz: 'Key visual va kampaniyalar', ru: "Key visual и кампании", en: 'Key visuals & campaigns' },
     text: { uz: 'Festival, konsert va aksiyalar uçun asosiy vizuallar', ru: "Ключевые визуалы для фестивалей, концертов и промоакций", en: 'Key visuals for festivals, shows and promos' },
-    projects: ['pepsi', 'chempion', 'bliss'],
+    projects: ['pepsi', 'yonda-awards', 'chempion', 'bliss'],
   },
   {
     id: '3d',
