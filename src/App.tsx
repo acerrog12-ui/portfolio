@@ -791,7 +791,7 @@ function CoverText({ p, small }: { p: Project; small?: boolean }) {
   meta.push([t(coverLabels.work), t(p.tags)])
   return (
     <>
-      <span aria-hidden className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(6,7,10,.9)_0%,rgba(6,7,10,.55)_45%,rgba(6,7,10,0)_80%),linear-gradient(0deg,rgba(6,7,10,.92)_0%,rgba(6,7,10,.6)_35%,rgba(6,7,10,0)_72%)]" />
+      <span aria-hidden className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(6,7,10,.6)_0%,rgba(6,7,10,.3)_40%,rgba(6,7,10,0)_70%),linear-gradient(0deg,rgba(6,7,10,.78)_0%,rgba(6,7,10,.38)_30%,rgba(6,7,10,0)_60%)]" />
       <span className={`pointer-events-none absolute inset-x-0 bottom-0 block ${small ? 'p-3 sm:p-4' : 'p-4 sm:p-6 lg:p-7'}`}>
         <span className={`block max-w-[85%] font-display leading-[1.02] text-white normal-case ${small ? 'text-[13px] sm:text-lg' : 'text-[clamp(1.25rem,2.6vw,2.3rem)]'}`}>
           {head}
