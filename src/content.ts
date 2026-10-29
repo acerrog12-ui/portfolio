@@ -11,7 +11,7 @@ export const contacts = {
   phone: '+998 90 332 03 11',
   phoneHref: 'tel:+998903320311',
   // Telegram relay for the contact form (empty = fall back to email)
-  relay: '',
+  relay: 'https://portfolio-relay-pi.vercel.app/api/contact',
   instagram: 'https://www.instagram.com/daminov_dostonbek1/',
   behance: 'https://www.behance.net/daminovdostonbek',
 }
