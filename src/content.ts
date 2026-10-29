@@ -62,7 +62,7 @@ export const ui = {
     title: { uz: 'LOYIHALAR', ru: "ПРОЕКТЫ", en: 'PROJECTS' },
     client: { uz: 'Mijoz', ru: "Клиент", en: 'Client' },
     view: { uz: "Kōriş", ru: "Смотреть", en: 'View project' },
-    all: { uz: "Barça işlar Behanceʼda", ru: "Все работы на Behance", en: 'All works on Behance' },
+    all: { uz: 'Barça işlar', ru: 'Все работы', en: 'All works' },
     open: { uz: "Bōlimga ōtiş", ru: "Открыть раздел", en: 'Open' },
     count: { uz: 'ta loyiha', ru: "проекта", en: 'projects' },
     back: { uz: 'Orqaga', ru: "Назад", en: 'Back' },
@@ -236,3 +236,11 @@ export const clients: { name: string; logo?: string }[] = [
   { name: 'Chiroqchi' },
   { name: 'Chust' },
 ]
+
+// "All works" page: every project from every direction, in the same order as the directions
+export const allWorks: Category = {
+  id: 'all',
+  title: { uz: 'Barça işlar', ru: 'Все работы', en: 'All works' },
+  text: { uz: 'Hamma yōnalişlardagi loyihalar', ru: 'Проекты всех направлений', en: 'Projects from every direction' },
+  projects: [...new Set(categories.flatMap((c) => c.projects))],
+}

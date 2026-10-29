@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState, type FormEvent, type Reac
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Lenis from 'lenis'
-import { categories, clients, contacts, projects, services, team, ui, type Category, type Project } from './content'
+import { allWorks, categories, clients, contacts, projects, services, team, ui, type Category, type Project } from './content'
 import { img, reducedMotion, SplitChars, useLang } from './lib'
 import { ChromeDefs, chromeFill, footerShapes } from './shapes'
 
@@ -26,7 +26,7 @@ function useRoute() {
 export default function App() {
   const [open, setOpen] = useState<Project | null>(null)
   const route = useRoute()
-  const cat = route.startsWith('work/') ? categories.find((c) => c.id === route.slice(5)) : undefined
+  const cat = route === 'work/all' ? allWorks : route.startsWith('work/') ? categories.find((c) => c.id === route.slice(5)) : undefined
   const lastCat = useRef<string | null>(null)
 
   // Going to a direction page starts at the top; coming back returns to the Projects section
@@ -622,8 +622,8 @@ function Projects() {
           )
         })}
         <div className="mt-4 text-center">
-          <a href={contacts.behance} target="_blank" rel="noreferrer" className="pill-line px-7 py-3 text-xs sm:text-sm">
-            {t(ui.projects.all)} ↗
+          <a href="#/work/all" className="pill-line px-7 py-3 text-xs sm:text-sm">
+            {t(ui.projects.all)} · {allWorks.projects.length} →
           </a>
         </div>
       </div>
@@ -637,7 +637,7 @@ function CategoryPage({ cat, onOpen }: { cat: Category; onOpen: (p: Project) => 
   const root = useRef<HTMLElement>(null)
   const ps = cat.projects.map((id) => projects.find((p) => p.id === id)!)
   const idx = categories.indexOf(cat)
-  const others = categories.filter((c) => c.id !== cat.id)
+  const others = cat.id === 'all' ? categories : [...categories.filter((c) => c.id !== cat.id), allWorks]
 
   useLayoutEffect(() => {
     if (reducedMotion()) return
@@ -659,7 +659,7 @@ function CategoryPage({ cat, onOpen }: { cat: Category; onOpen: (p: Project) => 
           ← {t(ui.projects.back)}
         </a>
         <div className="mt-10 flex items-end gap-4 sm:gap-8">
-          <span className="font-display text-5xl leading-none text-white/30 sm:text-8xl">{String(idx + 1).padStart(2, '0')}</span>
+          {idx >= 0 && <span className="font-display text-5xl leading-none text-white/30 sm:text-8xl">{String(idx + 1).padStart(2, '0')}</span>}
           <h1 className="cat-title silver font-display text-[clamp(2.4rem,7.5vw,7.5rem)] leading-[0.88] uppercase">
             <SplitChars text={t(cat.title)} />
           </h1>
