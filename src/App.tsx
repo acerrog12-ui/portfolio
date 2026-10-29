@@ -264,23 +264,13 @@ function Hero() {
     }
   }, [])
 
-  // Hovering the contact button makes the character happy: a quick cheerful wiggle,
-  // and the smiling render fades in once that file is added (HEAD_SMILE).
+  // Hovering the contact button sends a flash of light across the character's glasses
+  // (and fades in the smiling render once that file is added, see HEAD_SMILE).
   const happy = (on: boolean) => {
     if (reducedMotion()) return
-    const head = root.current?.querySelector('.hero-head')
+    const glint = root.current?.querySelector('.hero-glint')
     const smile = root.current?.querySelector('.hero-smile')
-    if (!head) return
-    gsap.killTweensOf(head, 'rotate,scale')
-    if (on) {
-      gsap.timeline()
-        .to(head, { rotate: -6, scale: 1.05, duration: 0.14, ease: 'power2.out' })
-        .to(head, { rotate: 5, duration: 0.14, ease: 'power1.inOut' })
-        .to(head, { rotate: -3, duration: 0.12, ease: 'power1.inOut' })
-        .to(head, { rotate: 0, scale: 1.03, duration: 0.35, ease: 'back.out(3)' })
-    } else {
-      gsap.to(head, { rotate: 0, scale: 1, duration: 0.5, ease: 'power3.out' })
-    }
+    if (on && glint) gsap.fromTo(glint, { backgroundPosition: '76% 0%' }, { backgroundPosition: '14% 0%', duration: 0.85, ease: 'power1.inOut', overwrite: true })
     if (smile) gsap.to(smile, { opacity: on ? 1 : 0, duration: 0.25, overwrite: true })
   }
 
@@ -303,6 +293,21 @@ function Hero() {
             <div className="hero-head relative">
               <img src={img('ace-head.webp')} srcSet={`${img('ace-head-s.webp')} 640w, ${img('ace-head.webp')} 1000w`} sizes="(max-width: 640px) 64vw, 29vw" fetchPriority="high" alt="Doston «Ace» Daminov" className="w-full" />
               {/* the same head smiling, shown while the contact button is hovered */}
+              {/* light streak clipped to the lenses (mask cut from the head render) */}
+              <span
+                aria-hidden
+                className="hero-glint pointer-events-none absolute inset-0 mix-blend-screen"
+                style={{
+                  WebkitMaskImage: `url(${img('ace-glasses-mask.webp')})`,
+                  maskImage: `url(${img('ace-glasses-mask.webp')})`,
+                  WebkitMaskSize: '100% 100%',
+                  maskSize: '100% 100%',
+                  backgroundImage: 'linear-gradient(110deg, transparent 44%, rgba(255,255,255,0.75) 46%, transparent 48%, rgba(255,255,255,0.4) 49.3%, transparent 50.4%)',
+                  backgroundSize: '300% 100%',
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: '76% 0%',
+                }}
+              />
               {HEAD_SMILE && <img src={img('ace-head-smile.webp')} alt="" aria-hidden decoding="async" className="hero-smile pointer-events-none absolute inset-0 w-full opacity-0" />}
             </div>
           </div>
