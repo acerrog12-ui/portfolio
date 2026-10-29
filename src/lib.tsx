@@ -1,8 +1,31 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
 import type { Lang } from './content'
 
-type Ctx = { lang: Lang; setLang: (l: Lang) => void; t: (v: Record<Lang, string>) => string }
-const LangCtx = createContext<Ctx>({ lang: 'uz', setLang: () => {}, t: (v) => v.uz })
+type Ctx = {
+  lang: Lang
+  setLang: (l: Lang) => void
+  t: (v: Record<Lang, string>) => string
+  /** Uzbek in the usual Latin spelling (sh, ch, oʻ, gʻ) instead of the new alphabet (ş, ç, ō, ğ) */
+  classic: boolean
+  setClassic: (c: boolean) => void
+}
+const LangCtx = createContext<Ctx>({ lang: 'uz', setLang: () => {}, t: (v) => v.uz, classic: false, setClassic: () => {} })
+
+// New alphabet -> usual Latin. Capitals become SH/CH inside all-caps words, Sh/Ch otherwise.
+const pairs: Record<string, [string, string]> = { ş: ['sh', 'Sh'], ç: ['ch', 'Ch'], ō: ['o‘', 'O‘'], ğ: ['g‘', 'G‘'] }
+export function toClassic(text: string): string {
+  if (!/[şçōğŞÇŌĞ]/.test(text)) return text
+  return text.replace(/[\p{L}ʻʼ'‘]+/gu, (w) => {
+    if (!/[şçōğŞÇŌĞ]/.test(w)) return w
+    const caps = w.length > 1 && w === w.toUpperCase()
+    return w.replace(/[şçōğŞÇŌĞ]/g, (ch) => {
+      const lower = ch.toLowerCase()
+      const [lo, cap] = pairs[lower]
+      if (ch === lower) return lo
+      return caps ? cap.toUpperCase() : cap
+    })
+  })
+}
 
 function initialLang(): Lang {
   try {
@@ -25,7 +48,22 @@ export function LangProvider({ children }: { children: ReactNode }) {
       /* storage blocked */
     }
   }, [lang])
-  return <LangCtx.Provider value={{ lang, setLang, t: (v) => v[lang] }}>{children}</LangCtx.Provider>
+  const [classic, setClassic] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem('uzScript') === 'classic'
+    } catch {
+      return false
+    }
+  })
+  useEffect(() => {
+    try {
+      localStorage.setItem('uzScript', classic ? 'classic' : 'new')
+    } catch {
+      /* storage blocked */
+    }
+  }, [classic])
+  const t = (v: Record<Lang, string>) => (lang === 'uz' && classic ? toClassic(v.uz) : v[lang])
+  return <LangCtx.Provider value={{ lang, setLang, t, classic, setClassic }}>{children}</LangCtx.Provider>
 }
 
 export const useLang = () => useContext(LangCtx)

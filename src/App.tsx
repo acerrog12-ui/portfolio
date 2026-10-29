@@ -108,7 +108,7 @@ function scrollTo(id: string) {
 
 /* ---------------- NAV ---------------- */
 function Nav() {
-  const { t, lang, setLang } = useLang()
+  const { t, lang, setLang, classic, setClassic } = useLang()
   const links = ['about', 'services', 'projects', 'contact'] as const
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-black">
@@ -137,8 +137,15 @@ function Nav() {
         </span>
         <div className="flex overflow-hidden rounded-full border border-white/50">
           {(['uz', 'ru', 'en'] as const).map((l) => (
-            <button key={l} onClick={() => setLang(l)} className={`px-2.5 py-1 transition-colors ${lang === l ? 'bg-white text-black' : 'text-white'}`}>
+            <button
+              key={l}
+              // a second tap on "uz" switches the spelling: new alphabet (ş, ç, ō) <-> usual Latin (sh, ch, oʻ)
+              onClick={() => (l === 'uz' && lang === 'uz' ? setClassic(!classic) : setLang(l))}
+              title={l === 'uz' ? (classic ? 'Yangi alifbo: ş, ç, ō' : 'Lotin yozuvi: sh, ch, o‘') : undefined}
+              className={`px-2.5 py-1 transition-colors ${lang === l ? 'bg-white text-black' : 'text-white'}`}
+            >
               {l}
+              {l === 'uz' && lang === 'uz' && <span className="ml-1 text-[0.7em] font-semibold opacity-50">{classic ? 'sh' : 'ş'}</span>}
             </button>
           ))}
         </div>
