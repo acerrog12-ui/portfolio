@@ -288,6 +288,52 @@ function Hero() {
   )
 }
 
+// A chrome object you can grab with the mouse and pull a little; on release it springs back.
+// Touch is left alone so a finger on an object still scrolls the page.
+function Grab({ children, className = '' }: { children: ReactNode; className?: string }) {
+  const el = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const n = el.current
+    if (!n) return
+    let sx = 0, sy = 0, on = false
+    const max = 140
+    const rubber = (d: number) => Math.sign(d) * max * (1 - Math.exp(-Math.abs(d) / max))
+    const down = (e: PointerEvent) => {
+      if (e.pointerType === 'touch') return
+      on = true; sx = e.clientX; sy = e.clientY
+      gsap.killTweensOf(n)
+      n.setPointerCapture(e.pointerId)
+      e.preventDefault()
+    }
+    const move = (e: PointerEvent) => {
+      if (!on) return
+      const x = rubber(e.clientX - sx), y = rubber(e.clientY - sy)
+      gsap.set(n, { x, y, rotate: x * 0.08 })
+    }
+    const up = () => {
+      if (!on) return
+      on = false
+      gsap.to(n, { x: 0, y: 0, rotate: 0, duration: 1.4, ease: 'elastic.out(1, 0.35)' })
+    }
+    n.addEventListener('pointerdown', down)
+    n.addEventListener('pointermove', move)
+    n.addEventListener('pointerup', up)
+    n.addEventListener('pointercancel', up)
+    return () => {
+      n.removeEventListener('pointerdown', down)
+      n.removeEventListener('pointermove', move)
+      n.removeEventListener('pointerup', up)
+      n.removeEventListener('pointercancel', up)
+      gsap.killTweensOf(n)
+    }
+  }, [])
+  return (
+    <div ref={el} className={`pointer-events-auto relative select-none will-change-transform ${className}`} onDragStart={(e) => e.preventDefault()}>
+      {children}
+    </div>
+  )
+}
+
 /* ---------------- CLIENT LOGOS + IMAGE STRIP ---------------- */
 // An endlessly moving row that can also be grabbed and thrown left or right.
 // speed is in px per second; negative moves left. Children must be the item list repeated twice.
@@ -313,6 +359,7 @@ function DragRow({ speed, children, onTap }: { speed: number; children: ReactNod
     let startX = 0
     let startT = 0
     let moved = 0
+    let wheelUntil = 0
 
     // the track width is measured once (and on resize), not every frame: reading it per frame forced a layout each frame
     let half = el.scrollWidth / 2
@@ -325,7 +372,7 @@ function DragRow({ speed, children, onTap }: { speed: number; children: ReactNod
     const loop = (now: number) => {
       const dt = Math.min(0.05, (now - prev) / 1000)
       prev = now
-      if (!dragging) {
+      if (!dragging && now > wheelUntil) {
         vel += (auto - vel) * Math.min(1, dt * 2.5) // ease back to the normal drift after a throw
         x += vel * dt
       }
@@ -380,6 +427,17 @@ function DragRow({ speed, children, onTap }: { speed: number; children: ReactNod
       vel = Math.max(-3000, Math.min(3000, vel))
       box.classList.remove('cursor-grabbing')
     }
+    // two-finger sideways swipe on a trackpad (or shift + wheel) moves the row;
+    // mostly-vertical wheel stays page scrolling
+    const wheel = (e: WheelEvent) => {
+      const dx = e.deltaX || (e.shiftKey ? e.deltaY : 0)
+      if (Math.abs(dx) <= Math.abs(e.shiftKey ? 0 : e.deltaY)) return
+      e.preventDefault()
+      x -= dx
+      vel = 0
+      wheelUntil = performance.now() + 250
+    }
+    box.addEventListener('wheel', wheel, { passive: false })
     box.addEventListener('pointerdown', down)
     box.addEventListener('pointermove', move)
     box.addEventListener('pointerup', up)
@@ -388,6 +446,7 @@ function DragRow({ speed, children, onTap }: { speed: number; children: ReactNod
       cancelAnimationFrame(raf)
       io.disconnect()
       ro.disconnect()
+      box.removeEventListener('wheel', wheel)
       box.removeEventListener('pointerdown', down)
       box.removeEventListener('pointermove', move)
       box.removeEventListener('pointerup', up)
@@ -514,19 +573,27 @@ function About() {
       {/* big chrome objects that fly in from the screen edges while scrolling, like the reference */}
       <div data-from="-1" className="about-obj pointer-events-none absolute will-change-transform hidden sm:block top-24 left-[-2%] w-28 sm:top-32 sm:w-[17vw]">
         <span aria-hidden="true" className="obj-glow" />
-        <img src={img('el-ae.webp')} alt="" loading="lazy" className="floaty relative w-full" style={{ ['--r' as string]: '-12deg' }} />
+        <Grab>
+          <img src={img('el-ae.webp')} alt="" loading="lazy" className="floaty relative w-full" style={{ ['--r' as string]: '-12deg' }} />
+        </Grab>
       </div>
       <div data-from="1" className="about-obj pointer-events-none absolute will-change-transform hidden sm:block top-20 right-[-3%] w-32 sm:top-28 sm:w-[19vw]">
         <span aria-hidden="true" className="obj-glow" />
-        <img src={img('el-3d.webp')} alt="" loading="lazy" className="floaty relative w-full" style={{ ['--r' as string]: '10deg', ['--d' as string]: '8s' }} />
+        <Grab>
+          <img src={img('el-3d.webp')} alt="" loading="lazy" className="floaty relative w-full" style={{ ['--r' as string]: '10deg', ['--d' as string]: '8s' }} />
+        </Grab>
       </div>
       <div data-from="-1" className="about-obj pointer-events-none absolute will-change-transform hidden sm:block top-[34%] left-[-4%] w-28 sm:w-[16vw]">
         <span aria-hidden="true" className="obj-glow" />
-        <img src={img('el-pen.webp')} alt="" loading="lazy" className="floaty relative w-full" style={{ ['--r' as string]: '14deg', ['--d' as string]: '9s' }} />
+        <Grab>
+          <img src={img('el-pen.webp')} alt="" loading="lazy" className="floaty relative w-full" style={{ ['--r' as string]: '14deg', ['--d' as string]: '9s' }} />
+        </Grab>
       </div>
       <div data-from="1" className="about-obj pointer-events-none absolute will-change-transform hidden sm:block top-[36%] right-[-4%] w-36 sm:w-[22vw]">
         <span aria-hidden="true" className="obj-glow" />
-        <img src={img('ace-pad.webp')} alt="" loading="lazy" className="floaty relative w-full" style={{ ['--r' as string]: '-14deg', ['--d' as string]: '7s' }} />
+        <Grab>
+          <img src={img('ace-pad.webp')} alt="" loading="lazy" className="floaty relative w-full" style={{ ['--r' as string]: '-14deg', ['--d' as string]: '7s' }} />
+        </Grab>
       </div>
 
       {/* phones: two objects above the heading, two between the button and the stats */}
