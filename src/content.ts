@@ -120,7 +120,7 @@ export const team = {
     { uz: '3D dizayn', ru: "3D-дизайн", en: '3D design' },
     { uz: 'Motion va animatsiya', ru: "Моушн и анимация", en: 'Motion & animation' },
     { uz: 'Videografiya', ru: "Видеосъёмка", en: 'Videography' },
-    { uz: 'Event va sahna dizayni', ru: "Ивент и сценография", en: 'Event & stage design' },
+    { uz: 'Event visual', ru: 'Event visual', en: 'Event visual' },
     { uz: 'Brending', ru: "Брендинг", en: 'Branding' },
   ] as T[],
 }
@@ -213,9 +213,9 @@ export const categories: Category[] = [
   },
   {
     id: 'event',
-    short: { uz: 'Event', ru: 'Ивент', en: 'Event' },
-    title: { uz: 'Event va sahna dizayni', ru: "Ивент и сценография", en: 'Event & stage design' },
-    text: { uz: "Katta tadbirlar uçun sahna, ekran va kōrgazma dizayni", ru: "Дизайн сцены, экранов и выставок для крупных мероприятий", en: 'Stage, screen and exhibition design for large events' },
+    short: { uz: 'Event visual', ru: 'Event visual', en: 'Event visual' },
+    title: { uz: 'Event visual', ru: 'Event visual', en: 'Event visual' },
+    text: { uz: 'Katta tadbirlar uçun sahna, ekran va kōrgazma vizuallari', ru: 'Визуалы для сцены, экранов и выставок крупных мероприятий', en: 'Visuals for stages, screens and exhibitions at large events' },
     projects: ['fide', 'talaba-fest', 'istedodlar-zamini', 'oltin-chinor', 'qahramonlar'],
   },
   {

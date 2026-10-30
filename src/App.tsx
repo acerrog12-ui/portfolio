@@ -617,31 +617,20 @@ function Clients({ onOpen }: { onOpen: (p: Project) => void }) {
 // Screen blending drops the black so it sits on any dark background.
 // It only plays while on screen.
 function TafSpin({ className = '' }: { className?: string }) {
-  const ref = useRef<HTMLVideoElement>(null)
-  useEffect(() => {
-    const v = ref.current
-    if (!v) return
-    const io = new IntersectionObserver(([e]) => {
-      if (e.isIntersecting && !reducedMotion()) v.play().catch(() => {})
-      else v.pause()
-    }, { rootMargin: '200px' })
-    io.observe(v)
-    return () => io.disconnect()
-  }, [])
+  // An animated image, not a video: Safari (and battery-saving modes) can refuse to start
+  // muted autoplay videos, which left the statuette frozen. Animated WebP always plays.
+  const still = reducedMotion()
   return (
-    <video
-      ref={ref}
+    <img
+      src={img(still ? 'taf-spin-poster.webp' : 'taf-spin.webp')}
+      alt="Tashkent Advertising Festival 2023"
+      loading="lazy"
+      decoding="async"
+      width={360}
+      height={716}
+      draggable={false}
       className={`pointer-events-none mix-blend-screen ${className}`}
-      poster={img('taf-spin-poster.webp')}
-      muted
-      loop
-      playsInline
-      preload="none"
-      aria-label="Tashkent Advertising Festival 2023"
-    >
-      <source src={img('taf-spin.mp4')} type="video/mp4" />
-      <source src={img('taf-spin.webm')} type="video/webm" />
-    </video>
+    />
   )
 }
 
