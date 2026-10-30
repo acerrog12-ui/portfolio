@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState, type FormEvent, type ReactNode } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import Lenis from 'lenis'
+import type Lenis from 'lenis'
 import { allWorks, categories, clients, contacts, projects, services, team, ui, type Category, type Project } from './content'
 import { img, reducedMotion, SplitChars, useLang } from './lib'
 import { ChromeDefs, chromeFill, footerShapes } from './shapes'
@@ -57,20 +57,8 @@ export default function App() {
     return () => io.disconnect()
   }, [cat])
 
-  // Smooth scrolling, synced with ScrollTrigger
-  useEffect(() => {
-    if (reducedMotion()) return
-    const lenis = new Lenis({ lerp: 0.16 })
-    lenis.on('scroll', ScrollTrigger.update)
-    const tick = (t: number) => lenis.raf(t * 1000)
-    gsap.ticker.add(tick)
-    gsap.ticker.lagSmoothing(0)
-    ;(window as unknown as { lenis: Lenis }).lenis = lenis
-    return () => {
-      gsap.ticker.remove(tick)
-      lenis.destroy()
-    }
-  }, [])
+  // No smooth-scroll library: the browser's own scrolling feels lighter and more direct
+  // (Lenis made the page feel heavy on computers)
 
   return (
     <div>
@@ -427,13 +415,44 @@ function DragRow({ speed, children, onTap }: { speed: number; children: ReactNod
 
     // the track width is measured once (and on resize), not every frame: reading it per frame forced a layout each frame
     let half = el.scrollWidth / 2
-    const ro = new ResizeObserver(() => (half = el.scrollWidth / 2))
-    ro.observe(el)
     const wrapX = () => {
       if (half <= 0) return
       x = ((x % half) - half) % half // keep x in (-half, 0]
     }
+
+    // Two modes. Drifting on its own: a browser animation that runs on the graphics card,
+    // so the page does no work per frame. Dragged, thrown or swiped: a JS loop, until the
+    // row is back to its normal drift, then it hands back to the browser animation.
+    let anim: Animation | null = null
+    let dur = 0
+    let visible = false
+    const readX = () => {
+      if (!anim || !dur) return
+      const t = (Number(anim.currentTime) || 0) % dur
+      const frac = auto < 0 ? t / dur : 1 - t / dur
+      x = -frac * half
+    }
+    const startAuto = () => {
+      anim?.cancel()
+      anim = null
+      el.style.transform = `translate3d(${x}px,0,0)`
+      if (!auto || half <= 0 || typeof el.animate !== 'function') return
+      dur = (half / Math.abs(auto)) * 1000
+      anim = el.animate([{ transform: 'translate3d(0,0,0)' }, { transform: `translate3d(${-half}px,0,0)` }], { duration: dur, iterations: Infinity, direction: auto < 0 ? 'normal' : 'reverse' })
+      const frac = half ? -x / half : 0
+      anim.currentTime = (auto < 0 ? frac : 1 - frac) * dur
+      if (!visible) anim.pause()
+    }
+    const stopAuto = () => {
+      if (!anim) return
+      readX()
+      anim.cancel()
+      anim = null
+      el.style.transform = `translate3d(${x}px,0,0)`
+    }
+
     const loop = (now: number) => {
+      raf = 0
       const dt = Math.min(0.05, (now - prev) / 1000)
       prev = now
       if (!dragging && now > wheelUntil) {
@@ -442,19 +461,42 @@ function DragRow({ speed, children, onTap }: { speed: number; children: ReactNod
       }
       wrapX()
       el.style.transform = `translate3d(${x}px,0,0)`
+      // settled: hand back to the browser animation
+      if (!dragging && now > wheelUntil && Math.abs(vel - auto) < 2) {
+        vel = auto
+        startAuto()
+        return
+      }
       raf = requestAnimationFrame(loop)
     }
-    // only run while the row is on screen
-    const io = new IntersectionObserver(([e]) => {
-      cancelAnimationFrame(raf)
-      if (e.isIntersecting) {
+    const startLoop = () => {
+      stopAuto()
+      if (!raf) {
         prev = performance.now()
         raf = requestAnimationFrame(loop)
       }
+    }
+
+    const ro = new ResizeObserver(() => {
+      const h = el.scrollWidth / 2
+      if (Math.abs(h - half) < 0.5) return
+      readX()
+      half = h
+      wrapX()
+      if (anim) startAuto()
+    })
+    ro.observe(el)
+    // only animate while the row is on screen
+    const io = new IntersectionObserver(([e]) => {
+      visible = e.isIntersecting
+      if (!visible) anim?.pause()
+      else if (anim) anim.play()
+      else if (!raf) startAuto()
     })
     io.observe(box)
 
     const down = (e: PointerEvent) => {
+      startLoop()
       dragging = true
       startX = e.clientX
       startT = performance.now()
@@ -497,6 +539,7 @@ function DragRow({ speed, children, onTap }: { speed: number; children: ReactNod
       const dx = e.deltaX || (e.shiftKey ? e.deltaY : 0)
       if (Math.abs(dx) <= Math.abs(e.shiftKey ? 0 : e.deltaY)) return
       e.preventDefault()
+      startLoop()
       x -= dx
       vel = 0
       wheelUntil = performance.now() + 250
@@ -508,6 +551,7 @@ function DragRow({ speed, children, onTap }: { speed: number; children: ReactNod
     box.addEventListener('pointercancel', up)
     return () => {
       cancelAnimationFrame(raf)
+      anim?.cancel()
       io.disconnect()
       ro.disconnect()
       box.removeEventListener('wheel', wheel)
@@ -767,7 +811,7 @@ function Services() {
       raf = 0
       const vh = window.innerHeight
       const d = desk.matches
-      const blurMax = d ? 6 : 0 // no animated filters on phones (too slow there)
+      const blurMax = 0 // blur turned off everywhere: it was the costliest part of this effect
       const exitStart = d ? 0.5 : 0.48
       const exitEnd = d ? 0.3 : 0.28 // just below the pinned title
       rows.forEach((r) => {
@@ -836,10 +880,10 @@ function Projects() {
       cards.forEach((card, i) => {
         const next = cards[i + 1]
         if (!next) return
-        // each card dims a little as the next one slides over it
+        // each card darkens a little as the next one slides over it
         const st = { trigger: next, start: 'top 80%', end: 'top 20%', scrub: true }
         // a black layer fades in instead of a CSS filter, which is slow on phones
-        gsap.to(card.firstElementChild, { scale: 0.97, ease: 'none', scrollTrigger: st })
+        // (no shrinking: scaling a rounded card full of pictures was the slowest thing on the page)
         gsap.to(card.querySelector('.proj-dim'), { opacity: 0.4, ease: 'none', scrollTrigger: st })
       })
     }, root)
