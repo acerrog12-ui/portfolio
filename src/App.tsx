@@ -1065,7 +1065,7 @@ function CoverText({ p, small }: { p: Project; small?: boolean }) {
 
 // An animated HTML presentation shown at its full height, so the modal does the scrolling.
 // Its slides still animate as they reach the screen (IntersectionObserver sees the real viewport).
-function EmbedDeck({ src, title }: { src: string; title: string }) {
+function EmbedDeck({ src, title, onInnerScroll }: { src: string; title: string; onInnerScroll?: (y: number) => void }) {
   const frame = useRef<HTMLIFrameElement>(null)
   const [h, setH] = useState(0)
   const [compact] = useState(() => window.matchMedia('(max-width: 1023px), (pointer: coarse)').matches)
@@ -1128,13 +1128,23 @@ function EmbedDeck({ src, title }: { src: string; title: string }) {
   }, [])
   const url = `${import.meta.env.BASE_URL}${src}`
   return (
-    <div className="mx-auto w-full max-w-[1100px] px-3 pb-10 sm:px-8">
+    <div className="w-full">
       {/* phones: the deck scrolls inside a screen-high frame, so the phone only draws the slides on screen
           (drawing all 18 at once ran out of memory and Safari reloaded the page) */}
       {compact ? (
-        <iframe src={url} title={title} className="block w-full rounded-2xl bg-black" style={{ height: 'calc(100svh - 150px)', border: 0 }} />
+        <iframe
+          src={url}
+          title={title}
+          className="block w-full bg-black"
+          style={{ height: '100svh', border: 0 }}
+          // the deck scrolls inside the frame here, so pass its scroll up to hide or show the title bar
+          onLoad={(e) => {
+            const w = e.currentTarget.contentWindow
+            try { w?.addEventListener('scroll', () => onInnerScroll?.(w.scrollY), { passive: true }) } catch { /* other origin */ }
+          }}
+        />
       ) : (
-        <iframe ref={frame} src={url} title={title} scrolling="no" className="block w-full rounded-2xl bg-black" style={{ height: h || '56vw', border: 0 }} />
+        <iframe ref={frame} src={url} title={title} scrolling="no" className="block w-full bg-black" style={{ height: h || '56vw', border: 0 }} />
       )}
     </div>
   )
@@ -1143,6 +1153,17 @@ function EmbedDeck({ src, title }: { src: string; title: string }) {
 function ProjectModal({ project, onClose }: { project: Project; onClose: () => void }) {
   const { t } = useLang()
   const ref = useRef<HTMLDivElement>(null)
+  // the title bar floats over the project: it slides away while scrolling down
+  // and comes back as soon as you scroll up
+  const [barHidden, setBarHidden] = useState(false)
+  const lastY = useRef(0)
+  const onScroll = (y = ref.current?.scrollTop ?? 0) => {
+    const d = y - lastY.current
+    if (Math.abs(d) > 4) {
+      setBarHidden(d > 0 && y > 60)
+      lastY.current = y
+    }
+  }
   useEffect(() => {
     const lenis = (window as unknown as { lenis?: Lenis }).lenis
     lenis?.stop()
@@ -1157,9 +1178,9 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
     }
   }, [onClose])
   return (
-    <div className="fixed inset-0 z-[70] bg-black/70 backdrop-blur-sm" onClick={onClose}>
-      <div ref={ref} data-lenis-prevent className="absolute inset-x-0 top-6 bottom-0 overflow-y-auto rounded-t-[2rem] bg-ink sm:inset-x-8" onClick={(e) => e.stopPropagation()}>
-        <div className="sticky top-0 z-10 flex items-center justify-between gap-4 bg-ink/90 px-5 py-4 backdrop-blur sm:px-8">
+    <div className="fixed inset-0 z-[70] bg-black" onClick={onClose}>
+      <div ref={ref} data-lenis-prevent onScroll={() => onScroll()} className="absolute inset-0 overflow-y-auto bg-ink" onClick={(e) => e.stopPropagation()}>
+        <div className={`fixed inset-x-0 top-0 z-10 flex items-center justify-between gap-4 bg-gradient-to-b from-black/85 via-black/55 to-transparent px-5 pt-4 pb-10 transition-transform duration-500 ease-out sm:px-8 sm:pt-5 ${barHidden ? '-translate-y-full' : ''}`}>
           <div className="min-w-0">
             <div className="text-[10px] tracking-[0.2em] text-white/50 uppercase">{project.client}{project.year && ` · ${project.year}`} · {t(project.tags)}</div>
             <h3 className="truncate font-display text-lg font-bold sm:text-2xl">{t(project.title)}</h3>
@@ -1172,7 +1193,7 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
         {project.videos?.map((v) => (
           <video
             key={v}
-            className="mx-auto mb-6 block max-h-[85svh] w-full max-w-[1100px] rounded-2xl bg-black object-contain px-3 sm:px-8"
+            className="block max-h-[100svh] w-full bg-black object-contain"
             src={`${import.meta.env.BASE_URL}video/${v}.mp4`}
             poster={`${import.meta.env.BASE_URL}video/${v}.jpg`}
             controls
@@ -1180,13 +1201,13 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
             preload="metadata"
           />
         ))}
-        {project.embed && <EmbedDeck src={project.embed} title={t(project.title)} />}
+        {project.embed && <EmbedDeck src={project.embed} title={t(project.title)} onInnerScroll={onScroll} />}
         {project.full !== false &&
-          (project.parts ? Array.from({ length: project.parts }, (_, i) => `${project.id}-full-${i + 1}.webp`) : [`${project.id}-full.webp`]).map((f, i, all) => (
+          (project.parts ? Array.from({ length: project.parts }, (_, i) => `${project.id}-full-${i + 1}.webp`) : [`${project.id}-full.webp`]).map((f, i) => (
             // phones get a 1080px copy: the full-size layouts are huge to decode and can crash mobile Safari
             <picture key={f}>
               <source media="(max-width: 900px)" srcSet={img(f.replace('.webp', '-m.webp'))} />
-              <img src={img(f)} alt={i ? '' : t(project.title)} loading="lazy" decoding="async" className={`mx-auto block w-full max-w-[1100px] px-3 sm:px-8 ${i === all.length - 1 ? 'pb-10' : ''}`} />
+              <img src={img(f)} alt={i ? '' : t(project.title)} loading="lazy" decoding="async" className="block w-full" />
             </picture>
           ))}
       </div>
