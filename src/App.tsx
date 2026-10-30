@@ -925,7 +925,7 @@ function Projects() {
       <h2 className="proj-title outline-text mb-14 text-center font-display text-[clamp(2.6rem,10vw,10rem)] leading-none uppercase sm:mb-20">
         <SplitChars text={t(ui.projects.title)} />
       </h2>
-      <div className="mx-auto max-w-[1180px]">
+      <div className="mx-auto max-w-[1400px]">
         {categories.map((c, i) => {
           const ps = c.projects.map((id) => projects.find((p) => p.id === id)!)
           const pics = c.covers ?? [ps[0].id, (ps[1] ?? ps[0]).id, (ps[2] ?? ps[1] ?? ps[0]).id]
@@ -945,10 +945,11 @@ function Projects() {
                     {t(ui.projects.open)} →
                   </span>
                 </header>
-                <div className="proj-grid grid w-full grid-cols-3 gap-2 sm:h-[62vh] sm:max-h-[620px] sm:grid-rows-2 sm:gap-3">
+                {/* tiles keep the pictures' own 16:9 shape, so nothing gets cut off */}
+                <div className="proj-grid grid w-full grid-cols-3 gap-2 sm:grid-rows-2 sm:gap-3">
                   {pics.map((p, k) => (
-                    <span key={k} className={k === 0 ? 'col-span-3 aspect-video overflow-hidden rounded-[1.25rem] sm:col-span-2 sm:row-span-2 sm:aspect-auto sm:h-full' : 'hidden overflow-hidden rounded-[1.25rem] sm:block'}>
-                      <img src={img(`${p}.webp`)} srcSet={`${img(`${p}-s.webp`)} 640w, ${img(`${p}.webp`)} 1200w`} sizes="(max-width: 640px) 90vw, 40vw" alt={k === 0 ? t(c.title) : ''} loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-105" />
+                    <span key={k} className={k === 0 ? 'col-span-3 aspect-video overflow-hidden rounded-[1.25rem] sm:col-span-2 sm:row-span-2' : 'hidden aspect-video overflow-hidden rounded-[1.25rem] sm:block'}>
+                      <img src={img(`${p}.webp`)} srcSet={`${img(`${p}-s.webp`)} 640w, ${img(`${p}.webp`)} 1200w`} sizes={k === 0 ? "(max-width: 640px) 90vw, 62vw" : "(max-width: 640px) 90vw, 31vw"} alt={k === 0 ? t(c.title) : ''} loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-105" />
                     </span>
                   ))}
                 </div>
