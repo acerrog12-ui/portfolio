@@ -202,7 +202,7 @@ export const categories: Category[] = [
     short: { uz: 'Key visual', ru: 'Key visual', en: 'Key visual' },
     title: { uz: 'Key visual va kampaniyalar', ru: "Key visual и кампании", en: 'Key visuals & campaigns' },
     text: { uz: 'Festival, konsert va aksiyalar uçun asosiy vizuallar', ru: "Ключевые визуалы для фестивалей, концертов и промоакций", en: 'Key visuals for festivals, shows and promos' },
-    projects: ['khiva-ethnosport', 'chempion', 'yoshlar-kuni', 'pepsi', 'yonda-awards', 'bliss'],
+    projects: ['pepsi', 'chempion', 'bliss', 'yonda-awards', 'yoshlar-kuni', 'khiva-ethnosport'],
   },
   {
     id: '3d',
@@ -231,7 +231,7 @@ export const categories: Category[] = [
     title: { uz: 'AI va art direction', ru: 'AI и арт-дирекшн', en: 'AI & art direction' },
     text: { uz: "Jamoa bilan qilingan AI filmlar va vizual hikoyalar", ru: 'AI-фильмы и визуальные истории, сделанные с командой', en: 'AI films and visual stories made with a team' },
     projects: ['peace-intro', 'amir-temur'],
-    covers: ['peace-intro', 'peace-intro-b', 'peace-intro-c'],
+    covers: ['peace-intro', 'amir-temur-b', 'amir-temur-c'],
   },
 ]
 
