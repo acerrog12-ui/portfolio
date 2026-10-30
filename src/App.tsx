@@ -926,7 +926,11 @@ function Projects() {
 function CategoryPage({ cat, onOpen }: { cat: Category; onOpen: (p: Project) => void }) {
   const { t, lang } = useLang()
   const root = useRef<HTMLElement>(null)
-  const ps = cat.projects.map((id) => projects.find((p) => p.id === id)!)
+  const isAll = cat.id === 'all'
+  // filter tabs on the "All works" page: '' = everything, otherwise a direction id
+  const [filter, setFilter] = useState('')
+  const shown = isAll && filter ? categories.find((c) => c.id === filter)! : cat
+  const ps = shown.projects.map((id) => projects.find((p) => p.id === id)!)
   const idx = categories.indexOf(cat)
   const others = cat.id === 'all' ? categories : [...categories.filter((c) => c.id !== cat.id), allWorks]
 
@@ -935,13 +939,23 @@ function CategoryPage({ cat, onOpen }: { cat: Category; onOpen: (p: Project) => 
     const ctx = gsap.context(() => {
       gsap.from('.cat-title .char', { yPercent: 110, stagger: 0.03, duration: 1.1, ease: 'expo.out', delay: 0.1 })
       gsap.from('.cat-fade', { y: 30, autoAlpha: 0, duration: 1, ease: 'expo.out', delay: 0.4 })
-      gsap.utils.toArray<HTMLElement>('.cat-item').forEach((el) => {
-        gsap.from(el, { y: 80, autoAlpha: 0, duration: 1.1, ease: 'expo.out', scrollTrigger: { trigger: el, start: 'top 92%' } })
+    }, root)
+    return () => ctx.revert()
+  }, [lang, cat.id])
+
+  // cards come up as they scroll in; after a tab switch the visible ones come up together
+  useLayoutEffect(() => {
+    if (reducedMotion()) return
+    const ctx = gsap.context(() => {
+      gsap.utils.toArray<HTMLElement>('.cat-item').forEach((el, i) => {
+        const inView = el.getBoundingClientRect().top < window.innerHeight * 0.92
+        if (filter && inView) gsap.from(el, { y: 50, autoAlpha: 0, duration: 0.8, ease: 'expo.out', delay: i * 0.06 })
+        else gsap.from(el, { y: 80, autoAlpha: 0, duration: 1.1, ease: 'expo.out', scrollTrigger: { trigger: el, start: 'top 92%' } })
       })
     }, root)
     ScrollTrigger.refresh()
     return () => ctx.revert()
-  }, [lang, cat.id])
+  }, [lang, cat.id, filter])
 
   return (
     <main ref={root} className="relative bg-ink px-3 pt-24 pb-48 sm:px-8 sm:pt-28 sm:pb-64">
@@ -956,10 +970,26 @@ function CategoryPage({ cat, onOpen }: { cat: Category; onOpen: (p: Project) => 
           </h1>
         </div>
         <p className="cat-fade mt-6 max-w-xl text-sm font-semibold text-white/60 uppercase sm:text-base">
-          {t(cat.text)} · {ps.length} {t(ui.projects.count)}
+          {t(cat.text)} · {cat.projects.length} {t(ui.projects.count)}
         </p>
 
-        <div className="mt-14 grid gap-5 sm:mt-20 md:grid-cols-2 md:gap-6">
+        {isAll && (
+          <div className="cat-fade mt-10 flex flex-wrap gap-2 sm:mt-14 sm:gap-3">
+            {[{ id: '', label: t(ui.projects.everything), n: cat.projects.length }, ...categories.map((c) => ({ id: c.id, label: t(c.short ?? c.title), n: c.projects.length }))].map((f) => (
+              <button
+                key={f.id}
+                onClick={() => setFilter(f.id)}
+                aria-pressed={filter === f.id}
+                className={`rounded-full px-5 py-2.5 text-sm font-bold transition-colors sm:px-7 sm:py-3.5 sm:text-lg ${filter === f.id ? 'bg-white text-black' : 'bg-white/[0.08] text-white hover:bg-white/[0.16]'}`}
+              >
+                {f.label}
+                <sup className="ml-1 text-[0.6em] opacity-50">{f.n}</sup>
+              </button>
+            ))}
+          </div>
+        )}
+
+        <div className={`grid gap-5 md:grid-cols-2 md:gap-6 ${isAll ? 'mt-8 sm:mt-10' : 'mt-14 sm:mt-20'}`}>
           {ps.map((p, i) => (
             <button key={p.id} onClick={() => onOpen(p)} className={`cat-item group block overflow-hidden rounded-[1.75rem] border-[1.5px] border-white/70 p-3 text-left sm:p-4 ${ps.length % 2 && i === 0 ? 'md:col-span-2' : ''}`}>
               <span className="relative block aspect-video overflow-hidden rounded-[1.25rem]">

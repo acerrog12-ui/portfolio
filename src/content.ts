@@ -63,6 +63,7 @@ export const ui = {
     client: { uz: 'Mijoz', ru: "Клиент", en: 'Client' },
     view: { uz: "Kōriş", ru: "Смотреть", en: 'View project' },
     all: { uz: 'Barça işlar', ru: 'Все работы', en: 'All works' },
+    everything: { uz: 'Hammasi', ru: 'Все', en: 'All' },
     open: { uz: "Bōlimga ōtiş", ru: "Открыть раздел", en: 'Open' },
     count: { uz: 'ta loyiha', ru: "проекта", en: 'projects' },
     back: { uz: 'Orqaga', ru: "Назад", en: 'Back' },
@@ -193,34 +194,40 @@ export const projects: Project[] = [
 // Clicking a card opens that direction's page with all its projects.
 // To move a project, put its id in another list.
 // covers: optional image names for the 3 pictures on the big card (default: first projects)
-export type Category = { id: string; title: T; text: T; projects: string[]; covers?: string[] }
+// short: the label on the filter tabs of the "All works" page
+export type Category = { id: string; title: T; text: T; projects: string[]; covers?: string[]; short?: T }
 export const categories: Category[] = [
   {
     id: 'key-visual',
+    short: { uz: 'Key visual', ru: 'Key visual', en: 'Key visual' },
     title: { uz: 'Key visual va kampaniyalar', ru: "Key visual и кампании", en: 'Key visuals & campaigns' },
     text: { uz: 'Festival, konsert va aksiyalar uçun asosiy vizuallar', ru: "Ключевые визуалы для фестивалей, концертов и промоакций", en: 'Key visuals for festivals, shows and promos' },
     projects: ['khiva-ethnosport', 'chempion', 'yoshlar-kuni', 'pepsi', 'yonda-awards', 'bliss'],
   },
   {
     id: '3d',
+    short: { uz: '3D va reklama', ru: '3D и реклама', en: '3D & ads' },
     title: { uz: '3D va reklama', ru: "3D и реклама", en: '3D & advertising' },
     text: { uz: 'Banklar va brendlar uçun 3D reklama hamda immersiv kontent', ru: "3D-реклама и иммерсивный контент для банков и брендов", en: '3D ads and immersive content for banks and brands' },
     projects: ['violence', 'agrobank', 'mkbank'],
   },
   {
     id: 'event',
+    short: { uz: 'Event', ru: 'Ивент', en: 'Event' },
     title: { uz: 'Event va sahna dizayni', ru: "Ивент и сценография", en: 'Event & stage design' },
     text: { uz: "Katta tadbirlar uçun sahna, ekran va kōrgazma dizayni", ru: "Дизайн сцены, экранов и выставок для крупных мероприятий", en: 'Stage, screen and exhibition design for large events' },
     projects: ['fide', 'talaba-fest', 'istedodlar-zamini', 'oltin-chinor', 'qahramonlar', 'amir-temur'],
   },
   {
     id: 'branding',
+    short: { uz: 'Brending', ru: 'Брендинг', en: 'Branding' },
     title: { uz: 'Brending va sport', ru: "Брендинг и спорт", en: 'Branding & sports' },
     text: { uz: 'Klublar, ligalar va hududlar uçun vizual identifikatsiya', ru: "Айдентика для клубов, лиг и территорий", en: 'Visual identity for clubs, leagues and places' },
     projects: ['salomtv', 'arch-design', 'samad', 'chust', 'superleague', 'logipro', 'chiroqchi'],
   },
   {
     id: 'ai',
+    short: { uz: 'AI', ru: 'AI', en: 'AI' },
     title: { uz: 'AI va art direction', ru: 'AI и арт-дирекшн', en: 'AI & art direction' },
     text: { uz: "Jamoa bilan qilingan AI filmlar va vizual hikoyalar", ru: 'AI-фильмы и визуальные истории, сделанные с командой', en: 'AI films and visual stories made with a team' },
     projects: ['peace-intro'],
