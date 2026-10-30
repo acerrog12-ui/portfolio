@@ -996,12 +996,10 @@ function CategoryPage({ cat, onOpen }: { cat: Category; onOpen: (p: Project) => 
                 {(p.videos || p.embed) && <span className="absolute top-3 left-3 z-10 rounded-full bg-black/70 px-3 py-1 text-[10px] font-bold tracking-wide text-white uppercase">{p.videos ? "▶ Video" : "▶ Motion"}</span>}
                 <img src={img(`${p.id}.webp`)} srcSet={`${img(`${p.id}-s.webp`)} 640w, ${img(`${p.id}.webp`)} 1200w`} sizes="(max-width: 640px) 95vw, 50vw" alt={t(p.title)} loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-105" />
               </span>
-              <span className="flex items-center gap-4 px-1 pt-4 pb-1">
-                <span className="min-w-0 flex-1">
-                  <span className="block font-cond text-base font-extrabold uppercase sm:text-lg">{p.client}</span>
-                  <span className="block truncate text-xs text-white/50 sm:hidden">{t(p.tags)}</span>
-                </span>
-                <span className="pill-line shrink-0 px-4 py-2 text-[10px] group-hover:bg-white group-hover:text-black sm:text-xs">{t(ui.projects.view)}</span>
+              {/* project name on the left, its direction on the right (like fido.studio) */}
+              <span className="flex items-baseline gap-4 px-1 pt-4 pb-1">
+                <span className="min-w-0 flex-1 truncate text-lg font-semibold sm:text-2xl">{t(p.title)}</span>
+                <span className="shrink-0 text-sm text-white/50 transition-colors group-hover:text-white sm:text-base">{t(dirOf(p.id))}</span>
               </span>
             </button>
           ))}
@@ -1020,6 +1018,12 @@ function CategoryPage({ cat, onOpen }: { cat: Category; onOpen: (p: Project) => 
       </div>
     </main>
   )
+}
+
+// the direction a project belongs to (short label, as on the filter tabs)
+const dirOf = (id: string) => {
+  const c = categories.find((k) => k.projects.includes(id))
+  return c ? (c.short ?? c.title) : allWorks.title
 }
 
 // Title over a project cover, like the deck covers: dark shade from the left and bottom,
