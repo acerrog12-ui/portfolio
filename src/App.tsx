@@ -995,7 +995,6 @@ function CategoryPage({ cat, onOpen }: { cat: Category; onOpen: (p: Project) => 
               <span className="relative block aspect-video overflow-hidden rounded-[1.25rem]">
                 {(p.videos || p.embed) && <span className="absolute top-3 left-3 z-10 rounded-full bg-black/70 px-3 py-1 text-[10px] font-bold tracking-wide text-white uppercase">{p.videos ? "▶ Video" : "▶ Motion"}</span>}
                 <img src={img(`${p.id}.webp`)} srcSet={`${img(`${p.id}-s.webp`)} 640w, ${img(`${p.id}.webp`)} 1200w`} sizes="(max-width: 640px) 95vw, 50vw" alt={t(p.title)} loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-105" />
-                <CoverText p={p} />
               </span>
               <span className="flex items-center gap-4 px-1 pt-4 pb-1">
                 <span className="min-w-0 flex-1">
