@@ -111,7 +111,7 @@ function Nav() {
   const { t, lang, setLang, classic, setClassic } = useLang()
   const links = ['about', 'services', 'projects', 'contact'] as const
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-black before:pointer-events-none before:absolute before:inset-x-0 before:bottom-full before:h-[300px] before:bg-black before:content-['']">
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-black pt-[var(--sat)] before:pointer-events-none before:absolute before:inset-x-0 before:bottom-full before:h-[300px] before:bg-black before:content-['']">
       {/* the black strip above the bar covers the iPhone status and address bar area, so scrolled content never shows above the menu */}
       <nav className="mx-auto flex max-w-[1500px] items-center gap-4 px-4 py-4 text-[11px] font-bold tracking-wide uppercase sm:px-8 sm:text-[13px]">
         <ul className="hidden flex-1 justify-around md:flex">
@@ -298,7 +298,7 @@ function Hero() {
   }
 
   return (
-    <section ref={root} className="relative flex flex-col overflow-hidden bg-ink sm:min-h-[100svh] px-3 pt-[72px] pb-8 sm:px-4 sm:pt-[78px]">
+    <section ref={root} className="relative flex flex-col overflow-hidden bg-ink sm:min-h-[100svh] px-3 pt-[calc(72px+var(--sat))] pb-8 sm:px-4 sm:pt-[calc(78px+var(--sat))]">
       {/* tall condensed Six Caps across the full width (Doston picked it), one line on every screen */}
       <h1 ref={title} className="hero-title silver relative z-0 -mt-[1.5vw] text-center text-[38vw] leading-[0.9] whitespace-nowrap uppercase sm:-mt-[1.9vw]" style={{ fontFamily: "'Six Caps', 'Archivo', sans-serif", fontWeight: 400, fontSynthesis: 'none', letterSpacing: '-0.02em' }}>
         <span className="inline-block">
@@ -806,7 +806,7 @@ function Services() {
     <section id="services" ref={root} className="relative z-10 -mt-24 bg-transparent px-2 sm:-mt-32 sm:px-3">
       <div className="svc-card rounded-[2rem] bg-paper px-5 pt-20 pb-40 text-black sm:rounded-[2.75rem] sm:px-12 sm:pt-28 sm:pb-56">
         {/* pinned under the nav while the list below scrolls */}
-        <h2 className="svc-title sticky top-[72px] z-10 text-center font-display text-[clamp(2.6rem,9vw,8.5rem)] leading-none uppercase sm:top-[84px]">{t(ui.services.title)}</h2>
+        <h2 className="svc-title sticky top-[calc(72px+var(--sat))] z-10 text-center font-display text-[clamp(2.6rem,9vw,8.5rem)] leading-none uppercase sm:top-[calc(84px+var(--sat))]">{t(ui.services.title)}</h2>
         <ol className="mx-auto mt-[22vh] max-w-[1100px] pb-[18vh] sm:mt-[30vh]">
           {services.map((s, i) => (
             <li key={i} className="svc-row group grid grid-cols-[56px_1fr] items-start gap-x-4 py-[7vh] will-change-transform sm:grid-cols-[120px_1fr_1fr] sm:gap-x-10 sm:py-[9vh]">
@@ -886,7 +886,7 @@ function Projects() {
           const ps = c.projects.map((id) => projects.find((p) => p.id === id)!)
           const pics = c.covers ?? [ps[0].id, (ps[1] ?? ps[0]).id, (ps[2] ?? ps[1] ?? ps[0]).id]
           return (
-            <article key={c.id} className="proj-card sticky mb-[6vh]" style={{ top: `calc(9vh + ${i * 14}px)` }}>
+            <article key={c.id} className="proj-card sticky mb-[6vh]" style={{ top: `calc(9vh + var(--sat) + ${i * 14}px)` }}>
               <a href={`#/work/${c.id}`} className="group relative block origin-top overflow-hidden rounded-[1.75rem] border-[1.5px] border-white/70 bg-ink p-3 will-change-transform sm:rounded-[2.25rem] sm:p-5">
                 <span className="proj-dim pointer-events-none absolute inset-0 z-10 bg-black opacity-0" />
                 <header className="flex items-center gap-3 px-1 pt-1 pb-4 sm:gap-5 sm:px-2 sm:pb-5">
@@ -958,7 +958,7 @@ function CategoryPage({ cat, onOpen }: { cat: Category; onOpen: (p: Project) => 
   }, [lang, cat.id, filter])
 
   return (
-    <main ref={root} className="relative bg-ink px-3 pt-24 pb-48 sm:px-8 sm:pt-28 sm:pb-64">
+    <main ref={root} className="relative bg-ink px-3 pt-[calc(6rem+var(--sat))] pb-48 sm:px-8 sm:pt-[calc(7rem+var(--sat))] sm:pb-64">
       <div className="mx-auto max-w-[1300px]">
         <a href="#" className="cat-fade pill-line px-5 py-2 text-xs">
           ← {t(ui.projects.back)}
@@ -1180,7 +1180,7 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
   return (
     <div className="fixed inset-0 z-[70] bg-black" onClick={onClose}>
       <div ref={ref} data-lenis-prevent onScroll={() => onScroll()} className="absolute inset-0 overflow-y-auto bg-ink" onClick={(e) => e.stopPropagation()}>
-        <div className={`fixed inset-x-0 top-0 z-10 flex items-center justify-between gap-4 bg-gradient-to-b from-black/85 via-black/55 to-transparent px-5 pt-4 pb-10 transition-transform duration-500 ease-out sm:px-8 sm:pt-5 ${barHidden ? '-translate-y-full' : ''}`}>
+        <div className={`fixed inset-x-0 top-0 z-10 flex items-center justify-between gap-4 bg-gradient-to-b from-black/85 via-black/55 to-transparent px-5 pt-[calc(1rem+var(--sat))] pb-10 transition-transform duration-500 ease-out sm:px-8 sm:pt-[calc(1.25rem+var(--sat))] ${barHidden ? '-translate-y-full' : ''}`}>
           <div className="min-w-0">
             <div className="text-[10px] tracking-[0.2em] text-white/50 uppercase">{project.client}{project.year && ` · ${project.year}`} · {t(project.tags)}</div>
             <h3 className="truncate font-display text-lg font-bold sm:text-2xl">{t(project.title)}</h3>
