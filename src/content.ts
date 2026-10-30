@@ -244,6 +244,7 @@ export const clients: { name: string; logo?: string; ratio?: number }[] = [
   { name: 'InnoWeek 2024', logo: 'innoweek.webp', ratio: 3.189 },
   { name: 'Salom TV', logo: 'salomtv.svg', ratio: 3.321 },
   { name: 'CCI Uzbekistan · Next Talent', logo: 'cci-next-talent.webp', ratio: 3.648 },
+  { name: 'Tashkent Events', logo: 'tashkent-events.webp', ratio: 4.692 },
 ]
 
 // "All works" page: every project from every direction, in the same order as the directions

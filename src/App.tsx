@@ -60,7 +60,7 @@ export default function App() {
   // Smooth scrolling, synced with ScrollTrigger
   useEffect(() => {
     if (reducedMotion()) return
-    const lenis = new Lenis({ lerp: 0.1 })
+    const lenis = new Lenis({ lerp: 0.16 })
     lenis.on('scroll', ScrollTrigger.update)
     const tick = (t: number) => lenis.raf(t * 1000)
     gsap.ticker.add(tick)
@@ -291,7 +291,9 @@ function Hero() {
     if (reducedMotion()) return
     const glint = root.current?.querySelector('.hero-glint')
     const smile = root.current?.querySelector('.hero-smile')
-    if (on && glint) gsap.fromTo(glint, { backgroundPosition: '76% 0%' }, { backgroundPosition: '14% 0%', duration: 0.85, ease: 'power1.inOut', overwrite: true })
+    // the streak only exists while it runs: a blended, masked layer left on the page
+    // made the browser redraw the whole head on every scroll frame
+    if (on && glint) gsap.fromTo(glint, { display: 'block', backgroundPosition: '76% 0%' }, { backgroundPosition: '14% 0%', duration: 0.85, ease: 'power1.inOut', overwrite: true, onComplete: () => gsap.set(glint, { display: 'none' }) })
     if (smile) gsap.to(smile, { opacity: on ? 1 : 0, duration: 0.25, overwrite: true })
   }
 
@@ -319,6 +321,7 @@ function Hero() {
                 aria-hidden
                 className="hero-glint pointer-events-none absolute inset-0 mix-blend-screen"
                 style={{
+                  display: 'none',
                   WebkitMaskImage: `url(${img('ace-glasses-mask.webp')})`,
                   maskImage: `url(${img('ace-glasses-mask.webp')})`,
                   WebkitMaskSize: '100% 100%',
@@ -764,11 +767,12 @@ function Services() {
       raf = 0
       const vh = window.innerHeight
       const d = desk.matches
-      const blurMax = d ? 8 : 0 // no animated filters on phones (too slow there)
+      const blurMax = d ? 6 : 0 // no animated filters on phones (too slow there)
       const exitStart = d ? 0.5 : 0.48
       const exitEnd = d ? 0.3 : 0.28 // just below the pinned title
       rows.forEach((r) => {
         const b = r.getBoundingClientRect()
+        if (b.bottom < -200 || b.top > vh + 200) return // off screen: nothing to update
         const c = (b.top - (shift.get(r) ?? 0) + b.height / 2) / vh
         const tin = clamp((1 - c) / 0.36)
         const e = 1 - Math.pow(1 - tin, 2)
@@ -777,8 +781,11 @@ function Services() {
         shift.set(r, y)
         r.style.opacity = String((0.08 + 0.92 * e) * (1 - out))
         r.style.transform = `translate3d(0,${y.toFixed(1)}px,0)`
-        if (blurMax) r.style.filter = `blur(${(blurMax * Math.min(1, 1 - e + out)).toFixed(2)}px)`
-        else r.style.filter = ''
+        // whole pixels only, and no filter at all once the row is sharp, so the browser
+        // isn't redrawing a blur on every frame
+        const bl = Math.round(blurMax * Math.min(1, 1 - e + out))
+        const f = bl ? `blur(${bl}px)` : ''
+        if (r.style.filter !== f) r.style.filter = f
       })
     }
     const tick = () => { if (on && !raf) raf = requestAnimationFrame(draw) }
@@ -839,6 +846,36 @@ function Projects() {
     return () => ctx.revert()
   }, [lang])
 
+  // Once a card is fully covered by the next one, stop drawing its pictures: only its
+  // top edge still peeks out. Without this the browser keeps painting every card in the
+  // stack on each frame, which made this part of the page slow on computers.
+  useEffect(() => {
+    const sec = root.current
+    if (!sec) return
+    const cards = Array.from(sec.querySelectorAll<HTMLElement>('.proj-card'))
+    let raf = 0
+    const check = () => {
+      raf = 0
+      cards.forEach((card, i) => {
+        const next = cards[i + 1]
+        const grid = card.querySelector<HTMLElement>('.proj-grid')
+        if (!next || !grid) return
+        const covered = next.getBoundingClientRect().top <= parseFloat(getComputedStyle(next).top) + 1
+        const v = covered ? 'hidden' : ''
+        if (grid.style.visibility !== v) grid.style.visibility = v
+      })
+    }
+    const tick = () => { if (!raf) raf = requestAnimationFrame(check) }
+    check()
+    window.addEventListener('scroll', tick, { passive: true })
+    window.addEventListener('resize', tick)
+    return () => {
+      cancelAnimationFrame(raf)
+      window.removeEventListener('scroll', tick)
+      window.removeEventListener('resize', tick)
+    }
+  }, [lang])
+
   return (
     <section id="projects" ref={root} className="relative z-20 -mt-24 rounded-t-[2rem] bg-ink px-3 pt-24 pb-24 sm:-mt-32 sm:rounded-t-[2.75rem] sm:px-8 sm:pt-32">
       <h2 className="proj-title outline-text mb-14 text-center font-display text-[clamp(2.6rem,10vw,10rem)] leading-none uppercase sm:mb-20">
@@ -864,7 +901,7 @@ function Projects() {
                     {t(ui.projects.open)} →
                   </span>
                 </header>
-                <div className="grid w-full grid-cols-3 gap-2 sm:h-[62vh] sm:max-h-[620px] sm:grid-rows-2 sm:gap-3">
+                <div className="proj-grid grid w-full grid-cols-3 gap-2 sm:h-[62vh] sm:max-h-[620px] sm:grid-rows-2 sm:gap-3">
                   {pics.map((p, k) => (
                     <span key={k} className={k === 0 ? 'col-span-3 aspect-video overflow-hidden rounded-[1.25rem] sm:col-span-2 sm:row-span-2 sm:aspect-auto sm:h-full' : 'hidden overflow-hidden rounded-[1.25rem] sm:block'}>
                       <img src={img(`${p}.webp`)} srcSet={`${img(`${p}-s.webp`)} 640w, ${img(`${p}.webp`)} 1200w`} sizes="(max-width: 640px) 90vw, 40vw" alt={k === 0 ? t(c.title) : ''} loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-105" />
@@ -1161,7 +1198,7 @@ function Team() {
           </a>
         </div>
         <div className="relative mx-auto aspect-square w-full max-w-[460px]">
-          <svg viewBox="0 0 200 200" className="team-ring absolute inset-0 h-full w-full" aria-hidden>
+          <svg viewBox="0 0 200 200" className="team-ring absolute inset-0 h-full w-full will-change-transform" aria-hidden>
             <defs>
               <path id="ring" d="M100,100 m-82,0 a82,82 0 1,1 164,0 a82,82 0 1,1 -164,0" />
             </defs>
