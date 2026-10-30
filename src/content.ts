@@ -239,7 +239,7 @@ export const categories: Category[] = [
 // and write its file name in logo (any colors: the site turns it white).
 // White one-colour logos made from the project layouts; ratio = width / height
 export const clients: { name: string; logo?: string; ratio?: number }[] = [
-  { name: 'Pepsi', logo: 'pepsi.webp', ratio: 1.005 },
+  { name: 'Pepsi', logo: 'pepsi.webp', ratio: 1 },
   { name: 'Agrobank', logo: 'agrobank.webp', ratio: 4.979 },
   { name: 'MKBANK', logo: 'mkbank.webp', ratio: 4.555 },
   { name: 'FIDE', logo: 'fide.webp', ratio: 1.169 },
