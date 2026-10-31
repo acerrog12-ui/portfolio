@@ -1288,7 +1288,10 @@ function ProjectAbout({ project }: { project: Project }) {
       {studio && (
         <div className="relative mx-auto mt-12 flex max-w-[1300px] items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.04] px-5 py-4 sm:mt-16">
           {studio === 'Tasnif Group' && <img src={img('logos/tasnif-group.webp')} alt="Tasnif Group" className="h-6 w-auto shrink-0 sm:h-7" />}
-          <span className="text-xs font-semibold tracking-[0.12em] text-white/70 uppercase sm:text-[13px]">{t(ui.projects.madeAt).replace('{s}', studio)}</span>
+          <div className="min-w-0">
+            <div className="text-xs font-semibold tracking-[0.12em] text-white/80 uppercase sm:text-[13px]">{t(ui.projects.madeAt).replace('{s}', studio)}</div>
+            <div className="mt-1 text-[11px] text-white/50 sm:text-xs">{t(ui.projects.rights).replace('{s}', studio)}</div>
+          </div>
         </div>
       )}
     </section>

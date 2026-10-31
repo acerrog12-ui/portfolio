@@ -73,7 +73,8 @@ export const ui = {
     work: { uz: 'Iş', ru: 'Работа', en: 'Work' },
     role: { uz: 'Mening vazifam', ru: 'Моя роль', en: 'My role' },
     // {s} = studio name
-    madeAt: { uz: '{s} dizayn studiyasida tayyorlangan', ru: 'Сделано в дизайн-студии {s}', en: 'Made at {s} design studio' },
+    madeAt: { uz: '{s} dizayn studiyasidagi faoliyatim davrida tayyorlangan', ru: 'Сделано в период моей работы в дизайн-студии {s}', en: 'Made during my time at {s} design studio' },
+    rights: { uz: '© {s}. Loyihaning mualliflik huquqlari studiyaga tegişli.', ru: '© {s}. Авторские права на проект принадлежат студии.', en: '© {s}. All rights to this project belong to the studio.' },
   },
   contact: {
     title: { uz: "IŞLAYDIGAN BŌLIB KELING", ru: "ПРИХОДИТЕ ГОТОВЫМИ К\u00a0РАБОТЕ", en: "COME READY TO WORK" },
