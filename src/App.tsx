@@ -1262,6 +1262,16 @@ function EmbedDeck({ src, title, onInnerScroll, active = true }: { src: string; 
   )
 }
 
+// phones get a 1080px copy: the full-size layouts are huge to decode and can crash mobile Safari
+function Layout({ file, alt }: { file: string; alt: string }) {
+  return (
+    <picture>
+      <source media="(max-width: 900px)" srcSet={img(file.replace('.webp', '-m.webp'))} />
+      <img src={img(file)} alt={alt} loading="lazy" decoding="async" className="block w-full" />
+    </picture>
+  )
+}
+
 /* "About the project": what it is, what was made, Doston's role and the studio */
 function ProjectAbout({ project }: { project: Project }) {
   const { t } = useLang()
@@ -1348,26 +1358,27 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
             {t(ui.projects.close)} ✕
           </button>
         </div>
-        <ProjectAbout project={project} />
-        {project.videos?.map((v) => (
-          <video
-            key={v}
-            className="block max-h-[100svh] w-full bg-black object-contain"
-            src={`${import.meta.env.BASE_URL}video/${v}.mp4`}
-            poster={`${import.meta.env.BASE_URL}video/${v}.jpg`}
-            controls
-            playsInline
-            preload="metadata"
-          />
+        {/* page 1 (video, or the first page of the layout), then "About the project" as page 2.
+            Decks carry their own About page: the role and studio are written into it. */}
+        {project.videos?.map((v, i) => (
+          <div key={v}>
+            <video
+              className="block max-h-[100svh] w-full bg-black object-contain"
+              src={`${import.meta.env.BASE_URL}video/${v}.mp4`}
+              poster={`${import.meta.env.BASE_URL}video/${v}.jpg`}
+              controls
+              playsInline
+              preload="metadata"
+            />
+            {i === 0 && !project.embed && <ProjectAbout project={project} />}
+          </div>
         ))}
+        {project.p1 && <Layout file={`${project.id}-p1.webp`} alt={t(project.title)} />}
+        {!project.videos?.length && !project.embed && <ProjectAbout project={project} />}
         {project.embed && <EmbedDeck src={project.embed} title={t(project.title)} onInnerScroll={onScroll} active={deckActive} />}
         {project.full !== false &&
           (project.parts ? Array.from({ length: project.parts }, (_, i) => `${project.id}-full-${i + 1}.webp`) : [`${project.id}-full.webp`]).map((f, i) => (
-            // phones get a 1080px copy: the full-size layouts are huge to decode and can crash mobile Safari
-            <picture key={f}>
-              <source media="(max-width: 900px)" srcSet={img(f.replace('.webp', '-m.webp'))} />
-              <img src={img(f)} alt={i ? '' : t(project.title)} loading="lazy" decoding="async" className="block w-full" />
-            </picture>
+            <Layout key={f} file={f} alt={i || project.p1 ? '' : t(project.title)} />
           ))}
       </div>
     </div>

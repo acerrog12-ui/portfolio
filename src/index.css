@@ -229,30 +229,33 @@ body {
 }
 
 /* Custom chrome cursor (mouse only). It is the browser's own cursor, so it never lags
-   and disappears by itself outside the site. The tip is the top-left corner (1px in). */
+   and disappears by itself outside the site. The tip is the top-left corner (1px in).
+   Both cursors stay within 32x32 px: Chrome drops bigger cursors near the edge of the
+   window (by the menu bar, scrollbar, address bar), which made the cursor come and go.
+   The same rules are copied into every deck page under public/ (iframes have their own cursor). */
 @media (pointer: fine) {
-  html {
-    cursor: url('/portfolio/img/cursor-32.png') 1 1, auto;
-    cursor: -webkit-image-set(url('/portfolio/img/cursor-32.png') 1x, url('/portfolio/img/cursor-64.png') 2x) 1 1, auto;
-    cursor: image-set(url('/portfolio/img/cursor-32.png') 1x, url('/portfolio/img/cursor-64.png') 2x) 1 1, auto;
+  html,
+  input,
+  textarea,
+  select,
+  video,
+  iframe,
+  input::placeholder,
+  textarea::placeholder {
+    cursor: url('/portfolio/img/cursor-a1.png') 1 1, auto;
+    cursor: -webkit-image-set(url('/portfolio/img/cursor-a1.png') 1x, url('/portfolio/img/cursor-a2.png') 2x) 1 1, auto;
+    cursor: image-set(url('/portfolio/img/cursor-a1.png') 1x, url('/portfolio/img/cursor-a2.png') 2x) 1 1, auto;
   }
   a,
   button,
   label,
+  summary,
+  [role='button'],
   [data-cursor],
-  .cursor-grab {
-    cursor: url('/portfolio/img/cursor-hot-40.png') 1 1, pointer;
-    cursor: -webkit-image-set(url('/portfolio/img/cursor-hot-40.png') 1x, url('/portfolio/img/cursor-hot-80.png') 2x) 1 1, pointer;
-    cursor: image-set(url('/portfolio/img/cursor-hot-40.png') 1x, url('/portfolio/img/cursor-hot-80.png') 2x) 1 1, pointer;
-  }
-  /* keep the chrome cursor over form fields too, instead of the system I-beam */
-  input,
-  textarea,
-  select,
-  input::placeholder,
-  textarea::placeholder {
-    cursor: url('/portfolio/img/cursor-32.png') 1 1, auto;
-    cursor: -webkit-image-set(url('/portfolio/img/cursor-32.png') 1x, url('/portfolio/img/cursor-64.png') 2x) 1 1, auto;
-    cursor: image-set(url('/portfolio/img/cursor-32.png') 1x, url('/portfolio/img/cursor-64.png') 2x) 1 1, auto;
+  .cursor-grab,
+  .cursor-grabbing {
+    cursor: url('/portfolio/img/cursor-hot-a1.png') 1 1, pointer;
+    cursor: -webkit-image-set(url('/portfolio/img/cursor-hot-a1.png') 1x, url('/portfolio/img/cursor-hot-a2.png') 2x) 1 1, pointer;
+    cursor: image-set(url('/portfolio/img/cursor-hot-a1.png') 1x, url('/portfolio/img/cursor-hot-a2.png') 2x) 1 1, pointer;
   }
 }
