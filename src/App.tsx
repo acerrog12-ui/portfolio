@@ -789,7 +789,7 @@ function About() {
           </div>
         </div>
 
-        <div className="mx-auto mt-10 grid max-w-[820px] grid-cols-3 border-y border-line sm:mt-24">
+        <div className="mx-auto mt-10 grid max-w-[820px] grid-cols-2 border-y border-line sm:mt-24">
           {ui.about.stats.map((s, i) => (
             <div key={i} className={`py-6 ${i ? 'border-l border-line' : ''}`}>
               <div className="font-display text-5xl sm:text-7xl">
