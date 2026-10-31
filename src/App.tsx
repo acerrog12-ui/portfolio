@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState, type FormEvent, type ReactNode } from 'react'
 import gsap from 'gsap'
-import { allWorks, categories, clients, contacts, projects, services, team, ui, type Category, type Project } from './content'
+import { allWorks, categories, clients, contacts, projectAbout, projects, services, team, ui, type Category, type Project } from './content'
 import { img, reducedMotion, SplitChars, useLang } from './lib'
 import { ChromeDefs, chromeFill, footerShapes } from './shapes'
 import { clamp01, onReveal, onScroll, pageTop, power2Out, progress, rangeOf, refresh } from './motion'
@@ -50,6 +50,9 @@ export default function App() {
 
   return (
     <div>
+      {/* while a project is open, the page behind it is hidden (after the slide-in), so iPhone Safari
+          shows black above the project instead of the page under its address bar */}
+      <div className={open ? 'behind-modal' : ''}>
       <Nav />
       {cat ? (
         <CategoryPage key={cat.id} cat={cat} onOpen={setOpen} />
@@ -65,6 +68,7 @@ export default function App() {
         </main>
       )}
       <Contact />
+      </div>
       {open && <ProjectModal project={open} onClose={() => setOpen(null)} />}
     </div>
   )
@@ -1171,7 +1175,7 @@ function CoverText({ p, small }: { p: Project; small?: boolean }) {
 
 // An animated HTML presentation shown at its full height, so the modal does the scrolling.
 // Its slides still animate as they reach the screen (IntersectionObserver sees the real viewport).
-function EmbedDeck({ src, title, onInnerScroll }: { src: string; title: string; onInnerScroll?: (y: number) => void }) {
+function EmbedDeck({ src, title, onInnerScroll, active = true }: { src: string; title: string; onInnerScroll?: (y: number) => void; active?: boolean }) {
   const frame = useRef<HTMLIFrameElement>(null)
   const [h, setH] = useState(0)
   const [compact] = useState(() => window.matchMedia('(max-width: 1023px), (pointer: coarse)').matches)
@@ -1242,7 +1246,9 @@ function EmbedDeck({ src, title, onInnerScroll }: { src: string; title: string; 
           src={url}
           title={title}
           className="block w-full bg-black"
-          style={{ height: '100svh', border: 0 }}
+          // the frame only takes the finger once the project view has scrolled it fully into place;
+          // before that, swipes move the whole view (otherwise the part above stayed stuck on top)
+          style={{ height: '100svh', border: 0, pointerEvents: active ? 'auto' : 'none' }}
           // the deck scrolls inside the frame here, so pass its scroll up to hide or show the title bar
           onLoad={(e) => {
             const w = e.currentTarget.contentWindow
@@ -1256,6 +1262,48 @@ function EmbedDeck({ src, title, onInnerScroll }: { src: string; title: string; 
   )
 }
 
+/* "About the project": what it is, what was made, Doston's role and the studio */
+function ProjectAbout({ project }: { project: Project }) {
+  const { t } = useLang()
+  const a = projectAbout[project.id]
+  const studio = a?.studio === undefined ? 'Tasnif Group' : a.studio
+  const rows: [string, string][] = [
+    [t(ui.projects.client), project.client],
+    ...(project.year ? [[t(ui.projects.year), project.year] as [string, string]] : []),
+    [t(ui.projects.work), t(a?.work ?? project.tags)],
+    ...(a?.role ? [[t(ui.projects.role), t(a.role)] as [string, string]] : []),
+  ]
+  return (
+    <section className="relative overflow-hidden px-5 pt-32 pb-14 sm:px-8 sm:pt-40 sm:pb-20">
+      <div aria-hidden className="pointer-events-none absolute -right-40 -bottom-40 h-[480px] w-[480px] rounded-full bg-[radial-gradient(circle,rgba(122,77,255,0.28)_0%,transparent_65%)]" />
+      <div className="relative mx-auto grid max-w-[1300px] gap-10 lg:grid-cols-[1.15fr_1fr] lg:gap-20">
+        <div>
+          <div className="text-[11px] font-bold tracking-[0.25em] text-[#9b7bff] uppercase">{t(ui.projects.about)}</div>
+          <h2 className="mt-4 font-display text-[clamp(1.9rem,4.4vw,3.4rem)] leading-[1.02] font-bold">{t(a?.title ?? project.title)}</h2>
+          {a && <p className="mt-6 max-w-xl text-[15px] leading-[1.7] text-white/75 sm:text-base">{t(a.text)}</p>}
+        </div>
+        <dl className="self-end border-b border-white/12 text-sm">
+          {rows.map(([k, v]) => (
+            <div key={k} className="grid grid-cols-[minmax(0,0.8fr)_minmax(0,1.6fr)] gap-4 border-t border-white/12 py-4">
+              <dt className="pt-0.5 text-[10px] font-bold tracking-[0.2em] text-[#9b7bff] uppercase">{k}</dt>
+              <dd className="font-medium text-white/90">{v}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+      {studio && (
+        <div className="relative mx-auto mt-12 flex max-w-[1300px] items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.04] px-5 py-4 sm:mt-16">
+          {studio === 'Tasnif Group' && <img src={img('logos/tasnif-group.webp')} alt="Tasnif Group" className="h-6 w-auto shrink-0 sm:h-7" />}
+          <div className="min-w-0">
+            <div className="text-xs font-semibold tracking-[0.12em] text-white/80 uppercase sm:text-[13px]">{t(ui.projects.madeAt).replace('{s}', studio)}</div>
+            <div className="mt-1 text-[11px] text-white/50 sm:text-xs">{t(ui.projects.rights).replace('{s}', studio)}</div>
+          </div>
+        </div>
+      )}
+    </section>
+  )
+}
+
 function ProjectModal({ project, onClose }: { project: Project; onClose: () => void }) {
   const { t } = useLang()
   const ref = useRef<HTMLDivElement>(null)
@@ -1263,6 +1311,13 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
   // and comes back as soon as you scroll up
   const [barHidden, setBarHidden] = useState(false)
   const lastY = useRef(0)
+  // phones: the deck frame scrolls on its own, and only once the view has reached the bottom
+  const [deckActive, setDeckActive] = useState(false)
+  const onOuterScroll = () => {
+    const el = ref.current
+    if (el) setDeckActive(el.scrollTop >= el.scrollHeight - el.clientHeight - 2)
+    onScroll()
+  }
   const onScroll = (y = ref.current?.scrollTop ?? 0) => {
     const d = y - lastY.current
     if (Math.abs(d) > 4) {
@@ -1282,7 +1337,7 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
   }, [onClose])
   return (
     <div className="fixed inset-0 z-[70] bg-black" onClick={onClose}>
-      <div ref={ref} onScroll={() => onScroll()} className="absolute inset-0 overflow-y-auto bg-ink" onClick={(e) => e.stopPropagation()}>
+      <div ref={ref} onScroll={onOuterScroll} className="absolute inset-0 overflow-y-auto bg-ink" onClick={(e) => e.stopPropagation()}>
         <div className={`fixed inset-x-0 top-0 z-10 flex items-center justify-between gap-4 bg-gradient-to-b from-black/85 via-black/55 to-transparent px-5 pt-[calc(1rem+var(--sat))] pb-10 transition-transform duration-500 ease-out sm:px-8 sm:pt-[calc(1.25rem+var(--sat))] ${barHidden ? '-translate-y-full' : ''}`}>
           <div className="min-w-0">
             <div className="text-[10px] tracking-[0.2em] text-white/50 uppercase">{project.client}{project.year && ` · ${project.year}`} · {t(project.tags)}</div>
@@ -1293,6 +1348,7 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
             {t(ui.projects.close)} ✕
           </button>
         </div>
+        <ProjectAbout project={project} />
         {project.videos?.map((v) => (
           <video
             key={v}
@@ -1304,7 +1360,7 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
             preload="metadata"
           />
         ))}
-        {project.embed && <EmbedDeck src={project.embed} title={t(project.title)} onInnerScroll={onScroll} />}
+        {project.embed && <EmbedDeck src={project.embed} title={t(project.title)} onInnerScroll={onScroll} active={deckActive} />}
         {project.full !== false &&
           (project.parts ? Array.from({ length: project.parts }, (_, i) => `${project.id}-full-${i + 1}.webp`) : [`${project.id}-full.webp`]).map((f, i) => (
             // phones get a 1080px copy: the full-size layouts are huge to decode and can crash mobile Safari

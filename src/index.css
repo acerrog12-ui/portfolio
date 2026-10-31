@@ -36,8 +36,16 @@ html {
   -webkit-font-smoothing: antialiased;
 }
 
+/* iPhone Safari (iOS 26) colors the area around the address bar from the body
+   background; without it the page shows through there */
 body {
   overflow-x: hidden;
+  background-color: var(--color-ink);
+}
+
+.behind-modal {
+  visibility: hidden;
+  transition: visibility 0s 0.9s;
 }
 
 ::selection {
