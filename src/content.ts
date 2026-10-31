@@ -308,7 +308,7 @@ export const projectAbout: Record<string, About> = {
     text: { uz: 'Arch Design arxitektura studiyasi uçun brendbuk: logotip va uni işlatiş qoidalari.', ru: 'Брендбук архитектурной студии Arch Design: логотип и правила его использования.', en: 'A brandbook for the Arch Design architecture studio: the logo and the rules for using it.' },
   },
   chust: {
-    role: designerAd,
+    role: designer,
     title: { uz: 'Çust şahri brendi', ru: 'Бренд города Чуст', en: 'An identity for the city of Chust' },
     text: { uz: 'Namangan viloyatidagi Çust şahri uçun logotip va vizual identifikatsiya.', ru: 'Логотип и визуальная айдентика города Чуст в Наманганской области.', en: 'A logo and visual identity for the city of Chust in the Namangan region.' },
   },
