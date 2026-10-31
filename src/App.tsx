@@ -57,9 +57,10 @@ export default function App() {
         <main>
           <Hero />
           <Clients onOpen={setOpen} />
-          <About />
-          <Services />
+          {/* work first: logos, then projects prove what Doston can do; services, about and team follow */}
           <Projects />
+          <Services />
+          <About />
           <Team />
         </main>
       )}
@@ -81,7 +82,7 @@ function scrollTo(id: string) {
 /* ---------------- NAV ---------------- */
 function Nav() {
   const { t, lang, setLang, classic, setClassic } = useLang()
-  const links = ['about', 'services', 'projects', 'contact'] as const
+  const links = ['projects', 'services', 'about', 'contact'] as const
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-black pt-[var(--sat)] before:pointer-events-none before:absolute before:inset-x-0 before:bottom-full before:h-[300px] before:bg-black before:content-['']">
       {/* the black strip above the bar covers the iPhone status and address bar area, so scrolled content never shows above the menu */}
@@ -898,7 +899,7 @@ function Services() {
   }, [lang])
 
   return (
-    <section id="services" ref={root} className="relative z-10 -mt-24 bg-transparent px-2 sm:-mt-32 sm:px-3">
+    <section id="services" ref={root} className="relative z-30 -mt-24 bg-transparent px-2 sm:-mt-32 sm:px-3">
       <div className="svc-card rounded-[2rem] bg-paper px-5 pt-20 pb-40 text-black sm:rounded-[2.75rem] sm:px-12 sm:pt-28 sm:pb-56">
         {/* pinned under the nav while the list below scrolls */}
         <h2 className="svc-title sticky top-[calc(72px+var(--sat))] z-10 text-center font-display text-[clamp(2.6rem,9vw,8.5rem)] leading-none uppercase sm:top-[calc(84px+var(--sat))]">{t(ui.services.title)}</h2>
@@ -974,7 +975,7 @@ function Projects() {
   }, [lang])
 
   return (
-    <section id="projects" ref={root} className="relative z-20 -mt-24 rounded-t-[2rem] bg-ink px-3 pt-24 pb-24 sm:-mt-32 sm:rounded-t-[2.75rem] sm:px-8 sm:pt-32">
+    <section id="projects" ref={root} className="relative z-20 bg-ink px-3 pt-16 pb-40 sm:px-8 sm:pt-24 sm:pb-52">
       <h2 className="proj-title outline-text mb-14 text-center font-display text-[clamp(2.6rem,10vw,10rem)] leading-none uppercase sm:mb-20">
         <SplitChars text={t(ui.projects.title)} />
       </h2>
