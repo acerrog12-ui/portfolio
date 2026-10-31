@@ -192,122 +192,139 @@ export const projects: Project[] = [
 
 // "About the project" block at the top of every project view.
 // title + text: what the project is. work: what was made (default: the project tags).
-// role: Doston's role on the project (the row is hidden while it is empty).
+// role: Doston's role on the project (the row is hidden when it is empty).
 // studio: where it was made (default Tasnif Group; write null to hide the line).
 export type About = { title: T; text: T; work?: T; role?: T; studio?: string | null }
 const designer: T = { uz: 'Dizayner', ru: 'Дизайнер', en: 'Designer' }
+const designerAd: T = { uz: 'Dizayner va art direktor', ru: 'Дизайнер и арт-директор', en: 'Designer & art director' }
 export const projectAbout: Record<string, About> = {
   pepsi: {
+    role: designer,
     title: { uz: 'Pepsi festivali uçun key visual', ru: 'Key visual для фестиваля Pepsi', en: 'Key visual for a Pepsi festival' },
     text: { uz: 'Pepsi Lazzatli Fest festivali uçun asosiy vizual va undan kelib çiqqan reklama materiallari.', ru: 'Ключевой визуал фестиваля Pepsi Lazzatli Fest и рекламные материалы на его основе.', en: 'The key visual for the Pepsi Lazzatli Fest festival and the ad materials built on it.' },
   },
   chempion: {
+    role: designer,
     title: { uz: 'Mirshakar Fayzullayevning «Chempion» konserti', ru: 'Концерт Миршакара Файзуллаева «Chempion»', en: 'Mirshakar Fayzullayev’s “Chempion” show' },
     text: { uz: 'Humo Arenaʼdagi stand-up konsert uçun vizual uslub: qōpol plakat şrifti va artistning qōlyozma imzosi bir-birining ustiga tuşadi. Qizil fon va sahna nuri barça taşuvçilarda bir xil his beradi.', ru: 'Визуальный стиль стендап-концерта в Humo Arena: грубый плакатный шрифт и рукописная подпись артиста наложены друг на друга. Красный фон и луч сцены дают одно настроение на всех носителях.', en: 'The visual style for a stand-up show at Humo Arena: a heavy poster typeface overlaid with the artist’s handwritten signature. A red background and a stage light keep every format in the same mood.' },
     work: { uz: 'Konsert identifikatsiyasi: afişa, ekranlar, bilet, bedjik, story', ru: 'Айдентика концерта: афиша, экраны, билет, бейджи, сторис', en: 'Show identity: poster, screens, ticket, badges, stories' },
-    role: designer,
   },
   agrobank: {
+    role: designerAd,
     title: { uz: 'Ipoteka uçun 3D reklama', ru: '3D-реклама ипотеки', en: '3D ads for a mortgage offer' },
     text: { uz: 'Agrobank ipoteka kampaniyasi uçun 3D reklama vizuallari va video.', ru: '3D-визуалы и видео для ипотечной кампании Agrobank.', en: '3D visuals and a video for Agrobank’s mortgage campaign.' },
   },
   fide: {
+    role: designer,
     title: { uz: 'Samarqanddagi şaxmat jahon çempionati', ru: 'Чемпионат мира по шахматам в Самарканде', en: 'The world chess championships in Samarkand' },
     text: { uz: 'Samarqandda ōtgan 2023-yilgi rapid va blits bōyiça jahon çempionati uçun key visual va tadbir vizuallari.', ru: 'Key visual и визуалы мероприятия для чемпионата мира по рапиду и блицу 2023 года в Самарканде.', en: 'The key visual and event visuals for the 2023 World Rapid & Blitz Championships in Samarkand.' },
   },
   'istedodlar-zamini': {
+    role: designer,
     title: { uz: 'Futbol keçasi uçun sahna ekranlari', ru: 'Сценические экраны для футбольного вечера', en: 'Stage screens for a football night' },
     text: { uz: 'Uzbekistans.club tadbiri uçun keng formatli LED ekranlar dizayni: asosiy fon, nomlaniş va konsert ekranlari. Rangli geometrik şakllar futbol bayrami kayfiyatini beradi.', ru: 'Дизайн широкоформатных LED-экранов для мероприятия Uzbekistans.club: основной фон, заставки и концертные экраны. Цветные геометрические формы передают настроение футбольного праздника.', en: 'Wide LED screens for an Uzbekistans.club event: the main backdrop, title screens and concert screens. Bright geometric shapes carry the mood of a football celebration.' },
     work: { uz: 'LED ekranlar, 7424×2688 px', ru: 'LED-экраны, 7424×2688 px', en: 'LED screens, 7424×2688 px' },
   },
   superleague: {
+    role: designerAd,
     title: { uz: 'Ōzbekiston Superligasi brendi', ru: 'Бренд Суперлиги Узбекистана', en: 'Uzbekistan Superleague identity' },
     text: { uz: 'Ōzbekiston futbol Superligasi uçun brending: vizual uslub hamda mukofot marosimi materiallari.', ru: 'Брендинг футбольной Суперлиги Узбекистана: визуальный стиль и материалы церемонии награждения.', en: 'Branding for Uzbekistan’s football Superleague: the visual style and the awards ceremony materials.' },
   },
   chiroqchi: {
+    role: designer,
     title: { uz: 'Çiroqçi tumani uçun hudud brendi', ru: 'Бренд Чиракчинского района', en: 'An identity for Chiroqchi district' },
     text: { uz: 'Qaşqadaryo viloyatidagi Çiroqçi tumani uçun logotip va vizual identifikatsiya.', ru: 'Логотип и визуальная айдентика Чиракчинского района Кашкадарьинской области.', en: 'A logo and visual identity for Chiroqchi district in the Kashkadarya region.' },
   },
   'amir-temur': {
+    role: designerAd,
     title: { uz: 'Sohibqiron Amir Temur kōrgazmasi', ru: 'Выставка «Сохибкиран Амир Темур»', en: 'The Sohibqiron Amir Temur exhibition' },
     text: { uz: 'Ōzbekistondagi Islom sivilizatsiyasi markazi uçun Amir Temurga bağişlangan vizuallar va immersiv video.', ru: 'Визуалы и иммерсивное видео об Амире Темуре для Центра исламской цивилизации в Узбекистане.', en: 'Visuals and an immersive video about Amir Temur for the Center of Islamic Civilization in Uzbekistan.' },
   },
   violence: {
+    role: designer,
     title: { uz: 'Devorlar gapiradigan zal', ru: 'Зал, где говорят стены', en: 'A room where the walls speak' },
     text: { uz: 'Gender zōravonligi va tengsizlik mavzusidagi kōrgazma uçun immersiv zal loyihalandi. Devorlarga proyeksiya qilinadigan fonlar, yuz portretlari va illyustratsiyalar tomoşabinni mavzu içiga olib kiradi.', ru: 'Иммерсивный зал для выставки о гендерном насилии и неравенстве. Проекции на стенах, портреты и иллюстрации погружают зрителя в тему.', en: 'An immersive room for an exhibition on gender violence and inequality. Wall projections, portraits and illustrations draw the visitor into the subject.' },
     work: { uz: 'Zal dizayni, video-mapping kompozitsiyasi', ru: 'Дизайн зала, композиция видеомэппинга', en: 'Room design, video mapping composition' },
-    role: designer,
   },
   'oltin-chinor': {
+    role: designer,
     title: { uz: 'Oltin çinor: ildiz va ōsiş ramzi', ru: 'Золотая чинара: символ корней и роста', en: 'The golden plane tree: roots and growth' },
     text: { uz: 'Uzbekistans.club Toşkent forumi doirasidagi «Oltin Çinor» milliy mukofoti uçun logotip, sahna ekranlari va nominatsiya titrlari. Qora fon va oltin çiziqlar tantanali, premium ohang beradi.', ru: 'Логотип, сценические экраны и титры номинаций для национальной премии «Олтин Чинор» на Ташкентском форуме Uzbekistans.club. Чёрный фон и золотые линии задают торжественный тон.', en: 'A logo, stage screens and nomination titles for the Oltin Chinor national award at the Uzbekistans.club Tashkent forum. Black and gold lines set a formal, premium tone.' },
     work: { uz: 'Logotip, sahna ekranlari, 3D fon animatsiyasi', ru: 'Логотип, экраны сцены, 3D-фоновая анимация', en: 'Logo, stage screens, 3D background animation' },
   },
   mkbank: {
+    role: designerAd,
     title: { uz: 'Omonatlar uçun 3D reklama', ru: '3D-реклама вкладов', en: '3D ads for deposits' },
     text: { uz: 'MKBANK omonat kampaniyasi uçun 3D reklama vizuallari va video.', ru: '3D-визуалы и видео для кампании по вкладам MKBANK.', en: '3D visuals and a video for MKBANK’s deposit campaign.' },
   },
   bliss: {
+    role: designer,
     title: { uz: 'BAAga sayohat aksiyasi', ru: 'Акция «Поездка в ОАЭ»', en: 'A trip-to-the-UAE promo' },
     text: { uz: 'Bliss şarbatlarining BAAga sayohat yutib oliş aksiyasi uçun key visual va reklama materiallari.', ru: 'Key visual и рекламные материалы для акции соков Bliss с розыгрышем поездки в ОАЭ.', en: 'The key visual and ad materials for a Bliss juice promo with a trip to the UAE as the prize.' },
   },
   'peace-intro': {
+    role: designerAd,
     title: { uz: 'Let peace be our guide', ru: 'Let peace be our guide', en: 'Let peace be our guide' },
     text: { uz: 'Jamoa bilan birga yaratilgan AI film: vizual uslub, kadrlar va montaj bitta art direction ostida.', ru: 'AI-фильм, сделанный вместе с командой: визуальный стиль, кадры и монтаж под одним арт-дирекшном.', en: 'An AI film made with a team: the visual style, shots and edit under one art direction.' },
-    role: { uz: 'Art director', ru: 'Арт-директор', en: 'Art director' },
   },
   qahramonlar: {
+    role: designerAd,
     studio: null,
     title: { uz: 'Bolalar bayrami uçun makon', ru: 'Пространство детского праздника', en: 'A venue for a kids’ celebration' },
     text: { uz: '«Qahramonlar davri» bolalar bayrami ōtadigan makonning 3D vizualizatsiyasi.', ru: '3D-визуализация пространства детского праздника «Qahramonlar davri».', en: 'A 3D visualization of the venue for the “Qahramonlar davri” kids’ celebration.' },
   },
   'yonda-awards': {
+    role: designer,
     title: { uz: 'Yonda Awards 2025', ru: 'Yonda Awards 2025', en: 'Yonda Awards 2025' },
     text: { uz: 'Yonda Awards 2025 mukofoti uçun key visual va 3D vizuallar.', ru: 'Key visual и 3D-визуалы для премии Yonda Awards 2025.', en: 'The key visual and 3D visuals for the Yonda Awards 2025.' },
   },
   logipro: {
+    role: designerAd,
     studio: null,
     title: { uz: 'Logistika akademiyasi brendi', ru: 'Бренд логистической академии', en: 'A logistics academy identity' },
     text: { uz: 'Logi Pro logistika akademiyasi uçun logotip va vizual identifikatsiya.', ru: 'Логотип и визуальная айдентика логистической академии Logi Pro.', en: 'A logo and visual identity for the Logi Pro logistics academy.' },
   },
   'khiva-ethnosport': {
+    role: designer,
     title: { uz: 'Milliy sport turlari festivali uçun vizual tizim', ru: 'Визуальная система фестиваля национальных видов спорта', en: 'A visual system for a national sports festival' },
     text: { uz: 'Xalqaro Ethnosport festivali Xivada ōtdi. Vazifa tarixiy şahar ruhini zamonaviy sport festivali tiliga kōçiriş edi: logotip, rang va naqşdan tortib billbord, sahna, bayroq va bedjiklargaça.', ru: 'Международный фестиваль Ethnosport прошёл в Хиве. Задача была перевести дух исторического города на язык современного спортивного фестиваля: от логотипа, цвета и орнамента до билбордов, сцены, флагов и бейджей.', en: 'The international Ethnosport festival took place in Khiva. The task was to carry the spirit of the old city into the language of a modern sports festival: from the logo, colour and pattern to billboards, the stage, flags and badges.' },
     work: { uz: 'Identifikatsiya, taşqi dizayn', ru: 'Айдентика, наружное оформление', en: 'Identity, outdoor design' },
-    role: designer,
   },
   salomtv: {
+    role: designerAd,
     studio: null,
     title: { uz: 'Ōzbekistonning onlayn kinoteatri', ru: 'Онлайн-кинотеатр Узбекистана', en: 'Uzbekistan’s online cinema' },
     text: { uz: 'Jahon filmlari, seriallar, jonli TV kanallar va ōzbek tilidagi «Originals» kontenti. Vazifa: bitta tuşunarli belgi yaratiş va uni Smart TV ekranidan tortib kōça posterigaça bir xil ovozda işlatadigan tizim quriş.', ru: 'Мировое кино, сериалы, live-каналы и узбекский контент «Originals». Задача: создать один понятный знак и систему, которая звучит одинаково от экрана Smart TV до уличного постера.', en: 'World films, series, live TV channels and Uzbek-language “Originals”. The task was one clear mark and a system that speaks with the same voice from a Smart TV screen to a street poster.' },
     work: { uz: 'Logotip, brend tizimi, motion', ru: 'Логотип, бренд-система, моушн', en: 'Logo, brand system, motion' },
   },
   'arch-design': {
+    role: designerAd,
     studio: null,
     title: { uz: 'Arxitektura studiyasi brendbuki', ru: 'Брендбук архитектурной студии', en: 'An architecture studio brandbook' },
     text: { uz: 'Arch Design arxitektura studiyasi uçun brendbuk: logotip va uni işlatiş qoidalari.', ru: 'Брендбук архитектурной студии Arch Design: логотип и правила его использования.', en: 'A brandbook for the Arch Design architecture studio: the logo and the rules for using it.' },
   },
   chust: {
+    role: designerAd,
     title: { uz: 'Çust şahri brendi', ru: 'Бренд города Чуст', en: 'An identity for the city of Chust' },
     text: { uz: 'Namangan viloyatidagi Çust şahri uçun logotip va vizual identifikatsiya.', ru: 'Логотип и визуальная айдентика города Чуст в Наманганской области.', en: 'A logo and visual identity for the city of Chust in the Namangan region.' },
   },
   samad: {
+    role: designer,
     title: { uz: 'Bir brend, uç xil mahsulot qatori', ru: 'Один бренд, три продуктовые линейки', en: 'One brand, three product lines' },
     text: { uz: 'Samad uçun plombir va sorbet idişlari hamda çuçvara qadoqlari işlab çiqildi. Har qator ōz rangiga ega, lekin logotip, tōlqinli şakl va yorqin taʼm ranglari ularni bitta oilaga boğlaydi.', ru: 'Упаковка для пломбира, сорбета и пельменей Samad. У каждой линейки свой цвет, но логотип, волна и яркие вкусовые цвета собирают их в одно семейство.', en: 'Tubs for Samad ice cream and sorbet, and packs for their dumplings. Each line has its own colour, while the logo, the wave and bright flavour colours tie them into one family.' },
     work: { uz: 'Qadoq dizayni, maketlar', ru: 'Дизайн упаковки, макеты', en: 'Packaging design, mockups' },
-    role: designer,
   },
   'talaba-fest': {
+    role: designerAd,
     title: { uz: 'Talabalar uçun imkoniyatlar festivali', ru: 'Фестиваль возможностей для студентов', en: 'A festival of opportunities for students' },
     text: { uz: 'Festival uçun logotip, illyustratsiyali vizual uslub va butun hudud dizayni yaratildi. Kiriş arkasidan tortib sahna, fotozonalar va yōlaklargaça hammasi 3Dʼda oldindan kōrsatildi.', ru: 'Логотип, иллюстративный стиль и дизайн всей территории фестиваля. От входной арки до сцены, фотозон и аллей всё было заранее показано в 3D.', en: 'A logo, an illustrated visual style and the design of the whole festival grounds. From the entrance arch to the stage, photo zones and walkways, everything was shown in 3D first.' },
     work: { uz: 'Identifikatsiya, 3D hudud dizayni', ru: 'Айдентика, 3D-дизайн территории', en: 'Identity, 3D venue design' },
-    role: designer,
   },
   'yoshlar-kuni': {
+    role: designer,
     title: { uz: 'Bir oy davom etgan yoşlar bayrami', ru: 'Молодёжный праздник длиной в месяц', en: 'A youth celebration that lasted a month' },
     text: { uz: '30-iyun, Yoşlar kuni uçun logotip, şior va butun bayram oyligining vizual tizimi yaratildi. Tez cōtka zarbalari va milliy bayroq ranglari harakat va yoşlik energiyasini beradi.', ru: 'Логотип, слоган и визуальная система всего праздничного месяца ко Дню молодёжи 30 июня. Быстрые мазки кисти и цвета национального флага передают движение и энергию молодости.', en: 'A logo, slogan and visual system for the whole month around Youth Day on June 30. Quick brush strokes and the colours of the national flag carry movement and youthful energy.' },
     work: { uz: 'Logotip, animatsiya, banner, press-devor, ekranlar', ru: 'Логотип, анимация, баннеры, пресс-волл, экраны', en: 'Logo, animation, banners, press wall, screens' },
-    role: designer,
   },
 }
 
