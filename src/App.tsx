@@ -910,7 +910,7 @@ function Services() {
                 {String(i + 1).padStart(2, '0')}
               </span>
               <h3 className="font-cond text-lg font-extrabold uppercase transition-transform duration-500 group-hover:translate-x-2 sm:pt-2 sm:text-[1.7rem] sm:leading-tight">{t(s.title)}</h3>
-              <p className="col-start-2 mt-2 max-w-[520px] text-sm leading-relaxed text-black/55 sm:col-start-3 sm:mt-0 sm:pt-2 sm:text-base">{t(s.text)}</p>
+              <p className="col-start-2 mt-2 max-w-[520px] text-sm leading-relaxed whitespace-pre-line text-black/55 sm:col-start-3 sm:mt-0 sm:pt-2 sm:text-base">{t(s.text)}</p>
             </li>
           ))}
         </ol>
