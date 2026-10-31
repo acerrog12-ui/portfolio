@@ -67,6 +67,7 @@ export const ui = {
     open: { uz: "Bōlimga ōtiş", ru: "Открыть раздел", en: 'Open' },
     count: { uz: 'ta loyiha', ru: "проекта", en: 'projects' },
     back: { uz: 'Orqaga', ru: "Назад", en: 'Back' },
+    backToProjects: { uz: 'Loyihalarga qaytiş', ru: 'Вернуться к проектам', en: 'Back to projects' },
     close: { uz: 'Yopiş', ru: "Закрыть", en: 'Close' },
     about: { uz: 'Loyiha haqida', ru: 'О проекте', en: 'About the project' },
     year: { uz: 'Yil', ru: 'Год', en: 'Year' },
@@ -157,7 +158,7 @@ export const projects: Project[] = [
   { id: 'istedodlar-zamini', client: 'Yoshlar harakati', title: { uz: "Ōzbekiston — Isteʼdodlar zamini", ru: "Узбекистан — земля талантов", en: "Uzbekistan — Land of Talents" }, tags: { uz: 'Sahna dizayni', ru: "Сценография", en: 'Stage design' }, year: '2025' , embed: 'ucfutbol/index.html', full: false },
   { id: 'superleague', client: 'UZSL', title: { uz: "Ōzbekiston Superligasi", ru: "Суперлига Узбекистана", en: 'Uzbekistan Superleague' }, tags: { uz: 'Brending · Sport', ru: "Брендинг · Спорт", en: 'Branding · Sports' }, videos: ['superleague-video'] },
   { id: 'chiroqchi', p1: true, client: 'Chiroqchi', title: { uz: 'Çiroqçi tumani brendi', ru: "Бренд Чиракчинского района", en: 'Chiroqchi district identity' }, tags: { uz: 'Brending · Şahar', ru: "Брендинг · Территория", en: 'Branding · Place' } },
-  { id: 'amir-temur', client: "O'zbekistondagi Islom sivilizatsiyasi markazi", title: { uz: 'Sohibqiron Amir Temur', ru: "Сохибкиран Амир Темур", en: 'Sohibqiron Amir Temur' }, tags: { uz: 'Vizual · Kōrgazma', ru: "Визуалы · Выставка", en: 'Visuals · Exhibition' }, videos: ['immersive-video'] },
+  { id: 'amir-temur', client: "O'zbekistondagi Islom sivilizatsiyasi markazi", title: { uz: 'Immersiv şou', ru: 'Иммерсивное шоу', en: 'Immersive show' }, tags: { uz: 'Vizual · Kōrgazma', ru: "Визуалы · Выставка", en: 'Visuals · Exhibition' }, videos: ['immersive-video'] },
   { id: 'violence', client: 'Tasnif Group', title: { uz: 'Zōravonlik — immersiv kōrgazma', ru: 'Насилие — иммерсивная выставка', en: 'Violence — immersive exhibition' }, tags: { uz: 'Immersiv · 3D mapping', ru: "Иммерсив · 3D-мэппинг", en: 'Immersive · 3D mapping' }, year: '2023' , embed: 'violence/index.html', full: false },
   { id: 'oltin-chinor', client: 'Oltin Chinor', title: { uz: 'Oltin Çinor milliy mukofoti', ru: "Национальная премия «Олтин Чинор»", en: 'Oltin Chinor national award' }, tags: { uz: 'Sahna dizayni', ru: "Сценография", en: 'Stage design' }, year: '2024' , embed: 'oltinchinor/index.html', full: false },
   { id: 'mkbank', client: 'MKBANK', title: { uz: 'Omonat kampaniyasi', ru: "Кампания по вкладам", en: 'Deposit campaign' }, tags: { uz: '3D · Reklama', ru: "3D · Реклама", en: '3D · Advertising' }, videos: ['mkbank-video'] },
@@ -241,7 +242,7 @@ export const projectAbout: Record<string, About> = {
   },
   'amir-temur': {
     role: designerAd,
-    title: { uz: 'Sohibqiron Amir Temur kōrgazmasi', ru: 'Выставка «Сохибкиран Амир Темур»', en: 'The Sohibqiron Amir Temur exhibition' },
+    title: { uz: 'Immersiv şou', ru: 'Иммерсивное шоу', en: 'Immersive show' },
     text: { uz: 'Ōzbekistondagi Islom sivilizatsiyasi markazi uçun Amir Temurga bağişlangan vizuallar va immersiv video.', ru: 'Визуалы и иммерсивное видео об Амире Темуре для Центра исламской цивилизации в Узбекистане.', en: 'Visuals and an immersive video about Amir Temur for the Center of Islamic Civilization in Uzbekistan.' },
   },
   violence: {

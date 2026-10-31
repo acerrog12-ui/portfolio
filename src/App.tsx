@@ -1324,8 +1324,12 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
   // phones: the deck frame scrolls on its own, and only once the view has reached the bottom
   const [deckActive, setDeckActive] = useState(false)
   const onOuterScroll = () => {
-    const el = ref.current
-    if (el) setDeckActive(el.scrollTop >= el.scrollHeight - el.clientHeight - 2)
+    // the deck takes the finger once its frame has reached the top of the screen
+    const f = ref.current?.querySelector('iframe')
+    if (f) {
+      const r = f.getBoundingClientRect()
+      setDeckActive(r.top <= 2 && r.bottom > 120)
+    }
     onScroll()
   }
   const onScroll = (y = ref.current?.scrollTop ?? 0) => {
@@ -1339,7 +1343,8 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
     document.body.style.overflow = 'hidden'
     const esc = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
     window.addEventListener('keydown', esc)
-    if (!reducedMotion()) gsap.from(ref.current, { yPercent: 100, duration: 0.9, ease: 'expo.out' })
+    // clearProps: a leftover transform would make the fixed title bar and close button scroll away with the page
+    if (!reducedMotion()) gsap.from(ref.current, { yPercent: 100, duration: 0.9, ease: 'expo.out', clearProps: 'transform' })
     return () => {
       document.body.style.overflow = ''
       window.removeEventListener('keydown', esc)
@@ -1360,6 +1365,14 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
         </div>
         {/* page 1 (video, or the first page of the layout), then "About the project" as page 2.
             Decks carry their own About page: the role and studio are written into it. */}
+        {/* while the title bar is hidden (scrolling down), a small close button stays on screen */}
+        <button
+          onClick={onClose}
+          aria-label={t(ui.projects.close)}
+          className={`fixed top-[calc(1rem+var(--sat))] right-4 z-20 grid h-12 w-12 place-items-center rounded-full border border-white/25 bg-black/70 text-xl text-white backdrop-blur transition-all duration-300 sm:right-8 ${barHidden ? 'translate-y-0 opacity-100' : 'pointer-events-none -translate-y-3 opacity-0'}`}
+        >
+          ✕
+        </button>
         {project.videos?.map((v, i) => (
           <div key={v}>
             <video
@@ -1380,6 +1393,12 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
           (project.parts ? Array.from({ length: project.parts }, (_, i) => `${project.id}-full-${i + 1}.webp`) : [`${project.id}-full.webp`]).map((f, i) => (
             <Layout key={f} file={f} alt={i || project.p1 ? '' : t(project.title)} />
           ))}
+        {/* end of the project: way back */}
+        <div className="flex justify-center px-5 py-16 sm:py-24">
+          <button onClick={onClose} className="rounded-full bg-white px-8 py-4 text-xs font-semibold tracking-widest text-black uppercase sm:text-sm">
+            ← {t(ui.projects.backToProjects)}
+          </button>
+        </div>
       </div>
     </div>
   )
