@@ -59,7 +59,7 @@ body {
   font-style: normal;
   font-weight: 400;
   font-display: block;
-  src: url('/portfolio/fonts/six-caps.woff2') format('woff2');
+  src: url('/fonts/six-caps.woff2') format('woff2');
 }
 
 /* Heavy display type, like the reference */
@@ -248,9 +248,9 @@ body {
   iframe,
   input::placeholder,
   textarea::placeholder {
-    cursor: url('/portfolio/img/cursor-a1.png') 1 1, auto;
-    cursor: -webkit-image-set(url('/portfolio/img/cursor-a1.png') 1x, url('/portfolio/img/cursor-a2.png') 2x) 1 1, auto;
-    cursor: image-set(url('/portfolio/img/cursor-a1.png') 1x, url('/portfolio/img/cursor-a2.png') 2x) 1 1, auto;
+    cursor: url('/img/cursor-a1.png') 1 1, auto;
+    cursor: -webkit-image-set(url('/img/cursor-a1.png') 1x, url('/img/cursor-a2.png') 2x) 1 1, auto;
+    cursor: image-set(url('/img/cursor-a1.png') 1x, url('/img/cursor-a2.png') 2x) 1 1, auto;
   }
   a,
   button,
@@ -260,8 +260,8 @@ body {
   [data-cursor],
   .cursor-grab,
   .cursor-grabbing {
-    cursor: url('/portfolio/img/cursor-hot-a1.png') 1 1, pointer;
-    cursor: -webkit-image-set(url('/portfolio/img/cursor-hot-a1.png') 1x, url('/portfolio/img/cursor-hot-a2.png') 2x) 1 1, pointer;
-    cursor: image-set(url('/portfolio/img/cursor-hot-a1.png') 1x, url('/portfolio/img/cursor-hot-a2.png') 2x) 1 1, pointer;
+    cursor: url('/img/cursor-hot-a1.png') 1 1, pointer;
+    cursor: -webkit-image-set(url('/img/cursor-hot-a1.png') 1x, url('/img/cursor-hot-a2.png') 2x) 1 1, pointer;
+    cursor: image-set(url('/img/cursor-hot-a1.png') 1x, url('/img/cursor-hot-a2.png') 2x) 1 1, pointer;
   }
 }
