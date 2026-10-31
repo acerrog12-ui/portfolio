@@ -364,7 +364,7 @@ export const categories: Category[] = [
   {
     id: 'branding',
     short: { uz: 'Brending', ru: 'Брендинг', en: 'Branding' },
-    title: { uz: 'Brending va sport', ru: "Брендинг и спорт", en: 'Branding & sports' },
+    title: { uz: 'Brending', ru: 'Брендинг', en: 'Branding' },
     text: { uz: 'Klublar, ligalar va hududlar uçun vizual identifikatsiya', ru: "Айдентика для клубов, лиг и территорий", en: 'Visual identity for clubs, leagues and places' },
     projects: ['superleague', 'salomtv', 'arch-design', 'samad', 'chust', 'logipro', 'chiroqchi'],
   },
