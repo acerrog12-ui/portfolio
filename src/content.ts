@@ -257,6 +257,7 @@ export const projectAbout: Record<string, About> = {
     role: { uz: 'Art director', ru: 'Арт-директор', en: 'Art director' },
   },
   qahramonlar: {
+    studio: null,
     title: { uz: 'Bolalar bayrami uçun makon', ru: 'Пространство детского праздника', en: 'A venue for a kids’ celebration' },
     text: { uz: '«Qahramonlar davri» bolalar bayrami ōtadigan makonning 3D vizualizatsiyasi.', ru: '3D-визуализация пространства детского праздника «Qahramonlar davri».', en: 'A 3D visualization of the venue for the “Qahramonlar davri” kids’ celebration.' },
   },
@@ -265,6 +266,7 @@ export const projectAbout: Record<string, About> = {
     text: { uz: 'Yonda Awards 2025 mukofoti uçun key visual va 3D vizuallar.', ru: 'Key visual и 3D-визуалы для премии Yonda Awards 2025.', en: 'The key visual and 3D visuals for the Yonda Awards 2025.' },
   },
   logipro: {
+    studio: null,
     title: { uz: 'Logistika akademiyasi brendi', ru: 'Бренд логистической академии', en: 'A logistics academy identity' },
     text: { uz: 'Logi Pro logistika akademiyasi uçun logotip va vizual identifikatsiya.', ru: 'Логотип и визуальная айдентика логистической академии Logi Pro.', en: 'A logo and visual identity for the Logi Pro logistics academy.' },
   },
@@ -275,11 +277,13 @@ export const projectAbout: Record<string, About> = {
     role: designer,
   },
   salomtv: {
+    studio: null,
     title: { uz: 'Ōzbekistonning onlayn kinoteatri', ru: 'Онлайн-кинотеатр Узбекистана', en: 'Uzbekistan’s online cinema' },
     text: { uz: 'Jahon filmlari, seriallar, jonli TV kanallar va ōzbek tilidagi «Originals» kontenti. Vazifa: bitta tuşunarli belgi yaratiş va uni Smart TV ekranidan tortib kōça posterigaça bir xil ovozda işlatadigan tizim quriş.', ru: 'Мировое кино, сериалы, live-каналы и узбекский контент «Originals». Задача: создать один понятный знак и систему, которая звучит одинаково от экрана Smart TV до уличного постера.', en: 'World films, series, live TV channels and Uzbek-language “Originals”. The task was one clear mark and a system that speaks with the same voice from a Smart TV screen to a street poster.' },
     work: { uz: 'Logotip, brend tizimi, motion', ru: 'Логотип, бренд-система, моушн', en: 'Logo, brand system, motion' },
   },
   'arch-design': {
+    studio: null,
     title: { uz: 'Arxitektura studiyasi brendbuki', ru: 'Брендбук архитектурной студии', en: 'An architecture studio brandbook' },
     text: { uz: 'Arch Design arxitektura studiyasi uçun brendbuk: logotip va uni işlatiş qoidalari.', ru: 'Брендбук архитектурной студии Arch Design: логотип и правила его использования.', en: 'A brandbook for the Arch Design architecture studio: the logo and the rules for using it.' },
   },
