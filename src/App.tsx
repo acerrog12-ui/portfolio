@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState, type FormEvent, type ReactNode } from 'react'
 import gsap from 'gsap'
-import { allWorks, categories, clients, contacts, projects, services, team, ui, type Category, type Project } from './content'
+import { allWorks, categories, clients, contacts, projectAbout, projects, services, team, ui, type Category, type Project } from './content'
 import { img, reducedMotion, SplitChars, useLang } from './lib'
 import { ChromeDefs, chromeFill, footerShapes } from './shapes'
 import { clamp01, onReveal, onScroll, pageTop, power2Out, progress, rangeOf, refresh } from './motion'
@@ -1256,6 +1256,45 @@ function EmbedDeck({ src, title, onInnerScroll }: { src: string; title: string; 
   )
 }
 
+/* "About the project": what it is, what was made, Doston's role and the studio */
+function ProjectAbout({ project }: { project: Project }) {
+  const { t } = useLang()
+  const a = projectAbout[project.id]
+  const studio = a?.studio === undefined ? 'Tasnif Group' : a.studio
+  const rows: [string, string][] = [
+    [t(ui.projects.client), project.client],
+    ...(project.year ? [[t(ui.projects.year), project.year] as [string, string]] : []),
+    [t(ui.projects.work), t(a?.work ?? project.tags)],
+    ...(a?.role ? [[t(ui.projects.role), t(a.role)] as [string, string]] : []),
+  ]
+  return (
+    <section className="relative overflow-hidden px-5 pt-32 pb-14 sm:px-8 sm:pt-40 sm:pb-20">
+      <div aria-hidden className="pointer-events-none absolute -right-40 -bottom-40 h-[480px] w-[480px] rounded-full bg-[radial-gradient(circle,rgba(122,77,255,0.28)_0%,transparent_65%)]" />
+      <div className="relative mx-auto grid max-w-[1300px] gap-10 lg:grid-cols-[1.15fr_1fr] lg:gap-20">
+        <div>
+          <div className="text-[11px] font-bold tracking-[0.25em] text-[#9b7bff] uppercase">{t(ui.projects.about)}</div>
+          <h2 className="mt-4 font-display text-[clamp(1.9rem,4.4vw,3.4rem)] leading-[1.02] font-bold">{t(a?.title ?? project.title)}</h2>
+          {a && <p className="mt-6 max-w-xl text-[15px] leading-[1.7] text-white/75 sm:text-base">{t(a.text)}</p>}
+        </div>
+        <dl className="self-end border-b border-white/12 text-sm">
+          {rows.map(([k, v]) => (
+            <div key={k} className="grid grid-cols-[minmax(0,0.8fr)_minmax(0,1.6fr)] gap-4 border-t border-white/12 py-4">
+              <dt className="pt-0.5 text-[10px] font-bold tracking-[0.2em] text-[#9b7bff] uppercase">{k}</dt>
+              <dd className="font-medium text-white/90">{v}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+      {studio && (
+        <div className="relative mx-auto mt-12 flex max-w-[1300px] items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.04] px-5 py-4 sm:mt-16">
+          {studio === 'Tasnif Group' && <img src={img('logos/tasnif-group.webp')} alt="Tasnif Group" className="h-6 w-auto shrink-0 sm:h-7" />}
+          <span className="text-xs font-semibold tracking-[0.12em] text-white/70 uppercase sm:text-[13px]">{t(ui.projects.madeAt).replace('{s}', studio)}</span>
+        </div>
+      )}
+    </section>
+  )
+}
+
 function ProjectModal({ project, onClose }: { project: Project; onClose: () => void }) {
   const { t } = useLang()
   const ref = useRef<HTMLDivElement>(null)
@@ -1293,6 +1332,7 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
             {t(ui.projects.close)} ✕
           </button>
         </div>
+        <ProjectAbout project={project} />
         {project.videos?.map((v) => (
           <video
             key={v}
