@@ -36,14 +36,6 @@ html {
   -webkit-font-smoothing: antialiased;
 }
 
-html.lenis,
-html.lenis body {
-  height: auto;
-}
-.lenis.lenis-smooth {
-  scroll-behavior: auto !important;
-}
-
 body {
   overflow-x: hidden;
 }
@@ -137,7 +129,16 @@ body {
 }
 .char {
   display: inline-block;
+}
+
+/* Parts that move with the scroll get their own GPU layer only while their section is on or
+   near the screen (motion.ts sets data-live). Layers kept for the whole page cost memory and
+   made the browser composite ~100 layers on every frame. */
+[data-live] .live-wc {
   will-change: transform;
+}
+[data-live] .live-wo {
+  will-change: opacity;
 }
 
 @keyframes marquee {

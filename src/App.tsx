@@ -1,14 +1,10 @@
 import { useEffect, useLayoutEffect, useRef, useState, type FormEvent, type ReactNode } from 'react'
 import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import type Lenis from 'lenis'
 import { allWorks, categories, clients, contacts, projects, services, team, ui, type Category, type Project } from './content'
 import { img, reducedMotion, SplitChars, useLang } from './lib'
 import { ChromeDefs, chromeFill, footerShapes } from './shapes'
+import { clamp01, onReveal, onScroll, pageTop, power2Out, progress, rangeOf, refresh } from './motion'
 
-gsap.registerPlugin(ScrollTrigger)
-// phone address bar shows/hides while scrolling; don't recalculate every trigger when it does
-ScrollTrigger.config({ ignoreMobileResize: true })
 const isPhone = () => window.matchMedia('(max-width: 639px)').matches
 
 // Simple hash routing: #/work/<category-id> opens a direction page
@@ -31,20 +27,15 @@ export default function App() {
 
   // Going to a direction page starts at the top; coming back returns to the Projects section
   useLayoutEffect(() => {
-    const lenis = (window as unknown as { lenis?: Lenis }).lenis
     if (cat) {
       lastCat.current = cat.id
-      lenis ? lenis.scrollTo(0, { immediate: true, force: true }) : window.scrollTo(0, 0)
-      setTimeout(() => lenis?.resize(), 60)
+      window.scrollTo(0, 0)
     } else if (lastCat.current) {
       lastCat.current = null
       setTimeout(() => {
-        lenis?.resize()
-        ScrollTrigger.refresh()
+        refresh()
         const el = document.getElementById('projects')
-        if (!el) return
-        const y = el.getBoundingClientRect().top + window.scrollY
-        lenis ? lenis.scrollTo(y, { immediate: true, force: true }) : window.scrollTo(0, y)
+        if (el) window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY)
       }, 60)
     }
   }, [cat])
@@ -56,9 +47,6 @@ export default function App() {
     els.forEach((el) => io.observe(el))
     return () => io.disconnect()
   }, [cat])
-
-  // No smooth-scroll library: the browser's own scrolling feels lighter and more direct
-  // (Lenis made the page feel heavy on computers)
 
   return (
     <div>
@@ -87,11 +75,7 @@ function scrollTo(id: string) {
     setTimeout(() => scrollTo(id), 80)
     return
   }
-  const el = document.getElementById(id)
-  const lenis = (window as unknown as { lenis?: Lenis }).lenis
-  if (!el) return
-  if (lenis) lenis.scrollTo(el, { offset: 0, duration: 1.4 })
-  else el.scrollIntoView({ behavior: 'smooth' })
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
 }
 
 /* ---------------- NAV ---------------- */
@@ -229,10 +213,25 @@ function Hero() {
         .from('.hero-head', { y: 140, autoAlpha: 0, scale: 0.8, duration: 1.6, ease: 'elastic.out(1,0.7)' }, 0.45)
         .from('.hero-fade', { y: 30, autoAlpha: 0, duration: 1, stagger: 0.1 }, 0.9)
 
-      // on scroll the head rises and the headline slides away
-      if (!isPhone()) gsap.to(avatar.current, { yPercent: -30, ease: 'none', scrollTrigger: { trigger: root.current, start: 'top top', end: 'bottom top', scrub: true } })
-      if (!isPhone()) gsap.to('.hero-title', { yPercent: -40, autoAlpha: 0.2, ease: 'none', scrollTrigger: { trigger: root.current, start: 'top top', end: 'bottom top', scrub: true } })
     }, root)
+    // the char layers only exist while the letters fly in
+    const clearChars = window.setTimeout(() => gsap.set('.hero-title .char', { clearProps: 'transform' }), 2600)
+
+    // on scroll the head rises and the headline slides away
+    const sec = root.current
+    const av = avatar.current
+    const h1 = title.current
+    let top = 0, height = 1, lastP = -1
+    const stopScroll = sec && av && h1 && !isPhone()
+      ? onScroll(sec, (y) => {
+          const p = clamp01((y - top) / height)
+          if (p === lastP) return
+          lastP = p
+          av.style.transform = p ? `translate3d(0,${(-30 * p).toFixed(2)}%,0)` : ''
+          h1.style.transform = p ? `translate3d(0,${(-40 * p).toFixed(2)}%,0)` : ''
+          h1.style.opacity = p ? String(1 - 0.8 * p) : ''
+        }, () => { top = pageTop(sec); height = Math.max(1, sec.offsetHeight) })
+      : undefined
 
     // the head follows the mouse a little
     const inner = avatar.current?.firstElementChild as HTMLElement | null
@@ -249,6 +248,8 @@ function Hero() {
     if (window.matchMedia('(pointer: fine)').matches) window.addEventListener('mousemove', move)
     return () => {
       ctx.revert()
+      window.clearTimeout(clearChars)
+      stopScroll?.()
       window.removeEventListener('mousemove', move)
     }
   }, [])
@@ -288,7 +289,7 @@ function Hero() {
   return (
     <section ref={root} className="relative flex flex-col overflow-hidden bg-ink sm:min-h-[100svh] px-3 pt-[calc(72px+var(--sat))] pb-8 sm:px-4 sm:pt-[calc(78px+var(--sat))]">
       {/* tall condensed Six Caps across the full width (Doston picked it), one line on every screen */}
-      <h1 ref={title} className="hero-title silver relative z-0 -mt-[1.5vw] text-center text-[38vw] leading-[0.9] whitespace-nowrap uppercase sm:-mt-[1.9vw]" style={{ fontFamily: "'Six Caps', 'Archivo', sans-serif", fontWeight: 400, fontSynthesis: 'none', letterSpacing: '-0.02em' }}>
+      <h1 ref={title} className="hero-title live-wc silver relative z-0 -mt-[1.5vw] text-center text-[38vw] leading-[0.9] whitespace-nowrap uppercase sm:-mt-[1.9vw]" style={{ fontFamily: "'Six Caps', 'Archivo', sans-serif", fontWeight: 400, fontSynthesis: 'none', letterSpacing: '-0.02em' }}>
         <span className="inline-block">
           <SplitChars text={t(ui.hero.hi)} className="inline-block" />
         </span>{' '}
@@ -299,7 +300,7 @@ function Hero() {
 
       <div className="relative flex flex-1 flex-col items-center sm:block">
         {/* the head sits on top of the headline, touching the letters like in the reference */}
-        <div ref={avatar} className="hero-avatar relative z-10 mx-auto -mt-[16vw] w-[min(58vw,46svh)] max-w-[440px] sm:absolute sm:top-0 sm:left-1/2 sm:mt-[-25vw] sm:w-[27vw] sm:max-w-[620px] sm:-translate-x-1/2">
+        <div ref={avatar} className="hero-avatar live-wc relative z-10 mx-auto -mt-[16vw] w-[min(58vw,46svh)] max-w-[440px] sm:absolute sm:top-0 sm:left-1/2 sm:mt-[-25vw] sm:w-[27vw] sm:max-w-[620px] sm:-translate-x-1/2">
           <div>
             <div className="hero-head relative">
               <img src={img('ace-head.webp')} srcSet={`${img('ace-head-s.webp')} 640w, ${img('ace-head.webp')} 1000w`} sizes="(max-width: 640px) 64vw, 29vw" fetchPriority="high" alt="Doston «Ace» Daminov" className="w-full" />
@@ -380,7 +381,7 @@ function Grab({ children, className = '' }: { children: ReactNode; className?: s
     }
   }, [])
   return (
-    <div ref={el} className={`pointer-events-auto relative select-none will-change-transform ${className}`} onDragStart={(e) => e.preventDefault()}>
+    <div ref={el} className={`pointer-events-auto relative select-none ${className}`} onDragStart={(e) => e.preventDefault()}>
       {children}
     </div>
   )
@@ -614,7 +615,8 @@ function Clients({ onOpen }: { onOpen: (p: Project) => void }) {
 
 /* ---------------- TAF! STATUETTE ---------------- */
 // A rendered 360° turn of the statuette on black (no glow, Doston asked).
-// Screen blending drops the black so it sits on any dark background.
+// It sits on the pure black About section, so no blend mode is needed (blending an
+// animated image made the browser redraw it with the page behind on every frame).
 // It only plays while on screen.
 function TafSpin({ className = '' }: { className?: string }) {
   // An animated image, not a video: Safari (and battery-saving modes) can refuse to start
@@ -629,7 +631,7 @@ function TafSpin({ className = '' }: { className?: string }) {
       width={360}
       height={716}
       draggable={false}
-      className={`pointer-events-none mix-blend-screen ${className}`}
+      className={`pointer-events-none ${className}`}
     />
   )
 }
@@ -641,62 +643,101 @@ function About() {
 
   useLayoutEffect(() => {
     if (reducedMotion()) return
+    const sec = root.current!
+    const stops: (() => void)[] = []
     const ctx = gsap.context(() => {
-      gsap.from('.about-title .char', { yPercent: 110, stagger: 0.04, duration: 1, ease: 'expo.out', scrollTrigger: { trigger: '.about-title', start: 'top 85%' } })
-      // words light up one by one while scrolling
-      gsap.fromTo('.about-word', { opacity: 0.15 }, { opacity: 1, stagger: 0.1, ease: 'none', scrollTrigger: { trigger: '.about-text', start: 'top 80%', end: 'bottom 55%', scrub: true } })
-      gsap.utils.toArray<HTMLElement>('.stat-num').forEach((el) => {
+      const title = gsap.from('.about-title .char', { yPercent: 110, stagger: 0.04, duration: 1, ease: 'expo.out', paused: true, onComplete: () => gsap.set('.about-title .char', { clearProps: 'transform' }) })
+      stops.push(onReveal(sec.querySelector('.about-title')!, () => title.play()))
+      sec.querySelectorAll<HTMLElement>('.stat-num').forEach((el) => {
         const end = Number(el.dataset.value)
         const o = { v: 0 }
-        gsap.to(o, { v: end, duration: 1.6, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 90%' }, onUpdate: () => (el.textContent = String(Math.round(o.v))) })
+        el.textContent = '0'
+        stops.push(onReveal(el, () => gsap.to(o, { v: end, duration: 1.6, ease: 'power3.out', onUpdate: () => (el.textContent = String(Math.round(o.v))) }), 0.9))
       })
-      gsap.from('.award', { y: 80, autoAlpha: 0, duration: 1.2, ease: 'expo.out', stagger: 0.15, scrollTrigger: { trigger: '.award', start: 'top 85%' } })
-      // objects slide in from off-screen and grow as the section scrolls into view,
-      // then keep drifting up a little while it scrolls past
-      if (!isPhone()) {
-        gsap.utils.toArray<HTMLElement>('.about-obj').forEach((el, i) => {
-          const side = Number(el.dataset.from)
-          gsap.fromTo(
-            el,
-            { xPercent: side * 140, yPercent: 40, scale: 0.55, rotate: side * 35 },
-            { xPercent: 0, yPercent: 0, scale: 1, rotate: 0, ease: 'power2.out', scrollTrigger: { trigger: root.current, start: 'top 95%', end: 'top 15%', scrub: 1 } },
-          )
-          // explicit start value so this drift never picks up the fly-in's starting offset (that caused a jump)
-          gsap.fromTo(el, { yPercent: 0 }, { yPercent: -[50, 30, 70, 40][i % 4], ease: 'none', immediateRender: false, scrollTrigger: { trigger: root.current, start: 'top 15%', end: 'bottom top', scrub: true } })
-        })
-      } else {
-        // phones: a single light fly-in when each object appears, no scroll-linked motion
-        gsap.utils.toArray<HTMLElement>('.about-obj-m').forEach((el) => {
-          const side = Number(el.dataset.from)
-          gsap.from(el, { xPercent: side * 110, rotate: side * 30, scale: 0.6, autoAlpha: 0, duration: 1.2, ease: 'expo.out', scrollTrigger: { trigger: el, start: 'top 92%' } })
-        })
-      }
+      const award = gsap.from('.award', { y: 80, autoAlpha: 0, duration: 1.2, ease: 'expo.out', stagger: 0.15, paused: true })
+      stops.push(onReveal(sec.querySelector('.award')!, () => award.play()))
     }, root)
-    return () => ctx.revert()
+
+    // words light up one by one while scrolling (each word fades over 0.5 of the run, starting 0.1 apart, like a GSAP stagger)
+    const text = sec.querySelector<HTMLElement>('.about-text')!
+    const words = Array.from(sec.querySelectorAll<HTMLElement>('.about-word'))
+    const total = 0.5 + 0.1 * Math.max(0, words.length - 1)
+    const shown = words.map(() => -1)
+    let wr: readonly [number, number] = [0, 1]
+    let tTop = 0, tH = 0
+    stops.push(onScroll(text, (y, vh) => {
+      wr = rangeOf(tTop, tH, vh, ['top', 0.8], ['bottom', 0.55])
+      const p = progress(y, wr) * total
+      words.forEach((w, i) => {
+        const o = Math.round((0.15 + 0.85 * clamp01((p - 0.1 * i) / 0.5)) * 100) / 100
+        if (o !== shown[i]) { shown[i] = o; w.style.opacity = String(o) }
+      })
+    }, () => { tTop = pageTop(text); tH = text.offsetHeight }))
+
+    // objects slide in from off-screen and grow as the section scrolls into view
+    // (eased toward the scroll position, like a 1 s scrub), then keep drifting up a little while it scrolls past
+    if (!isPhone()) {
+      const objs = Array.from(sec.querySelectorAll<HTMLElement>('.about-obj'))
+      const drift = [50, 30, 70, 40]
+      const cur = objs.map(() => -1)
+      let sTop = 0, sH = 0
+      stops.push(onScroll(sec, (y, vh, dt) => {
+        const fly = progress(y, rangeOf(sTop, sH, vh, ['top', 0.95], ['top', 0.15]))
+        const away = progress(y, rangeOf(sTop, sH, vh, ['top', 0.15], ['bottom', 0]))
+        let moving = false
+        objs.forEach((el, i) => {
+          // smooth toward the target
+          const c = cur[i] < 0 ? fly : cur[i] + (fly - cur[i]) * (1 - Math.exp(-dt / 0.28))
+          cur[i] = Math.abs(fly - c) < 0.0005 ? fly : c
+          if (cur[i] !== fly) moving = true
+          const side = Number(el.dataset.from)
+          const e = power2Out(cur[i])
+          const x = side * 140 * (1 - e)
+          const yy = 40 * (1 - e) - drift[i % 4] * away
+          el.style.transform = `translate3d(${x.toFixed(2)}%,${yy.toFixed(2)}%,0) rotate(${(side * 35 * (1 - e)).toFixed(2)}deg) scale(${(0.55 + 0.45 * e).toFixed(4)})`
+        })
+        return moving
+      }, () => { sTop = pageTop(sec); sH = sec.offsetHeight }))
+    } else {
+      // phones: a single light fly-in when each object appears, no scroll-linked motion
+      const m = gsap.context(() => {
+        sec.querySelectorAll<HTMLElement>('.about-obj-m').forEach((el) => {
+          const side = Number(el.dataset.from)
+          const tw = gsap.from(el, { xPercent: side * 110, rotate: side * 30, scale: 0.6, autoAlpha: 0, duration: 1.2, ease: 'expo.out', paused: true })
+          stops.push(onReveal(el, () => tw.play(), 0.92))
+        })
+      }, root)
+      stops.push(() => m.revert())
+    }
+    return () => {
+      stops.forEach((f) => f())
+      ctx.revert()
+      words.forEach((w) => (w.style.opacity = ''))
+    }
   }, [lang])
 
   return (
     <section id="about" ref={root} className="relative overflow-hidden bg-ink px-4 pt-28 pb-40 sm:px-8 sm:pt-40 sm:pb-56">
       {/* big chrome objects that fly in from the screen edges while scrolling, like the reference */}
-      <div data-from="-1" className="about-obj pointer-events-none absolute will-change-transform hidden sm:block top-24 left-[-2%] w-28 sm:top-32 sm:w-[17vw]">
+      <div data-from="-1" className="about-obj live-wc pointer-events-none absolute hidden sm:block top-24 left-[-2%] w-28 sm:top-32 sm:w-[17vw]">
         <span aria-hidden="true" className="obj-glow" />
         <Grab>
           <img src={img('el-ae.webp')} alt="" loading="lazy" className="floaty relative w-full" style={{ ['--r' as string]: '-12deg' }} />
         </Grab>
       </div>
-      <div data-from="1" className="about-obj pointer-events-none absolute will-change-transform hidden sm:block top-20 right-[-3%] w-32 sm:top-28 sm:w-[19vw]">
+      <div data-from="1" className="about-obj live-wc pointer-events-none absolute hidden sm:block top-20 right-[-3%] w-32 sm:top-28 sm:w-[19vw]">
         <span aria-hidden="true" className="obj-glow" />
         <Grab>
           <img src={img('el-3d.webp')} alt="" loading="lazy" className="floaty relative w-full" style={{ ['--r' as string]: '10deg', ['--d' as string]: '8s' }} />
         </Grab>
       </div>
-      <div data-from="-1" className="about-obj pointer-events-none absolute will-change-transform hidden sm:block top-[34%] left-[-4%] w-28 sm:w-[16vw]">
+      <div data-from="-1" className="about-obj live-wc pointer-events-none absolute hidden sm:block top-[34%] left-[-4%] w-28 sm:w-[16vw]">
         <span aria-hidden="true" className="obj-glow" />
         <Grab>
           <img src={img('el-pen.webp')} alt="" loading="lazy" className="floaty relative w-full" style={{ ['--r' as string]: '14deg', ['--d' as string]: '9s' }} />
         </Grab>
       </div>
-      <div data-from="1" className="about-obj pointer-events-none absolute will-change-transform hidden sm:block top-[36%] right-[-4%] w-36 sm:w-[22vw]">
+      <div data-from="1" className="about-obj live-wc pointer-events-none absolute hidden sm:block top-[36%] right-[-4%] w-36 sm:w-[22vw]">
         <span aria-hidden="true" className="obj-glow" />
         <Grab>
           <img src={img('ace-pad.webp')} alt="" loading="lazy" className="floaty relative w-full" style={{ ['--r' as string]: '-14deg', ['--d' as string]: '7s' }} />
@@ -771,67 +812,88 @@ function About() {
 function Services() {
   const { t, lang } = useLang()
   const root = useRef<HTMLElement>(null)
-  useLayoutEffect(() => {
-    if (reducedMotion()) return
-    const ctx = gsap.context(() => {
-      // the light panel slides up over the black page
-      gsap.from('.svc-card', { y: 120, scale: 0.96, ease: 'none', scrollTrigger: { trigger: root.current, start: 'top bottom', end: 'top 35%', scrub: true } })
-      // the title starts pale grey and fills in black
-      gsap.fromTo('.svc-title', { color: '#c4c7cb' }, { color: '#000', ease: 'none', scrollTrigger: { trigger: '.svc-title', start: 'top 85%', end: 'top 35%', scrub: true } })
-    }, root)
-    return () => ctx.revert()
+  // the light panel slides up over the black page, and the title starts pale grey and fills in black
+  useEffect(() => {
+    const sec = root.current
+    if (!sec || reducedMotion()) return
+    const card = sec.querySelector<HTMLElement>('.svc-card')!
+    const title = sec.querySelector<HTMLElement>('.svc-title')!
+    let top = 0, h = 0, titleTop = 0, titleH = 0
+    let lastP = -1, lastC = -1
+    const stop = onScroll(sec, (y, vh) => {
+      const p = progress(y, rangeOf(top, h, vh, ['top', 1], ['top', 0.35]))
+      if (p !== lastP) {
+        lastP = p
+        // only a layer of its own while it moves: a big panel kept on the GPU costs memory the whole time
+        card.style.willChange = p < 1 ? 'transform' : ''
+        card.style.transform = p < 1 ? `translate3d(0,${(120 * (1 - p)).toFixed(1)}px,0) scale(${(0.96 + 0.04 * p).toFixed(4)})` : ''
+      }
+      const c = Math.round(progress(y, rangeOf(titleTop, titleH, vh, ['top', 0.85], ['top', 0.35])) * 100) / 100
+      if (c !== lastC) {
+        lastC = c
+        const v = Math.round(0xc4 * (1 - c)), g = Math.round(0xc7 * (1 - c)), b = Math.round(0xcb * (1 - c))
+        title.style.color = `rgb(${v},${g},${b})`
+      }
+    }, () => {
+      top = pageTop(sec)
+      h = sec.offsetHeight
+      // the title is sticky, so take where it sits before it sticks: the top of the panel plus its padding
+      // (measured with the panel in its starting place, moved down 120px and shrunk, as the old version did)
+      titleTop = pageTop(card) + 120 + card.offsetHeight * 0.02 + 0.96 * parseFloat(getComputedStyle(card).paddingTop)
+      titleH = title.offsetHeight
+    })
+    return () => {
+      stop()
+      card.style.transform = ''
+      card.style.willChange = ''
+      title.style.color = ''
+    }
   }, [lang])
 
   // Like fido.studio: the title stays pinned at the top while the list scrolls under it.
-  // Each row comes up from below faded and blurred, is sharp in the middle of the screen,
-  // then blurs and fades away before it reaches the title. Worked out from where each row
+  // Each row comes up from below faded, is clear in the middle of the screen,
+  // then fades away before it reaches the title. Worked out from where each row
   // is on screen right now (not from positions measured once), so images loading higher
-  // up the page can't push the effect out of place.
+  // up the page can't push the effect out of place. All rows are read first and written
+  // after, so the browser lays the page out once per frame, not once per row.
   useEffect(() => {
     const sec = root.current
     if (!sec || reducedMotion()) return
     const rows = Array.from(sec.querySelectorAll<HTMLElement>('.svc-row'))
     const desk = window.matchMedia('(min-width: 640px)')
-    const shift = new Map<HTMLElement, number>()
-    const clamp = (v: number) => Math.max(0, Math.min(1, v))
-    let raf = 0
-    let on = false
-    const draw = () => {
-      raf = 0
-      const vh = window.innerHeight
+    const shift = rows.map(() => 0)
+    const tops = rows.map(() => 0)
+    const hs = rows.map(() => 0)
+    const shownO = rows.map(() => '')
+    const stop = onScroll(sec, (_y, vh) => {
       const d = desk.matches
-      const blurMax = 0 // blur turned off everywhere: it was the costliest part of this effect
       const exitStart = d ? 0.5 : 0.48
       const exitEnd = d ? 0.3 : 0.28 // just below the pinned title
-      rows.forEach((r) => {
-        const b = r.getBoundingClientRect()
-        if (b.bottom < -200 || b.top > vh + 200) return // off screen: nothing to update
-        const c = (b.top - (shift.get(r) ?? 0) + b.height / 2) / vh
-        const tin = clamp((1 - c) / 0.36)
+      for (let i = 0; i < rows.length; i++) {
+        const b = rows[i].getBoundingClientRect()
+        tops[i] = b.top
+        hs[i] = b.height
+      }
+      rows.forEach((r, i) => {
+        const hgt = hs[i]
+        const top = tops[i] - shift[i]
+        if (top + hgt < -200 || top > vh + 200) return // off screen: nothing to update
+        const c = (top + hgt / 2) / vh
+        const tin = clamp01((1 - c) / 0.36)
         const e = 1 - Math.pow(1 - tin, 2)
-        const out = clamp((exitStart - c) / (exitStart - exitEnd))
-        const y = 70 * (1 - e) - 40 * out
-        shift.set(r, y)
-        r.style.opacity = String((0.08 + 0.92 * e) * (1 - out))
-        r.style.transform = `translate3d(0,${y.toFixed(1)}px,0)`
-        // whole pixels only, and no filter at all once the row is sharp, so the browser
-        // isn't redrawing a blur on every frame
-        const bl = Math.round(blurMax * Math.min(1, 1 - e + out))
-        const f = bl ? `blur(${bl}px)` : ''
-        if (r.style.filter !== f) r.style.filter = f
+        const out = clamp01((exitStart - c) / (exitStart - exitEnd))
+        const y = Math.round((70 * (1 - e) - 40 * out) * 10) / 10
+        const o = ((0.08 + 0.92 * e) * (1 - out)).toFixed(3)
+        if (y === shift[i] && o === shownO[i]) return
+        shift[i] = y
+        shownO[i] = o
+        r.style.opacity = o
+        r.style.transform = `translate3d(0,${y}px,0)`
       })
-    }
-    const tick = () => { if (on && !raf) raf = requestAnimationFrame(draw) }
-    const io = new IntersectionObserver(([en]) => { on = en.isIntersecting; tick() }, { rootMargin: '20% 0px' })
-    io.observe(sec)
-    window.addEventListener('scroll', tick, { passive: true })
-    window.addEventListener('resize', tick)
+    })
     return () => {
-      io.disconnect()
-      cancelAnimationFrame(raf)
-      window.removeEventListener('scroll', tick)
-      window.removeEventListener('resize', tick)
-      rows.forEach((r) => { r.style.opacity = ''; r.style.transform = ''; r.style.filter = '' })
+      stop()
+      rows.forEach((r) => { r.style.opacity = ''; r.style.transform = '' })
     }
   }, [lang])
 
@@ -842,7 +904,7 @@ function Services() {
         <h2 className="svc-title sticky top-[calc(72px+var(--sat))] z-10 text-center font-display text-[clamp(2.6rem,9vw,8.5rem)] leading-none uppercase sm:top-[calc(84px+var(--sat))]">{t(ui.services.title)}</h2>
         <ol className="mx-auto mt-[22vh] max-w-[1100px] pb-[18vh] sm:mt-[30vh]">
           {services.map((s, i) => (
-            <li key={i} className="svc-row group grid grid-cols-[56px_1fr] items-start gap-x-4 py-[7vh] will-change-transform sm:grid-cols-[120px_1fr_1fr] sm:gap-x-10 sm:py-[9vh]">
+            <li key={i} className="svc-row live-wc group grid grid-cols-[56px_1fr] items-start gap-x-4 py-[7vh] sm:grid-cols-[120px_1fr_1fr] sm:gap-x-10 sm:py-[9vh]">
               <span className="font-display text-[2.2rem] leading-[0.85] transition-colors duration-300 group-hover:text-violet sm:text-[4rem]">
                 {String(i + 1).padStart(2, '0')}
               </span>
@@ -863,49 +925,51 @@ function Projects() {
 
   useLayoutEffect(() => {
     if (reducedMotion()) return
+    const sec = root.current!
+    let stop = () => {}
     const ctx = gsap.context(() => {
-      gsap.from('.proj-title .char', { yPercent: 110, stagger: 0.04, duration: 1, ease: 'expo.out', scrollTrigger: { trigger: '.proj-title', start: 'top 85%' } })
-      const cards = gsap.utils.toArray<HTMLElement>('.proj-card')
-      cards.forEach((card, i) => {
-        const next = cards[i + 1]
-        if (!next) return
-        // each card darkens a little as the next one slides over it
-        const st = { trigger: next, start: 'top 80%', end: 'top 20%', scrub: true }
-        // a black layer fades in instead of a CSS filter, which is slow on phones
-        // (no shrinking: scaling a rounded card full of pictures was the slowest thing on the page)
-        gsap.to(card.querySelector('.proj-dim'), { opacity: 0.4, ease: 'none', scrollTrigger: st })
-      })
+      const tw = gsap.from('.proj-title .char', { yPercent: 110, stagger: 0.04, duration: 1, ease: 'expo.out', paused: true, onComplete: () => gsap.set('.proj-title .char', { clearProps: 'transform' }) })
+      stop = onReveal(sec.querySelector('.proj-title')!, () => tw.play())
     }, root)
-    return () => ctx.revert()
+    return () => {
+      stop()
+      ctx.revert()
+    }
   }, [lang])
 
-  // Once a card is fully covered by the next one, stop drawing its pictures: only its
-  // top edge still peeks out. Without this the browser keeps painting every card in the
-  // stack on each frame, which made this part of the page slow on computers.
+  // Each card darkens a little as the next one slides over it (a black layer fading in,
+  // not a CSS filter or a shrink: scaling a rounded card full of pictures was the slowest
+  // thing on the page). Once a card is fully covered by the next one, its pictures are not
+  // drawn at all: only its top edge still peeks out. The cards are sticky, so their place on
+  // screen is read each frame (all reads first, then all writes).
   useEffect(() => {
     const sec = root.current
     if (!sec) return
     const cards = Array.from(sec.querySelectorAll<HTMLElement>('.proj-card'))
-    let raf = 0
-    const check = () => {
-      raf = 0
-      cards.forEach((card, i) => {
-        const next = cards[i + 1]
-        const grid = card.querySelector<HTMLElement>('.proj-grid')
-        if (!next || !grid) return
-        const covered = next.getBoundingClientRect().top <= parseFloat(getComputedStyle(next).top) + 1
-        const v = covered ? 'hidden' : ''
-        if (grid.style.visibility !== v) grid.style.visibility = v
-      })
-    }
-    const tick = () => { if (!raf) raf = requestAnimationFrame(check) }
-    check()
-    window.addEventListener('scroll', tick, { passive: true })
-    window.addEventListener('resize', tick)
+    const dims = cards.map((c) => c.querySelector<HTMLElement>('.proj-dim')!)
+    const grids = cards.map((c) => c.querySelector<HTMLElement>('.proj-grid')!)
+    const stickTop = cards.map(() => 0)
+    const nextTop = cards.map(() => 0)
+    const dimShown = cards.map(() => -1)
+    const still = reducedMotion()
+    const stop = onScroll(sec, (_y, vh) => {
+      for (let i = 1; i < cards.length; i++) nextTop[i] = cards[i].getBoundingClientRect().top
+      for (let i = 0; i < cards.length - 1; i++) {
+        const t = nextTop[i + 1]
+        const v = t <= stickTop[i + 1] + 1 ? 'hidden' : ''
+        if (grids[i].style.visibility !== v) grids[i].style.visibility = v
+        if (still) continue
+        // from the next card's top at 80% of the screen to 20%
+        const o = Math.round(0.4 * clamp01((0.8 * vh - t) / (0.6 * vh)) * 100) / 100
+        if (o !== dimShown[i]) { dimShown[i] = o; dims[i].style.opacity = String(o) }
+      }
+    }, () => {
+      cards.forEach((c, i) => (stickTop[i] = parseFloat(getComputedStyle(c).top) || 0))
+    })
     return () => {
-      cancelAnimationFrame(raf)
-      window.removeEventListener('scroll', tick)
-      window.removeEventListener('resize', tick)
+      stop()
+      grids.forEach((g) => (g.style.visibility = ''))
+      dims.forEach((d) => (d.style.opacity = ''))
     }
   }, [lang])
 
@@ -920,8 +984,8 @@ function Projects() {
           const pics = c.covers ?? [ps[0].id, (ps[1] ?? ps[0]).id, (ps[2] ?? ps[1] ?? ps[0]).id]
           return (
             <article key={c.id} className="proj-card sticky mb-[6vh]" style={{ top: `calc(9vh + var(--sat) + ${i * 14}px)` }}>
-              <a href={`#/work/${c.id}`} className="group relative block origin-top overflow-hidden rounded-[1.75rem] border-[1.5px] border-white/70 bg-ink p-3 will-change-transform sm:rounded-[2.25rem] sm:p-5">
-                <span className="proj-dim pointer-events-none absolute inset-0 z-10 bg-black opacity-0" />
+              <a href={`#/work/${c.id}`} className="group relative block origin-top overflow-hidden rounded-[1.75rem] border-[1.5px] border-white/70 bg-ink p-3 sm:rounded-[2.25rem] sm:p-5">
+                <span className="proj-dim live-wo pointer-events-none absolute inset-0 z-10 bg-black opacity-0" />
                 <header className="flex items-center gap-3 px-1 pt-1 pb-4 sm:gap-5 sm:px-2 sm:pb-5">
                   <span className="font-display text-4xl leading-none sm:text-6xl">{String(i + 1).padStart(2, '0')}</span>
                   <div className="min-w-0 flex-1">
@@ -980,15 +1044,22 @@ function CategoryPage({ cat, onOpen }: { cat: Category; onOpen: (p: Project) => 
   // cards come up as they scroll in; after a tab switch the visible ones come up together
   useLayoutEffect(() => {
     if (reducedMotion()) return
+    const stops: (() => void)[] = []
     const ctx = gsap.context(() => {
       gsap.utils.toArray<HTMLElement>('.cat-item').forEach((el, i) => {
         const inView = el.getBoundingClientRect().top < window.innerHeight * 0.92
         if (filter && inView) gsap.from(el, { y: 50, autoAlpha: 0, duration: 0.8, ease: 'expo.out', delay: i * 0.06 })
-        else gsap.from(el, { y: 80, autoAlpha: 0, duration: 1.1, ease: 'expo.out', scrollTrigger: { trigger: el, start: 'top 92%' } })
+        else {
+          const tw = gsap.from(el, { y: 80, autoAlpha: 0, duration: 1.1, ease: 'expo.out', paused: true })
+          stops.push(onReveal(el, () => tw.play(), 0.92))
+        }
       })
     }, root)
-    ScrollTrigger.refresh()
-    return () => ctx.revert()
+    refresh()
+    return () => {
+      stops.forEach((f) => f())
+      ctx.revert()
+    }
   }, [lang, cat.id, filter])
 
   return (
@@ -1199,21 +1270,18 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
     }
   }
   useEffect(() => {
-    const lenis = (window as unknown as { lenis?: Lenis }).lenis
-    lenis?.stop()
     document.body.style.overflow = 'hidden'
     const esc = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
     window.addEventListener('keydown', esc)
     if (!reducedMotion()) gsap.from(ref.current, { yPercent: 100, duration: 0.9, ease: 'expo.out' })
     return () => {
-      lenis?.start()
       document.body.style.overflow = ''
       window.removeEventListener('keydown', esc)
     }
   }, [onClose])
   return (
     <div className="fixed inset-0 z-[70] bg-black" onClick={onClose}>
-      <div ref={ref} data-lenis-prevent onScroll={() => onScroll()} className="absolute inset-0 overflow-y-auto bg-ink" onClick={(e) => e.stopPropagation()}>
+      <div ref={ref} onScroll={() => onScroll()} className="absolute inset-0 overflow-y-auto bg-ink" onClick={(e) => e.stopPropagation()}>
         <div className={`fixed inset-x-0 top-0 z-10 flex items-center justify-between gap-4 bg-gradient-to-b from-black/85 via-black/55 to-transparent px-5 pt-[calc(1rem+var(--sat))] pb-10 transition-transform duration-500 ease-out sm:px-8 sm:pt-[calc(1.25rem+var(--sat))] ${barHidden ? '-translate-y-full' : ''}`}>
           <div className="min-w-0">
             <div className="text-[10px] tracking-[0.2em] text-white/50 uppercase">{project.client}{project.year && ` · ${project.year}`} · {t(project.tags)}</div>
@@ -1255,12 +1323,26 @@ function Team() {
   const root = useRef<HTMLElement>(null)
   useLayoutEffect(() => {
     if (reducedMotion()) return
+    const sec = root.current!
+    const stops: (() => void)[] = []
     const ctx = gsap.context(() => {
-      gsap.from('.team-title .char', { yPercent: 110, stagger: 0.035, duration: 1, ease: 'expo.out', scrollTrigger: { trigger: '.team-title', start: 'top 85%' } })
-      gsap.from('.team-chip', { scale: 0, autoAlpha: 0, stagger: 0.08, duration: 0.9, ease: 'back.out(2)', scrollTrigger: { trigger: '.team-chips', start: 'top 85%' } })
-      gsap.to('.team-ring', { rotate: 360, ease: 'none', scrollTrigger: { trigger: root.current, start: 'top bottom', end: 'bottom top', scrub: true } })
+      const title = gsap.from('.team-title .char', { yPercent: 110, stagger: 0.035, duration: 1, ease: 'expo.out', paused: true, onComplete: () => gsap.set('.team-title .char', { clearProps: 'transform' }) })
+      stops.push(onReveal(sec.querySelector('.team-title')!, () => title.play()))
+      const chips = gsap.from('.team-chip', { scale: 0, autoAlpha: 0, stagger: 0.08, duration: 0.9, ease: 'back.out(2)', paused: true })
+      stops.push(onReveal(sec.querySelector('.team-chips')!, () => chips.play()))
     }, root)
-    return () => ctx.revert()
+    // the name ring turns once while the section crosses the screen
+    const ring = sec.querySelector<SVGElement>('.team-ring')!
+    let top = 0, h = 0, last = -1
+    stops.push(onScroll(sec, (y, vh) => {
+      const deg = Math.round(360 * progress(y, rangeOf(top, h, vh, ['top', 1], ['bottom', 0])) * 10) / 10
+      if (deg !== last) { last = deg; ring.style.transform = `rotate(${deg}deg)` }
+    }, () => { top = pageTop(sec); h = sec.offsetHeight }))
+    return () => {
+      stops.forEach((f) => f())
+      ctx.revert()
+      ring.style.transform = ''
+    }
   }, [lang])
 
   const ring = `${t(team.title)} • ${t(team.title)} • `
@@ -1286,7 +1368,7 @@ function Team() {
           </a>
         </div>
         <div className="relative mx-auto aspect-square w-full max-w-[460px]">
-          <svg viewBox="0 0 200 200" className="team-ring absolute inset-0 h-full w-full will-change-transform" aria-hidden>
+          <svg viewBox="0 0 200 200" className="team-ring live-wc absolute inset-0 h-full w-full" aria-hidden>
             <defs>
               <path id="ring" d="M100,100 m-82,0 a82,82 0 1,1 164,0 a82,82 0 1,1 -164,0" />
             </defs>
@@ -1317,19 +1399,48 @@ function Contact() {
   const root = useRef<HTMLElement>(null)
   useLayoutEffect(() => {
     if (reducedMotion()) return
-const ctx = gsap.context(() => {
-      gsap.from('.ct-panel', { y: 120, scale: 0.96, ease: 'none', scrollTrigger: { trigger: '.ct-panel', start: 'top bottom', end: 'top 40%', scrub: true } })
-      gsap.from('.ct-title .char', { yPercent: 110, stagger: 0.03, duration: 1, ease: 'expo.out', scrollTrigger: { trigger: '.ct-title', start: 'top 85%' } })
-      gsap.utils.toArray<HTMLElement>('.ct-obj').forEach((el) => {
-        const side = Number(el.dataset.from)
-        gsap.fromTo(
-          el,
-          { xPercent: side * 140, yPercent: 40, scale: 0.55, rotate: side * 35 },
-          { xPercent: 0, yPercent: 0, scale: 1, rotate: 0, ease: 'power2.out', scrollTrigger: { trigger: '.ct-panel', start: 'top 95%', end: 'top 20%', scrub: 1 } },
-        )
-      })
+    const sec = root.current!
+    const panel = sec.querySelector<HTMLElement>('.ct-panel')!
+    const objs = Array.from(sec.querySelectorAll<HTMLElement>('.ct-obj'))
+    let stopReveal = () => {}
+    const ctx = gsap.context(() => {
+      const tw = gsap.from('.ct-title .char', { yPercent: 110, stagger: 0.03, duration: 1, ease: 'expo.out', paused: true, onComplete: () => gsap.set('.ct-title .char', { clearProps: 'transform' }) })
+      stopReveal = onReveal(sec.querySelector('.ct-title')!, () => tw.play())
     }, root)
-    return () => ctx.revert()
+    // the light panel slides up, and the chrome objects fly in from the sides (eased like a 1 s scrub)
+    let top = 0, h = 0, lastP = -1
+    const cur = objs.map(() => -1)
+    const stop = onScroll(sec, (y, vh, dt) => {
+      const p = progress(y, rangeOf(top, h, vh, ['top', 1], ['top', 0.4]))
+      if (p !== lastP) {
+        lastP = p
+        panel.style.willChange = p < 1 ? 'transform' : ''
+        panel.style.transform = p < 1 ? `translate3d(0,${(120 * (1 - p)).toFixed(1)}px,0) scale(${(0.96 + 0.04 * p).toFixed(4)})` : ''
+      }
+      const fly = progress(y, rangeOf(top, h, vh, ['top', 0.95], ['top', 0.2]))
+      let moving = false
+      objs.forEach((el, i) => {
+        const c = cur[i] < 0 ? fly : cur[i] + (fly - cur[i]) * (1 - Math.exp(-dt / 0.28))
+        cur[i] = Math.abs(fly - c) < 0.0005 ? fly : c
+        if (cur[i] !== fly) moving = true
+        const side = Number(el.dataset.from)
+        const e = power2Out(cur[i])
+        el.style.transform = e < 1 ? `translate3d(${(side * 140 * (1 - e)).toFixed(2)}%,${(40 * (1 - e)).toFixed(2)}%,0) rotate(${(side * 35 * (1 - e)).toFixed(2)}deg) scale(${(0.55 + 0.45 * e).toFixed(4)})` : ''
+      })
+      return moving
+    }, () => {
+      h = panel.offsetHeight
+      // measured from where the panel starts (moved down 120px and shrunk), as the old version did
+      top = pageTop(panel) + 120 + h * 0.02
+    })
+    return () => {
+      stop()
+      stopReveal()
+      ctx.revert()
+      panel.style.transform = ''
+      panel.style.willChange = ''
+      objs.forEach((el) => (el.style.transform = ''))
+    }
   }, [lang])
 
   // the footer row sits at the very end of the page, so reveal it when it becomes visible
@@ -1381,12 +1492,12 @@ const ctx = gsap.context(() => {
     <footer id="contact" ref={root} className="relative z-30 -mt-24 px-2 sm:-mt-32 sm:px-3">
       <div className="ct-panel relative overflow-hidden rounded-[2rem] bg-paper px-5 pt-20 pb-40 text-black sm:rounded-[2.75rem] sm:px-14 sm:pt-28 sm:pb-52">
         {/* big chrome objects half off the panel edges, flying in on scroll like in About */}
-        <div data-from="-1" className="ct-obj pointer-events-none absolute hidden sm:block bottom-14 left-[-8%] w-24 sm:bottom-[24%] sm:left-[-7%] sm:w-[16vw]">
+        <div data-from="-1" className="ct-obj live-wc pointer-events-none absolute hidden sm:block bottom-14 left-[-8%] w-24 sm:bottom-[24%] sm:left-[-7%] sm:w-[16vw]">
           <Grab>
             <img src={img('el-3d.webp')} alt="" loading="lazy" className="floaty w-full" style={{ ['--r' as string]: '-12deg' }} />
           </Grab>
         </div>
-        <div data-from="1" className="ct-obj pointer-events-none absolute top-[-4%] right-[-3%] w-24 sm:right-[-2%] sm:w-[12vw]">
+        <div data-from="1" className="ct-obj live-wc pointer-events-none absolute top-[-4%] right-[-3%] w-24 sm:right-[-2%] sm:w-[12vw]">
           <Grab>
             <img src={img('el-bolt.webp')} alt="" loading="lazy" className="floaty w-full" style={{ ['--r' as string]: '16deg', ['--d' as string]: '8s' }} />
           </Grab>
