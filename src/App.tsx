@@ -50,6 +50,9 @@ export default function App() {
 
   return (
     <div>
+      {/* while a project is open, the page behind it is hidden (after the slide-in), so iPhone Safari
+          shows black above the project instead of the page under its address bar */}
+      <div className={open ? 'behind-modal' : ''}>
       <Nav />
       {cat ? (
         <CategoryPage key={cat.id} cat={cat} onOpen={setOpen} />
@@ -65,6 +68,7 @@ export default function App() {
         </main>
       )}
       <Contact />
+      </div>
       {open && <ProjectModal project={open} onClose={() => setOpen(null)} />}
     </div>
   )
@@ -1171,7 +1175,7 @@ function CoverText({ p, small }: { p: Project; small?: boolean }) {
 
 // An animated HTML presentation shown at its full height, so the modal does the scrolling.
 // Its slides still animate as they reach the screen (IntersectionObserver sees the real viewport).
-function EmbedDeck({ src, title, onInnerScroll }: { src: string; title: string; onInnerScroll?: (y: number) => void }) {
+function EmbedDeck({ src, title, onInnerScroll, active = true }: { src: string; title: string; onInnerScroll?: (y: number) => void; active?: boolean }) {
   const frame = useRef<HTMLIFrameElement>(null)
   const [h, setH] = useState(0)
   const [compact] = useState(() => window.matchMedia('(max-width: 1023px), (pointer: coarse)').matches)
@@ -1242,7 +1246,9 @@ function EmbedDeck({ src, title, onInnerScroll }: { src: string; title: string; 
           src={url}
           title={title}
           className="block w-full bg-black"
-          style={{ height: '100svh', border: 0 }}
+          // the frame only takes the finger once the project view has scrolled it fully into place;
+          // before that, swipes move the whole view (otherwise the part above stayed stuck on top)
+          style={{ height: '100svh', border: 0, pointerEvents: active ? 'auto' : 'none' }}
           // the deck scrolls inside the frame here, so pass its scroll up to hide or show the title bar
           onLoad={(e) => {
             const w = e.currentTarget.contentWindow
@@ -1305,6 +1311,13 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
   // and comes back as soon as you scroll up
   const [barHidden, setBarHidden] = useState(false)
   const lastY = useRef(0)
+  // phones: the deck frame scrolls on its own, and only once the view has reached the bottom
+  const [deckActive, setDeckActive] = useState(false)
+  const onOuterScroll = () => {
+    const el = ref.current
+    if (el) setDeckActive(el.scrollTop >= el.scrollHeight - el.clientHeight - 2)
+    onScroll()
+  }
   const onScroll = (y = ref.current?.scrollTop ?? 0) => {
     const d = y - lastY.current
     if (Math.abs(d) > 4) {
@@ -1324,7 +1337,7 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
   }, [onClose])
   return (
     <div className="fixed inset-0 z-[70] bg-black" onClick={onClose}>
-      <div ref={ref} onScroll={() => onScroll()} className="absolute inset-0 overflow-y-auto bg-ink" onClick={(e) => e.stopPropagation()}>
+      <div ref={ref} onScroll={onOuterScroll} className="absolute inset-0 overflow-y-auto bg-ink" onClick={(e) => e.stopPropagation()}>
         <div className={`fixed inset-x-0 top-0 z-10 flex items-center justify-between gap-4 bg-gradient-to-b from-black/85 via-black/55 to-transparent px-5 pt-[calc(1rem+var(--sat))] pb-10 transition-transform duration-500 ease-out sm:px-8 sm:pt-[calc(1.25rem+var(--sat))] ${barHidden ? '-translate-y-full' : ''}`}>
           <div className="min-w-0">
             <div className="text-[10px] tracking-[0.2em] text-white/50 uppercase">{project.client}{project.year && ` · ${project.year}`} · {t(project.tags)}</div>
@@ -1347,7 +1360,7 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
             preload="metadata"
           />
         ))}
-        {project.embed && <EmbedDeck src={project.embed} title={t(project.title)} onInnerScroll={onScroll} />}
+        {project.embed && <EmbedDeck src={project.embed} title={t(project.title)} onInnerScroll={onScroll} active={deckActive} />}
         {project.full !== false &&
           (project.parts ? Array.from({ length: project.parts }, (_, i) => `${project.id}-full-${i + 1}.webp`) : [`${project.id}-full.webp`]).map((f, i) => (
             // phones get a 1080px copy: the full-size layouts are huge to decode and can crash mobile Safari
