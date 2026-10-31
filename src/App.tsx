@@ -211,7 +211,10 @@ function Hero() {
   }, [])
 
   useLayoutEffect(() => {
-    if (reducedMotion()) return
+    // the letter masks only matter while the letters rise in; after that they would cut
+    // the round tops and bottoms of the tall letters, so they are opened
+    const openMasks = () => gsap.set('.hero-title .line-mask', { overflow: 'visible' })
+    if (reducedMotion()) return void openMasks()
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: 'expo.out' } })
       tl.from('.hero-title .char', { yPercent: 110, duration: 1.3, stagger: 0.03 }, 0.15)
@@ -220,7 +223,10 @@ function Hero() {
 
     }, root)
     // the char layers only exist while the letters fly in
-    const clearChars = window.setTimeout(() => gsap.set('.hero-title .char', { clearProps: 'transform' }), 2600)
+    const clearChars = window.setTimeout(() => {
+      gsap.set('.hero-title .char', { clearProps: 'transform' })
+      openMasks()
+    }, 2600)
 
     // on scroll the head rises and the headline slides away
     const sec = root.current
@@ -1038,7 +1044,10 @@ function CategoryPage({ cat, onOpen }: { cat: Category; onOpen: (p: Project) => 
   const others = cat.id === 'all' ? categories : [...categories.filter((c) => c.id !== cat.id), allWorks]
 
   useLayoutEffect(() => {
-    if (reducedMotion()) return
+    // the letter masks only matter while the letters rise in; after that they would cut
+    // the round tops and bottoms of the tall letters, so they are opened
+    const openMasks = () => gsap.set('.hero-title .line-mask', { overflow: 'visible' })
+    if (reducedMotion()) return void openMasks()
     const ctx = gsap.context(() => {
       gsap.from('.cat-title .char', { yPercent: 110, stagger: 0.03, duration: 1.1, ease: 'expo.out', delay: 0.1 })
       gsap.from('.cat-fade', { y: 30, autoAlpha: 0, duration: 1, ease: 'expo.out', delay: 0.4 })
