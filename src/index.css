@@ -203,6 +203,12 @@ body {
 .hero-title .line-mask {
   display: inline-block;
 }
+/* the silver fill is painted only inside each letter box; with the tight line height the
+   round tops and bottoms (C, O, S, U) stuck out of it and looked cut, so give the box room */
+.hero-title .char {
+  padding-block: 0.1em;
+  margin-block: -0.1em;
+}
 
 /* tilted contact pill in the hero, like the reference */
 .hero-pill {
