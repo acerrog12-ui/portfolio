@@ -1393,6 +1393,15 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
   // the title bar floats over the project: it slides away while scrolling down
   // and comes back as soon as you scroll up
   const [barHidden, setBarHidden] = useState(false)
+  // each video's width / height, read from its poster picture
+  const [ratios, setRatios] = useState<Record<string, string>>({})
+  useEffect(() => {
+    project.videos?.forEach((v) => {
+      const im = new Image()
+      im.onload = () => im.naturalWidth && setRatios((r) => ({ ...r, [v]: `${im.naturalWidth} / ${im.naturalHeight}` }))
+      im.src = `${import.meta.env.BASE_URL}video/${v}.jpg`
+    })
+  }, [project])
   const lastY = useRef(0)
   // phones: the deck frame scrolls on its own, and only once the view has reached the bottom
   const [deckActive, setDeckActive] = useState(false)
@@ -1429,13 +1438,13 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
   return (
     <div className="fixed inset-0 z-[70] bg-black" onClick={onClose}>
       <div ref={ref} onScroll={onOuterScroll} className="absolute inset-0 overflow-y-auto bg-ink" onClick={(e) => e.stopPropagation()}>
-        <div className={`fixed inset-x-0 top-0 z-10 flex items-center justify-between gap-4 bg-gradient-to-b from-black/85 via-black/55 to-transparent px-5 pt-[calc(1rem+var(--sat))] pb-10 transition-transform duration-500 ease-out sm:px-8 sm:pt-[calc(1.25rem+var(--sat))] ${barHidden ? '-translate-y-full' : ''}`}>
+        <div className={`pointer-events-none fixed inset-x-0 top-0 z-10 flex items-center justify-between gap-4 bg-gradient-to-b from-black/85 via-black/55 to-transparent px-5 pt-[calc(1rem+var(--sat))] pb-10 transition-transform duration-500 ease-out sm:px-8 sm:pt-[calc(1.25rem+var(--sat))] ${barHidden ? '-translate-y-full' : ''}`}>
           <div className="min-w-0">
             <div className="text-[11px] tracking-[0.16em] text-white/60 uppercase">{project.client}{project.year && ` · ${project.year}`} · {t(project.tags)}</div>
             <h3 className="truncate font-display text-lg font-bold sm:text-2xl">{t(project.title)}</h3>
             {project.note && <p className="mt-1 text-xs text-white/60 sm:text-sm">{t(project.note)}</p>}
           </div>
-          <button onClick={onClose} className="shrink-0 rounded-full bg-white px-5 py-2 text-xs font-semibold tracking-widest text-black uppercase">
+          <button onClick={onClose} className="pointer-events-auto shrink-0 rounded-full bg-white px-5 py-2 text-xs font-semibold tracking-widest text-black uppercase">
             {t(ui.projects.close)} ✕
           </button>
         </div>
@@ -1449,9 +1458,14 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
         >
           ✕
         </button>
+        {/* phones: page 1 starts below the title bar, so the bar never covers the video or its play button */}
+        {!project.embed && <div aria-hidden className="h-[calc(5.25rem+var(--sat))] sm:hidden" />}
         {project.videos?.map((v, i) => (
           <div key={v}>
             <video
+              // the box takes the video's own shape from its poster, so no black band is left under a wide video
+              // (iOS does not load video metadata ahead, and an unsized video defaults to a 2:1 box)
+              style={{ aspectRatio: ratios[v] ?? '16 / 9' }}
               className="block max-h-[100svh] w-full bg-black object-contain"
               src={`${import.meta.env.BASE_URL}video/${v}.mp4`}
               poster={`${import.meta.env.BASE_URL}video/${v}.jpg`}
