@@ -148,6 +148,8 @@ export type Project = {
   p1?: boolean
   // the first page is animated: public/video/<id>-p1.mp4 (first frame: <id>-p1.jpg); plays once and stops on the finished page
   p1v?: boolean
+  // with p1v: the first page is a full film with sound, shown with player controls (starts muted)
+  p1vFilm?: boolean
 }
 
 // Order = order on the site. Images: public/img/<id>.webp (cover), <id>-s.webp (640px, phones) and <id>-full.webp (full layout).
@@ -158,7 +160,7 @@ export const projects: Project[] = [
   { id: 'fide', client: 'FIDE', title: { uz: 'Rapid va blits bōyiça jahon çempionati', ru: "Чемпионат мира по рапиду и блицу", en: 'World Rapid & Blitz Championships' }, tags: { uz: 'Event · Key visual', ru: "Ивент · Key visual", en: 'Event · Key visual' }, year: '2023', videos: ['fide-video'] },
   { id: 'istedodlar-zamini', client: 'Yoshlar harakati', title: { uz: "Ōzbekiston — Isteʼdodlar zamini", ru: "Узбекистан — земля талантов", en: "Uzbekistan — Land of Talents" }, tags: { uz: 'Sahna dizayni', ru: "Сценография", en: 'Stage design' }, year: '2025' , embed: 'ucfutbol/index.html', full: false },
   { id: 'superleague', client: 'UZSL', title: { uz: "Ōzbekiston Superligasi", ru: "Суперлига Узбекистана", en: 'Uzbekistan Superleague' }, tags: { uz: 'Brending · Sport', ru: "Брендинг · Спорт", en: 'Branding · Sports' }, videos: ['superleague-video'] },
-  { id: 'chiroqchi', p1: true, p1v: true, client: 'Chiroqchi', title: { uz: 'Çiroqçi tumani brendi', ru: "Бренд Чиракчинского района", en: 'Chiroqchi district identity' }, tags: { uz: 'Brending · Şahar', ru: "Брендинг · Территория", en: 'Branding · Place' } },
+  { id: 'chiroqchi', p1: true, p1v: true, p1vFilm: true, client: 'Chiroqchi', title: { uz: 'Çiroqçi tumani brendi', ru: "Бренд Чиракчинского района", en: 'Chiroqchi district identity' }, tags: { uz: 'Brending · Şahar', ru: "Брендинг · Территория", en: 'Branding · Place' } },
   { id: 'amir-temur', client: "O'zbekistondagi Islom sivilizatsiyasi markazi", title: { uz: 'Immersiv şou', ru: 'Иммерсивное шоу', en: 'Immersive show' }, tags: { uz: 'Vizual · Kōrgazma', ru: "Визуалы · Выставка", en: 'Visuals · Exhibition' }, videos: ['immersive-video'] },
   { id: 'violence', client: 'Tasnif Group', title: { uz: 'Zōravonlik — immersiv kōrgazma', ru: 'Насилие — иммерсивная выставка', en: 'Violence — immersive exhibition' }, tags: { uz: 'Immersiv · 3D mapping', ru: "Иммерсив · 3D-мэппинг", en: 'Immersive · 3D mapping' }, year: '2023' , embed: 'violence/index.html', full: false },
   { id: 'oltin-chinor', client: 'Oltin Chinor', title: { uz: 'Oltin Çinor milliy mukofoti', ru: "Национальная премия «Олтин Чинор»", en: 'Oltin Chinor national award' }, tags: { uz: 'Sahna dizayni', ru: "Сценография", en: 'Stage design' }, year: '2024' , embed: 'oltinchinor/index.html', full: false },

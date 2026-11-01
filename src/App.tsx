@@ -1112,7 +1112,7 @@ function CategoryPage({ cat, onOpen }: { cat: Category; onOpen: (p: Project) => 
           {ps.map((p, i) => (
             <button key={p.id} onClick={() => onOpen(p)} className={`cat-item group block overflow-hidden rounded-[1.75rem] border-[1.5px] border-white/70 p-3 text-left sm:p-4 ${ps.length % 2 && i === 0 ? 'md:col-span-2' : ''}`}>
               <span className="relative block aspect-video overflow-hidden rounded-[1.25rem]">
-                {(p.videos || p.embed || p.p1v) && <span className="absolute top-3 left-3 z-10 rounded-full bg-black/70 px-3 py-1 text-[10px] font-bold tracking-wide text-white uppercase">{p.videos ? "▶ Video" : "▶ Motion"}</span>}
+                {(p.videos || p.embed || p.p1v) && <span className="absolute top-3 left-3 z-10 rounded-full bg-black/70 px-3 py-1 text-[10px] font-bold tracking-wide text-white uppercase">{p.videos || p.p1vFilm ? "▶ Video" : "▶ Motion"}</span>}
                 <img src={img(`${p.id}.webp`)} srcSet={`${img(`${p.id}-s.webp`)} 640w, ${img(`${p.id}.webp`)} 1200w`} sizes="(max-width: 640px) 95vw, 50vw" alt={t(p.title)} loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-105" />
               </span>
               {/* project name on the left, its direction on the right (like fido.studio) */}
@@ -1274,26 +1274,27 @@ function EmbedDeck({ src, title, onInnerScroll, active = true }: { src: string; 
 // phones get a 1080px copy: the full-size layouts are huge to decode and can crash mobile Safari
 /* animated first page: plays once and stays on the finished page.
    If autoplay is blocked (or motion is reduced) the finished page is shown as a picture. */
-function CoverVideo({ id, alt }: { id: string; alt: string }) {
+function CoverVideo({ id, alt, film }: { id: string; alt: string; film?: boolean }) {
   const ref = useRef<HTMLVideoElement>(null)
-  const [still, setStill] = useState(() => reducedMotion())
+  // a film keeps its player, so it never falls back to the picture
+  const [still, setStill] = useState(() => !film && reducedMotion())
   useEffect(() => {
     const v = ref.current
-    if (!v) return
-    v.play()?.catch(() => setStill(true))
-  }, [])
+    if (!v || (film && reducedMotion())) return
+    v.play()?.catch(() => !film && setStill(true))
+  }, [film])
   if (still) return <Layout file={`${id}-p1.webp`} alt={alt} />
   return (
     <video
       ref={ref}
-      className="block aspect-video w-full object-cover"
+      className={`block aspect-video w-full object-cover ${film ? "bg-black" : ""}`}
       src={`${import.meta.env.BASE_URL}video/${id}-p1.mp4`}
       poster={`${import.meta.env.BASE_URL}video/${id}-p1.jpg`}
       aria-label={alt}
       muted
       playsInline
-      autoPlay
-      preload="auto"
+      controls={film}
+      preload={film ? 'metadata' : 'auto'}
     />
   )
 }
@@ -1424,7 +1425,7 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
             {i === 0 && !project.embed && <ProjectAbout project={project} />}
           </div>
         ))}
-        {project.p1 && (project.p1v ? <CoverVideo id={project.id} alt={t(project.title)} /> : <Layout file={`${project.id}-p1.webp`} alt={t(project.title)} />)}
+        {project.p1 && (project.p1v ? <CoverVideo id={project.id} alt={t(project.title)} film={project.p1vFilm} /> : <Layout file={`${project.id}-p1.webp`} alt={t(project.title)} />)}
         {!project.videos?.length && !project.embed && <ProjectAbout project={project} />}
         {project.embed && <EmbedDeck src={project.embed} title={t(project.title)} onInnerScroll={onScroll} active={deckActive} />}
         {project.full !== false &&
