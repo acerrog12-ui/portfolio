@@ -146,6 +146,8 @@ export type Project = {
   parts?: number
   // the layout's first page is a separate image, <id>-p1.webp, so "About the project" can sit after it
   p1?: boolean
+  // the first page is animated: public/video/<id>-p1.mp4 (first frame: <id>-p1.jpg); plays once and stops on the finished page
+  p1v?: boolean
 }
 
 // Order = order on the site. Images: public/img/<id>.webp (cover), <id>-s.webp (640px, phones) and <id>-full.webp (full layout).
@@ -156,7 +158,7 @@ export const projects: Project[] = [
   { id: 'fide', client: 'FIDE', title: { uz: 'Rapid va blits bōyiça jahon çempionati', ru: "Чемпионат мира по рапиду и блицу", en: 'World Rapid & Blitz Championships' }, tags: { uz: 'Event · Key visual', ru: "Ивент · Key visual", en: 'Event · Key visual' }, year: '2023', videos: ['fide-video'] },
   { id: 'istedodlar-zamini', client: 'Yoshlar harakati', title: { uz: "Ōzbekiston — Isteʼdodlar zamini", ru: "Узбекистан — земля талантов", en: "Uzbekistan — Land of Talents" }, tags: { uz: 'Sahna dizayni', ru: "Сценография", en: 'Stage design' }, year: '2025' , embed: 'ucfutbol/index.html', full: false },
   { id: 'superleague', client: 'UZSL', title: { uz: "Ōzbekiston Superligasi", ru: "Суперлига Узбекистана", en: 'Uzbekistan Superleague' }, tags: { uz: 'Brending · Sport', ru: "Брендинг · Спорт", en: 'Branding · Sports' }, videos: ['superleague-video'] },
-  { id: 'chiroqchi', p1: true, client: 'Chiroqchi', title: { uz: 'Çiroqçi tumani brendi', ru: "Бренд Чиракчинского района", en: 'Chiroqchi district identity' }, tags: { uz: 'Brending · Şahar', ru: "Брендинг · Территория", en: 'Branding · Place' } },
+  { id: 'chiroqchi', p1: true, p1v: true, client: 'Chiroqchi', title: { uz: 'Çiroqçi tumani brendi', ru: "Бренд Чиракчинского района", en: 'Chiroqchi district identity' }, tags: { uz: 'Brending · Şahar', ru: "Брендинг · Территория", en: 'Branding · Place' } },
   { id: 'amir-temur', client: "O'zbekistondagi Islom sivilizatsiyasi markazi", title: { uz: 'Immersiv şou', ru: 'Иммерсивное шоу', en: 'Immersive show' }, tags: { uz: 'Vizual · Kōrgazma', ru: "Визуалы · Выставка", en: 'Visuals · Exhibition' }, videos: ['immersive-video'] },
   { id: 'violence', client: 'Tasnif Group', title: { uz: 'Zōravonlik — immersiv kōrgazma', ru: 'Насилие — иммерсивная выставка', en: 'Violence — immersive exhibition' }, tags: { uz: 'Immersiv · 3D mapping', ru: "Иммерсив · 3D-мэппинг", en: 'Immersive · 3D mapping' }, year: '2023' , embed: 'violence/index.html', full: false },
   { id: 'oltin-chinor', client: 'Oltin Chinor', title: { uz: 'Oltin Çinor milliy mukofoti', ru: "Национальная премия «Олтин Чинор»", en: 'Oltin Chinor national award' }, tags: { uz: 'Sahna dizayni', ru: "Сценография", en: 'Stage design' }, year: '2024' , embed: 'oltinchinor/index.html', full: false },
@@ -183,12 +185,12 @@ export const projects: Project[] = [
     tags: { uz: '3D · Event dizayn', ru: '3D · Ивент-дизайн', en: '3D · Event design' },
     parts: 2,
   },
-  { id: 'yonda-awards', p1: true, client: 'Yonda Awards', title: { uz: 'Yonda Awards 2025', ru: 'Yonda Awards 2025', en: 'Yonda Awards 2025' }, tags: { uz: 'Key visual · 3D · Mukofot', ru: 'Key visual · 3D · Премия', en: 'Key visual · 3D · Awards' }, year: '2025' },
-  { id: 'logipro', p1: true, client: 'Logi Pro', title: { uz: 'Logi Pro logistika akademiyasi', ru: 'Логистическая академия Logi Pro', en: 'Logi Pro logistics academy' }, tags: { uz: 'Brending · Taʼlim', ru: 'Брендинг · Образование', en: 'Branding · Education' } },
+  { id: 'yonda-awards', p1: true, p1v: true, client: 'Yonda Awards', title: { uz: 'Yonda Awards 2025', ru: 'Yonda Awards 2025', en: 'Yonda Awards 2025' }, tags: { uz: 'Key visual · 3D · Mukofot', ru: 'Key visual · 3D · Премия', en: 'Key visual · 3D · Awards' }, year: '2025' },
+  { id: 'logipro', p1: true, p1v: true, client: 'Logi Pro', title: { uz: 'Logi Pro logistika akademiyasi', ru: 'Логистическая академия Logi Pro', en: 'Logi Pro logistics academy' }, tags: { uz: 'Brending · Taʼlim', ru: 'Брендинг · Образование', en: 'Branding · Education' } },
   { id: 'khiva-ethnosport', client: 'Ethnosport Khiva', title: { uz: 'Ethnosport Khiva 2023', ru: 'Ethnosport Khiva 2023', en: 'Ethnosport Khiva 2023' }, tags: { uz: 'Festival identifikatsiyasi · Key visual · Motion', ru: 'Айдентика фестиваля · Key visual · Моушн', en: 'Festival identity · Key visual · Motion' }, year: '2023', embed: 'khiva/index.html', full: false },
   { id: 'salomtv', client: 'Salom TV', title: { uz: 'Salom TV brendingi', ru: 'Брендинг Salom TV', en: 'Salom TV branding' }, tags: { uz: 'Brending · Onlayn kinoteatr · Motion', ru: 'Брендинг · Онлайн-кинотеатр · Моушн', en: 'Branding · Online cinema · Motion' }, year: '2026', embed: 'salomtv/index.html', full: false },
-  { id: 'arch-design', p1: true, client: 'Arch Design', title: { uz: 'Arch Design arxitektura studiyasi brendbuki', ru: 'Брендбук архитектурной студии Arch Design', en: 'Arch Design architecture studio brandbook' }, tags: { uz: 'Brending · Brendbuk · Arxitektura', ru: 'Брендинг · Брендбук · Архитектура', en: 'Branding · Brandbook · Architecture' }, year: '2024', parts: 2 },
-  { id: 'chust', p1: true, client: 'Chust', title: { uz: 'Çust şahar brendi', ru: "Бренд города Чуст", en: 'Chust city branding' }, tags: { uz: 'Brending · Şahar', ru: "Брендинг · Город", en: 'Branding · City' } },
+  { id: 'arch-design', p1: true, p1v: true, client: 'Arch Design', title: { uz: 'Arch Design arxitektura studiyasi brendbuki', ru: 'Брендбук архитектурной студии Arch Design', en: 'Arch Design architecture studio brandbook' }, tags: { uz: 'Brending · Brendbuk · Arxitektura', ru: 'Брендинг · Брендбук · Архитектура', en: 'Branding · Brandbook · Architecture' }, year: '2024', parts: 2 },
+  { id: 'chust', p1: true, p1v: true, client: 'Chust', title: { uz: 'Çust şahar brendi', ru: "Бренд города Чуст", en: 'Chust city branding' }, tags: { uz: 'Brending · Şahar', ru: "Брендинг · Город", en: 'Branding · City' } },
   { id: 'samad', client: 'Samad', title: { uz: 'Samad qadoq dizayni', ru: 'Дизайн упаковки Samad', en: 'Samad packaging design' }, tags: { uz: 'Qadoq · Plombir, sorbet, çuçvara', ru: 'Упаковка · Пломбир, сорбет, пельмени', en: 'Packaging · Ice cream, sorbet, dumplings' }, embed: 'samad/index.html', full: false },
   { id: 'talaba-fest', client: 'Talaba Fest', title: { uz: 'Talaba Fest festivali', ru: 'Фестиваль Talaba Fest', en: 'Talaba Fest festival' }, tags: { uz: 'Identifikatsiya · 3D hudud dizayni', ru: 'Айдентика · 3D-дизайн территории', en: 'Identity · 3D venue design' }, embed: 'talabafest/index.html', full: false },
   { id: 'yoshlar-kuni', client: 'Yoshlar ishlari agentligi', title: { uz: '30-iyun · Yoshlar kuni', ru: '30 июня · День молодёжи', en: 'June 30 · Youth Day' }, tags: { uz: 'Identifikatsiya · Animatsiya · Key visual', ru: 'Айдентика · Анимация · Key visual', en: 'Identity · Animation · Key visual' }, embed: 'yoshlar/index.html', full: false },
