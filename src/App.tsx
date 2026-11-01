@@ -1345,7 +1345,8 @@ function Layout({ file, alt }: { file: string; alt: string }) {
 }
 
 /* "About the project": what it is, what was made, Doston's role and the studio */
-function ProjectAbout({ project }: { project: Project }) {
+// first = nothing above it, so it must clear the floating title bar; otherwise it follows page 1 closely
+function ProjectAbout({ project, first = false }: { project: Project; first?: boolean }) {
   const { t } = useLang()
   const a = projectAbout[project.id]
   const studio = a?.studio === undefined ? 'Tasnif Group' : a.studio
@@ -1356,7 +1357,7 @@ function ProjectAbout({ project }: { project: Project }) {
     ...(a?.role ? [[t(ui.projects.role), t(a.role)] as [string, string]] : []),
   ]
   return (
-    <section className="relative overflow-hidden px-5 pt-32 pb-14 sm:px-8 sm:pt-40 sm:pb-20">
+    <section className={`relative overflow-hidden px-5 pb-14 sm:px-8 sm:pb-20 ${first ? 'pt-32 sm:pt-40' : 'pt-12 sm:pt-20'}`}>
       <div aria-hidden className="pointer-events-none absolute -right-40 -bottom-40 h-[480px] w-[480px] rounded-full bg-[radial-gradient(circle,rgba(122,77,255,0.28)_0%,transparent_65%)]" />
       <div className="relative mx-auto grid max-w-[1300px] gap-10 lg:grid-cols-[1.15fr_1fr] lg:gap-20">
         <div>
@@ -1462,7 +1463,7 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
           </div>
         ))}
         {project.p1 && (project.p1v ? <CoverVideo id={project.id} alt={t(project.title)} film={project.p1vFilm} /> : <Layout file={`${project.id}-p1.webp`} alt={t(project.title)} />)}
-        {!project.videos?.length && !project.embed && <ProjectAbout project={project} />}
+        {!project.videos?.length && !project.embed && <ProjectAbout project={project} first={!project.p1} />}
         {project.embed && <EmbedDeck src={project.embed} title={t(project.title)} onInnerScroll={onScroll} active={deckActive} />}
         {project.full !== false &&
           (project.parts ? Array.from({ length: project.parts }, (_, i) => `${project.id}-full-${i + 1}.webp`) : [`${project.id}-full.webp`]).map((f, i) => (
