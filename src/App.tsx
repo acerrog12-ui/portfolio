@@ -1332,6 +1332,7 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
   const lastY = useRef(0)
   // phones: the deck frame scrolls on its own, and only once the view has reached the bottom
   const [deckActive, setDeckActive] = useState(false)
+  const [deckOnly] = useState(() => !!project.embed && !project.videos?.length && project.full === false && !project.p1 && window.matchMedia('(max-width: 1023px), (pointer: coarse)').matches)
   const onOuterScroll = () => {
     // the deck takes the finger once its frame has reached the top of the screen
     const f = ref.current?.querySelector('iframe')
@@ -1353,7 +1354,9 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
     const esc = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
     window.addEventListener('keydown', esc)
     // clearProps: a leftover transform would make the fixed title bar and close button scroll away with the page
-    if (!reducedMotion()) gsap.from(ref.current, { yPercent: 100, duration: 0.9, ease: 'expo.out', clearProps: 'transform' })
+    // once the view is in place, a deck at its very top takes the finger straight away
+    if (!reducedMotion()) gsap.from(ref.current, { yPercent: 100, duration: 0.9, ease: 'expo.out', clearProps: 'transform', onComplete: onOuterScroll })
+    else onOuterScroll()
     return () => {
       document.body.style.overflow = ''
       window.removeEventListener('keydown', esc)
@@ -1402,8 +1405,9 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
           (project.parts ? Array.from({ length: project.parts }, (_, i) => `${project.id}-full-${i + 1}.webp`) : [`${project.id}-full.webp`]).map((f, i) => (
             <Layout key={f} file={f} alt={i || project.p1 ? '' : t(project.title)} />
           ))}
-        {/* end of the project: way back */}
-        <div className="flex justify-center px-5 py-16 sm:py-24">
+        {/* end of the project: way back. Not under a deck on phones: the deck fills the screen and
+            scrolls inside itself, and any extra space below let the view slide and cut off its top */}
+        <div className={`flex justify-center px-5 py-16 sm:py-24 ${deckOnly ? 'hidden' : ''}`}>
           <button onClick={onClose} className="rounded-full bg-white px-8 py-4 text-xs font-semibold tracking-widest text-black uppercase sm:text-sm">
             ← {t(ui.projects.backToProjects)}
           </button>
