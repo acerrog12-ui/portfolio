@@ -90,7 +90,7 @@ function Nav() {
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-black pt-[var(--sat)] before:pointer-events-none before:absolute before:inset-x-0 before:bottom-full before:h-[300px] before:bg-black before:content-['']">
       {/* the black strip above the bar covers the iPhone status and address bar area, so scrolled content never shows above the menu */}
-      <nav className="mx-auto flex max-w-[1500px] items-center gap-4 px-4 py-4 text-[11px] font-bold tracking-wide uppercase sm:px-8 sm:text-[13px]">
+      <nav className="mx-auto flex max-w-[1500px] items-center gap-4 px-4 py-4 text-[12px] font-bold tracking-wide uppercase sm:px-8 sm:text-[14px]">
         <ul className="hidden flex-1 justify-around md:flex">
           {links.map((l) =>
             l === 'projects' ? (
@@ -99,7 +99,7 @@ function Nav() {
               </li>
             ) : (
               <li key={l}>
-                <button onClick={() => scrollTo(l)} className="group relative">
+                <button onClick={() => scrollTo(l)} className="group relative uppercase">
                   {t(ui.nav[l])}
                   <span className="absolute -bottom-1 left-0 h-[1.5px] w-full origin-right scale-x-0 bg-white transition-transform duration-500 group-hover:origin-left group-hover:scale-x-100" />
                 </button>
@@ -111,7 +111,7 @@ function Nav() {
           ACE<span className="text-pink">.</span>
         </button>
         <span className="ml-auto md:hidden">
-          <ProjectsMenu label={t(ui.nav.projects)} />
+          <ProjectsMenu label={t(menuLabel)} sections />
         </span>
         <div className="flex overflow-hidden rounded-full border border-white/50">
           {(['uz', 'ru', 'en'] as const).map((l) => (
@@ -134,7 +134,8 @@ function Nav() {
 
 // "Projects" in the nav with a small arrow: opens a list of All works and every direction.
 // Opens on hover with a mouse and on tap on phones.
-function ProjectsMenu({ label }: { label: string }) {
+const menuLabel = { uz: 'Menyu', ru: 'Меню', en: 'Menu' }
+function ProjectsMenu({ label, sections = false }: { label: string; sections?: boolean }) {
   const { t } = useLang()
   const [open, setOpen] = useState(false)
   const box = useRef<HTMLDivElement>(null)
@@ -156,9 +157,23 @@ function ProjectsMenu({ label }: { label: string }) {
       </button>
       <div className={`absolute top-full right-0 z-50 pt-3 md:right-auto md:left-1/2 md:-translate-x-1/2 ${open ? '' : 'pointer-events-none'}`}>
         <ul className={`w-64 overflow-hidden rounded-2xl border border-white/15 bg-[#0b0b0e] p-2 shadow-2xl transition duration-200 ${open ? 'translate-y-0 opacity-100' : '-translate-y-1 opacity-0'}`}>
+          {/* on phones the same list also leads to the page sections, since the bar has no room for them */}
+          {sections && (
+            <>
+              {(['services', 'about', 'contact'] as const).map((l) => (
+                <li key={l}>
+                  <button onClick={() => { setOpen(false); scrollTo(l) }} className="flex w-full items-center justify-between rounded-xl px-4 py-3 text-left text-[13px] font-bold tracking-wide text-white normal-case hover:bg-white/10">
+                    {t(ui.nav[l])}
+                    <span className="text-white/40">↓</span>
+                  </button>
+                </li>
+              ))}
+              <li className="mx-4 my-1 border-t border-white/10 pt-2 pb-1 text-[11px] font-bold tracking-[0.14em] text-white/50 uppercase">{t(ui.nav.projects)}</li>
+            </>
+          )}
           {items.map((c) => (
             <li key={c.id}>
-              <a href={`#/work/${c.id}`} onClick={() => setOpen(false)} className={`flex items-center justify-between rounded-xl px-4 py-3 text-[12px] font-bold tracking-wide normal-case hover:bg-white/10 ${c.id === 'all' ? 'text-[#9b7bff]' : 'text-white'}`}>
+              <a href={`#/work/${c.id}`} onClick={() => setOpen(false)} className={`flex items-center justify-between rounded-xl px-4 py-3 text-[13px] font-bold tracking-wide normal-case hover:bg-white/10 ${c.id === 'all' ? 'text-[#9b7bff]' : 'text-white'}`}>
                 {t(c.title)}
                 <span className="text-white/40">→</span>
               </a>
@@ -309,9 +324,10 @@ function Hero() {
         </span>
       </h1>
 
-      <div className="relative flex flex-1 flex-col items-center sm:block">
-        {/* the head sits on top of the headline, touching the letters like in the reference */}
-        <div ref={avatar} className="hero-avatar live-wc relative z-10 mx-auto -mt-[16vw] w-[min(58vw,46svh)] max-w-[440px] sm:absolute sm:top-0 sm:left-1/2 sm:mt-[-25vw] sm:w-[27vw] sm:max-w-[620px] sm:-translate-x-1/2">
+      <div className="relative flex flex-1 flex-col items-center sm:block sm:min-h-[19.5vw]">
+        {/* the head sits on top of the headline, touching the letters like in the reference;
+            low enough that "OF" stays readable above the hair */}
+        <div ref={avatar} className="hero-avatar live-wc relative z-10 mx-auto -mt-[16vw] w-[min(58vw,46svh)] max-w-[440px] sm:absolute sm:top-0 sm:left-1/2 sm:mt-[-19vw] sm:w-[24vw] sm:max-w-[620px] sm:-translate-x-1/2">
           <div>
             <div className="hero-head relative">
               <img src={img('ace-head.webp')} srcSet={`${img('ace-head-s.webp')} 640w, ${img('ace-head.webp')} 1000w`} sizes="(max-width: 640px) 64vw, 29vw" fetchPriority="high" alt="Doston «Ace» Daminov" className="w-full" />
@@ -811,7 +827,7 @@ function About() {
             <div className="font-display text-4xl">{t(ui.about.award.title)}</div>
             <p className="mt-2 text-sm font-semibold text-white/60 uppercase">{t(ui.about.award.sub)}</p>
             <img src={img('violence.webp')} srcSet={`${img('violence-s.webp')} 640w, ${img('violence.webp')} 1200w`} sizes="(max-width: 640px) 90vw, 560px" alt="Violence" loading="lazy" className="mt-5 aspect-video w-full rounded-xl object-cover" />
-            <p className="mt-4 text-xs text-white/40">{t(ui.about.award.note)}</p>
+            <p className="mt-4 text-xs text-white/55">{t(ui.about.award.note)}</p>
           </div>
         </div>
       </div>
@@ -910,17 +926,17 @@ function Services() {
 
   return (
     <section id="services" ref={root} className="relative z-30 -mt-24 bg-transparent px-2 sm:-mt-32 sm:px-3">
-      <div className="svc-card rounded-[2rem] bg-paper px-5 pt-20 pb-40 text-black sm:rounded-[2.75rem] sm:px-12 sm:pt-28 sm:pb-56">
+      <div className="svc-card rounded-[2rem] bg-paper px-5 pt-20 pb-32 text-black sm:rounded-[2.75rem] sm:px-12 sm:pt-28 sm:pb-40">
         {/* pinned under the nav while the list below scrolls */}
         <h2 className="svc-title sticky top-[calc(72px+var(--sat))] z-10 text-center font-display text-[clamp(2.6rem,9vw,8.5rem)] leading-none uppercase sm:top-[calc(84px+var(--sat))]">{t(ui.services.title)}</h2>
-        <ol className="mx-auto mt-[22vh] max-w-[1100px] pb-[18vh] sm:mt-[30vh]">
+        <ol className="mx-auto mt-[12vh] max-w-[1100px] pb-[8vh] sm:mt-[14vh]">
           {services.map((s, i) => (
-            <li key={i} className="svc-row live-wc group grid grid-cols-[56px_1fr] items-start gap-x-4 py-[7vh] sm:grid-cols-[120px_1fr_1fr] sm:gap-x-10 sm:py-[9vh]">
+            <li key={i} className="svc-row live-wc group grid grid-cols-[56px_1fr] items-start gap-x-4 py-[6vh] sm:grid-cols-[120px_1fr_1fr] sm:gap-x-10 sm:py-[6vh]">
               <span className="font-display text-[2.2rem] leading-[0.85] transition-colors duration-300 group-hover:text-violet sm:text-[4rem]">
                 {String(i + 1).padStart(2, '0')}
               </span>
               <h3 className="font-cond text-lg font-extrabold uppercase transition-transform duration-500 group-hover:translate-x-2 sm:pt-2 sm:text-[1.7rem] sm:leading-tight">{t(s.title)}</h3>
-              <p className="col-start-2 mt-2 max-w-[520px] text-sm leading-relaxed whitespace-pre-line text-black/55 sm:col-start-3 sm:mt-0 sm:pt-2 sm:text-base">{t(s.text)}</p>
+              <p className="col-start-2 mt-2 max-w-[520px] text-sm leading-relaxed whitespace-pre-line text-black/70 sm:col-start-3 sm:mt-0 sm:pt-2 sm:text-base">{t(s.text)}</p>
             </li>
           ))}
         </ol>
@@ -1001,11 +1017,11 @@ function Projects() {
                   <span className="font-display text-4xl leading-none sm:text-6xl">{String(i + 1).padStart(2, '0')}</span>
                   <div className="min-w-0 flex-1">
                     <div className="font-cond text-sm font-extrabold uppercase sm:text-xl">{t(c.title)}</div>
-                    <div className="truncate text-[11px] text-white/50 sm:text-sm">
+                    <div className="truncate text-[12px] text-white/60 sm:text-sm">
                       {ps.length} {t(ui.projects.count)} · {t(c.text)}
                     </div>
                   </div>
-                  <span className="pill-line shrink-0 px-4 py-2 text-[10px] group-hover:bg-white group-hover:text-black sm:px-6 sm:py-2.5 sm:text-xs">
+                  <span className="pill-line shrink-0 px-4 py-2 text-[11px] group-hover:bg-white group-hover:text-black sm:px-6 sm:py-2.5 sm:text-xs">
                     {t(ui.projects.open)} →
                   </span>
                 </header>
@@ -1042,6 +1058,25 @@ function CategoryPage({ cat, onOpen }: { cat: Category; onOpen: (p: Project) => 
   const ps = shown.projects.map((id) => projects.find((p) => p.id === id)!)
   const idx = categories.indexOf(cat)
   const others = cat.id === 'all' ? categories : [...categories.filter((c) => c.id !== cat.id), allWorks]
+
+  // a long word in the title (KAMPANIYALAR, АРТ-ДИРЕКШН) must not stick out past the screen
+  // and push the whole page sideways on phones: shrink the title until its widest word fits
+  const catTitle = useRef<HTMLHeadingElement>(null)
+  useLayoutEffect(() => {
+    const h = catTitle.current
+    if (!h) return
+    const fit = () => {
+      h.style.fontSize = ''
+      const words = Array.from(h.querySelectorAll<HTMLElement>('.line-mask > span'))
+      const widest = Math.max(0, ...words.map((w) => w.offsetWidth))
+      const room = h.clientWidth
+      if (widest > room) h.style.fontSize = `${(parseFloat(getComputedStyle(h).fontSize) * room * 0.98) / widest}px`
+    }
+    fit()
+    document.fonts?.ready.then(fit)
+    window.addEventListener('resize', fit)
+    return () => window.removeEventListener('resize', fit)
+  }, [lang, cat.id])
 
   useLayoutEffect(() => {
     // the letter masks only matter while the letters rise in; after that they would cut
@@ -1082,9 +1117,10 @@ function CategoryPage({ cat, onOpen }: { cat: Category; onOpen: (p: Project) => 
         <a href="#" className="cat-fade pill-line px-5 py-2 text-xs">
           ← {t(ui.projects.back)}
         </a>
-        <div className="mt-10 flex items-end gap-4 sm:gap-8">
+        {/* on phones the number sits above the title, so a long word has the whole width */}
+        <div className="mt-10 flex flex-col items-start gap-3 sm:flex-row sm:items-end sm:gap-8">
           {idx >= 0 && <span className="font-display text-5xl leading-none text-white/30 sm:text-8xl">{String(idx + 1).padStart(2, '0')}</span>}
-          <h1 className="cat-title silver font-display text-[clamp(2.4rem,7.5vw,7.5rem)] leading-[0.88] uppercase">
+          <h1 ref={catTitle} className="cat-title silver w-full min-w-0 font-display text-[clamp(2.4rem,7.5vw,7.5rem)] leading-[0.88] uppercase sm:w-auto sm:flex-1">
             <SplitChars text={t(cat.title)} />
           </h1>
         </div>
@@ -1112,7 +1148,7 @@ function CategoryPage({ cat, onOpen }: { cat: Category; onOpen: (p: Project) => 
           {ps.map((p, i) => (
             <button key={p.id} onClick={() => onOpen(p)} className={`cat-item group block overflow-hidden rounded-[1.75rem] border-[1.5px] border-white/70 p-3 text-left sm:p-4 ${ps.length % 2 && i === 0 ? 'md:col-span-2' : ''}`}>
               <span className="relative block aspect-video overflow-hidden rounded-[1.25rem]">
-                {(p.videos || p.embed || p.p1v) && <span className="absolute top-3 left-3 z-10 rounded-full bg-black/70 px-3 py-1 text-[10px] font-bold tracking-wide text-white uppercase">{p.videos || p.p1vFilm ? "▶ Video" : "▶ Motion"}</span>}
+                {(p.videos || p.embed || p.p1v) && <span className="absolute top-3 left-3 z-10 rounded-full bg-black/70 px-3 py-1 text-[11px] font-bold tracking-wide text-white uppercase">{p.videos || p.p1vFilm ? "▶ Video" : "▶ Motion"}</span>}
                 <img src={img(`${p.id}.webp`)} srcSet={`${img(`${p.id}-s.webp`)} 640w, ${img(`${p.id}.webp`)} 1200w`} sizes="(max-width: 640px) 95vw, 50vw" alt={t(p.title)} loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-105" />
               </span>
               {/* project name on the left, its direction on the right (like fido.studio) */}
@@ -1172,8 +1208,8 @@ function CoverText({ p, small }: { p: Project; small?: boolean }) {
         <span className={`mt-3 hidden gap-6 ${small ? '' : 'sm:flex'}`}>
           {meta.map(([k, v]) => (
             <span key={k} className="min-w-0">
-              <span className="block text-[9px] font-bold tracking-[0.18em] text-white/50 uppercase">{k}</span>
-              <span className="block truncate text-[11px] font-semibold text-white/90 lg:text-xs">{v}</span>
+              <span className="block text-[11px] font-bold tracking-[0.14em] text-white/60 uppercase">{k}</span>
+              <span className="block truncate text-[13px] font-semibold text-white/90 lg:text-sm">{v}</span>
             </span>
           ))}
         </span>
@@ -1324,14 +1360,14 @@ function ProjectAbout({ project }: { project: Project }) {
       <div aria-hidden className="pointer-events-none absolute -right-40 -bottom-40 h-[480px] w-[480px] rounded-full bg-[radial-gradient(circle,rgba(122,77,255,0.28)_0%,transparent_65%)]" />
       <div className="relative mx-auto grid max-w-[1300px] gap-10 lg:grid-cols-[1.15fr_1fr] lg:gap-20">
         <div>
-          <div className="text-[11px] font-bold tracking-[0.25em] text-[#9b7bff] uppercase">{t(ui.projects.about)}</div>
+          <div className="text-[12px] font-bold tracking-[0.25em] text-[#9b7bff] uppercase">{t(ui.projects.about)}</div>
           <h2 className="mt-4 font-display text-[clamp(1.9rem,4.4vw,3.4rem)] leading-[1.02] font-bold">{t(a?.title ?? project.title)}</h2>
           {a && <p className="mt-6 max-w-xl text-[15px] leading-[1.7] text-white/75 sm:text-base">{t(a.text)}</p>}
         </div>
         <dl className="self-end border-b border-white/12 text-sm">
           {rows.map(([k, v]) => (
             <div key={k} className="grid grid-cols-[minmax(0,0.8fr)_minmax(0,1.6fr)] gap-4 border-t border-white/12 py-4">
-              <dt className="pt-0.5 text-[10px] font-bold tracking-[0.2em] text-[#9b7bff] uppercase">{k}</dt>
+              <dt className="pt-0.5 text-[12px] font-bold tracking-[0.16em] text-[#9b7bff] uppercase">{k}</dt>
               <dd className="font-medium text-white/90">{v}</dd>
             </div>
           ))}
@@ -1342,7 +1378,7 @@ function ProjectAbout({ project }: { project: Project }) {
           {studio === 'Tasnif Group' && <img src={img('logos/tasnif-group.webp')} alt="Tasnif Group" className="h-6 w-auto shrink-0 sm:h-7" />}
           <div className="min-w-0">
             <div className="text-xs font-semibold tracking-[0.12em] text-white/80 uppercase sm:text-[13px]">{t(ui.projects.madeAt).replace('{s}', studio)}</div>
-            <div className="mt-1 text-[11px] text-white/50 sm:text-xs">{t(ui.projects.rights).replace('{s}', studio)}</div>
+            <div className="mt-1 text-[12px] text-white/60 sm:text-sm">{t(ui.projects.rights).replace('{s}', studio)}</div>
           </div>
         </div>
       )}
@@ -1394,7 +1430,7 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
       <div ref={ref} onScroll={onOuterScroll} className="absolute inset-0 overflow-y-auto bg-ink" onClick={(e) => e.stopPropagation()}>
         <div className={`fixed inset-x-0 top-0 z-10 flex items-center justify-between gap-4 bg-gradient-to-b from-black/85 via-black/55 to-transparent px-5 pt-[calc(1rem+var(--sat))] pb-10 transition-transform duration-500 ease-out sm:px-8 sm:pt-[calc(1.25rem+var(--sat))] ${barHidden ? '-translate-y-full' : ''}`}>
           <div className="min-w-0">
-            <div className="text-[10px] tracking-[0.2em] text-white/50 uppercase">{project.client}{project.year && ` · ${project.year}`} · {t(project.tags)}</div>
+            <div className="text-[11px] tracking-[0.16em] text-white/60 uppercase">{project.client}{project.year && ` · ${project.year}`} · {t(project.tags)}</div>
             <h3 className="truncate font-display text-lg font-bold sm:text-2xl">{t(project.title)}</h3>
             {project.note && <p className="mt-1 text-xs text-white/60 sm:text-sm">{t(project.note)}</p>}
           </div>
@@ -1588,7 +1624,6 @@ function Contact() {
   const socials = [
     { name: 'Telegram', href: contacts.telegram },
     { name: 'Instagram', href: contacts.instagram },
-    { name: 'Behance', href: contacts.behance },
   ]
 
   // The form goes to Doston's Telegram bot through the relay; without one it opens the mail app
@@ -1597,9 +1632,15 @@ function Contact() {
     e.preventDefault()
     const form = e.currentTarget
     const f = new FormData(form)
+    const phoneEl = form.elements.namedItem('phone') as HTMLInputElement
+    if (!String(f.get('phone') || '').trim() && !String(f.get('email') || '').trim()) {
+      phoneEl.setCustomValidity(t(ui.contact.form.need))
+      phoneEl.reportValidity()
+      return
+    }
     if (!contacts.relay) {
       const subject = `Portfolio: ${f.get('name') || ''}`
-      const body = `${f.get('message') || ''}\n\n${f.get('name') || ''} · ${f.get('phone') || ''}`
+      const body = `${f.get('message') || ''}\n\n${f.get('name') || ''} · ${f.get('phone') || ''} ${f.get('email') || ''}`
       window.location.href = `mailto:${contacts.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
       return
     }
@@ -1613,7 +1654,7 @@ function Contact() {
       setStatus('error')
     }
   }
-  const field = 'w-full border-b border-black/25 bg-transparent py-3 text-base text-black outline-none placeholder:text-black/40 focus:border-black'
+  const field = 'w-full border-b border-black/25 bg-transparent py-3 text-base text-black outline-none placeholder:text-black/50 focus:border-black'
 
   return (
     <footer id="contact" ref={root} className="relative z-30 -mt-24 px-2 sm:-mt-32 sm:px-3">
@@ -1646,15 +1687,17 @@ function Contact() {
               <a href={contacts.phoneHref} className="w-fit text-black transition-colors hover:text-violet">
                 {contacts.phone}
               </a>
-              <a href={`mailto:${contacts.email}`} className="w-fit text-sm font-medium break-all text-black/55 transition-colors hover:text-violet">
+              <a href={`mailto:${contacts.email}`} className="w-fit text-sm font-medium break-all text-black/70 transition-colors hover:text-violet">
                 {contacts.email}
               </a>
             </div>
-            <p className="mt-4 max-w-sm text-sm text-black/55">{t(ui.contact.lead)}</p>
+            <p className="mt-4 max-w-sm text-sm text-black/70">{t(ui.contact.lead)}</p>
           </div>
           <form onSubmit={send} className="flex flex-col gap-4">
             <input name="name" required placeholder={t(ui.contact.form.name)} className={field} />
-            <input name="phone" type="tel" inputMode="tel" autoComplete="tel" required minLength={7} maxLength={20} placeholder={t(ui.contact.form.phone)} className={field} />
+            {/* phone or email: at least one of them (checked in send) */}
+            <input name="phone" type="tel" inputMode="tel" autoComplete="tel" minLength={7} maxLength={20} placeholder={t(ui.contact.form.phone)} className={field} onInput={(e) => e.currentTarget.setCustomValidity('')} />
+            <input name="email" type="email" autoComplete="email" maxLength={120} placeholder={t(ui.contact.form.email)} className={field} />
             <textarea name="message" rows={3} placeholder={t(ui.contact.form.message)} className={`${field} resize-none`} />
             {/* honeypot: hidden from people, bots fill it */}
             <input name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 opacity-0" />
@@ -1681,7 +1724,7 @@ function Contact() {
               Daminov
             </div>
             <div className="text-sm">
-              <div className="mb-3 text-[11px] font-extrabold tracking-wide uppercase">{t(ui.contact.social)}</div>
+              <div className="mb-3 text-[12px] font-extrabold tracking-wide uppercase">{t(ui.contact.social)}</div>
               <ul className="space-y-1.5 text-white/70">
                 {socials.map((s) => (
                   <li key={s.name}>
@@ -1693,7 +1736,7 @@ function Contact() {
               </ul>
             </div>
             <div className="text-sm">
-              <div className="mb-3 text-[11px] font-extrabold tracking-wide uppercase">{t(ui.contact.mail)}</div>
+              <div className="mb-3 text-[12px] font-extrabold tracking-wide uppercase">{t(ui.contact.mail)}</div>
               <div className="space-y-1.5 text-white/70">
                 <a href={contacts.telegram} target="_blank" rel="noreferrer" className="block font-semibold text-white transition-colors hover:text-pink">
                   Telegram {contacts.telegramHandle}
@@ -1717,7 +1760,7 @@ function Contact() {
               </div>
             ))}
           </div>
-          <div className="mt-6 flex justify-between text-[11px] text-white/40">
+          <div className="mt-6 flex justify-between gap-4 text-[12px] text-white/55">
             <span>© {new Date().getFullYear()} Doston «Ace» Daminov</span>
             <span>{t(ui.contact.rights)}</span>
           </div>

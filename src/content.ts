@@ -77,10 +77,12 @@ export const ui = {
     rights: { uz: '© {s}. Loyihaning mualliflik huquqlari studiyaga tegişli.', ru: '© {s}. Авторские права на проект принадлежат студии.', en: '© {s}. All rights to this project belong to the studio.' },
   },
   contact: {
-    title: { uz: "IŞLAYDIGAN BŌLIB KELING", ru: "ПРИХОДИТЕ ГОТОВЫМИ К\u00a0РАБОТЕ", en: "COME READY TO WORK" },
+    title: { uz: "KELING, BIRGA IŞLAYMIZ", ru: "ДАВАЙТЕ РАБОТАТЬ ВМЕСТЕ", en: "LET'S WORK TOGETHER" },
     form: {
       name: { uz: 'Ismingiz', ru: "Ваше имя", en: 'Your name' },
       phone: { uz: 'Telefon raqamingiz', ru: 'Ваш номер телефона', en: 'Your phone number' },
+      email: { uz: 'yoki email', ru: 'или email', en: 'or email' },
+      need: { uz: 'Telefon yoki email yozing', ru: 'Укажите телефон или email', en: 'Please add a phone or email' },
       message: { uz: "Loyiha, muddat va format haqida", ru: "Проект, сроки и формат", en: 'Project, timeline and format' },
       send: { uz: 'Yuboriş', ru: "Отправить", en: 'Send' },
       sending: { uz: 'Yuborilmoqda…', ru: 'Отправляю…', en: 'Sending…' },
