@@ -188,8 +188,8 @@ function ProjectsMenu({ label, sections = false }: { label: string; sections?: b
 // Turn on once public/img/ace-head-smile.webp (same framing as ace-head.webp) is added
 const HEAD_SMILE = false
 
-// Preview only: ?style=chrome|neon|comic|arcane|spider|spider2|spider3 swaps the hero character for a restyled render
-const HEAD_STYLES = ['chrome', 'neon', 'comic', 'arcane', 'spider', 'spider2', 'spider3']
+// Preview only: ?style=chrome|neon|comic|arcane|spider|spider2|spider3|sva|svb swaps the hero character for a restyled render
+const HEAD_STYLES = ['chrome', 'neon', 'comic', 'arcane', 'spider', 'spider2', 'spider3', 'sva', 'svb']
 const headStyle = (() => {
   try {
     const v = new URLSearchParams(window.location.search).get('style') ?? ''
