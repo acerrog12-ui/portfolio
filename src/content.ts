@@ -112,7 +112,7 @@ export const services: { title: T; text: T }[] = [
 
 // "Big projects" block: Doston leads a team across these directions.
 export const team = {
-  title: { uz: 'KATTA LOYIHALAR', ru: "БОЛЬШИЕ ПРОЕКТЫ", en: 'BIG PROJECTS' },
+  title: { uz: 'KATTA LOYIHALAR UÇUN', ru: 'ДЛЯ БОЛЬШИХ ПРОЕКТОВ', en: 'FOR BIG PROJECTS' },
   lead: {
     uz: "Bu mening şaxsiy portfoliom, lekin har bir yōnalişda ōz jamoam bor. Şuning uçun istalgan hajmdagi loyihani, ğoyadan to sahnagaça, tōliq olib çiqa olamiz.",
     ru: "Это моё личное портфолио, но в каждом направлении у меня есть своя команда. Поэтому мы берём проекты любого масштаба и ведём их полностью — от идеи до сцены.", en: "This is my personal portfolio, but I also lead a team with specialists in every direction. That means we can take on a project of any size and deliver it end to end, from idea to stage.",
