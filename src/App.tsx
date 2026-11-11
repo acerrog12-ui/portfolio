@@ -185,6 +185,41 @@ function ProjectsMenu({ label, sections = false }: { label: string; sections?: b
   )
 }
 
+// "Spider-sense": three wavy white strokes on each side of the head, shown while the contact button is hovered.
+// Coordinates are in the head image's own space (1000 x 1568); each stroke starts next to the head and runs outward.
+const SENSE_LINES: [number, number, number][] = [
+  // x, y where the stroke starts, angle in degrees (0 = straight out)
+  [40, 330, -30],
+  [10, 560, 0],
+  [40, 790, 30],
+]
+function squiggle(len: number, waves = 6, amp = 36) {
+  const step = len / (waves * 2)
+  let d = 'M0 0'
+  for (let i = 0; i < waves * 2; i++) {
+    const x1 = step * (i + 0.5)
+    const y1 = (i % 2 ? amp : -amp) * (1 - (i / (waves * 2)) * 0.45)
+    d += ` Q${x1.toFixed(1)} ${y1.toFixed(1)} ${(step * (i + 1)).toFixed(1)} 0`
+  }
+  return d
+}
+function SpiderSense() {
+  const d = squiggle(340)
+  return (
+    <svg aria-hidden viewBox="0 0 1000 1568" className="hero-sense pointer-events-none absolute inset-0 h-full w-full overflow-visible" style={{ visibility: 'hidden' }}>
+      {[-1, 1].map((side) =>
+        SENSE_LINES.map(([x, y, a], i) => (
+          <g key={`${side}${i}`} transform={side < 0 ? `translate(${x} ${y}) rotate(${180 - a})` : `translate(${1000 - x} ${y}) rotate(${a})`}>
+            <g className="sense-line">
+              <path d={d} pathLength={1} fill="none" stroke="#fff" strokeWidth={20} strokeLinecap="round" strokeLinejoin="round" style={{ filter: 'drop-shadow(0 0 10px rgba(255,255,255,.55))' }} />
+            </g>
+          </g>
+        )),
+      )}
+    </svg>
+  )
+}
+
 // Turn on once public/img/ace-head-smile.webp (same framing as ace-head.webp) is added
 const HEAD_SMILE = false
 
@@ -310,6 +345,20 @@ function Hero() {
     // made the browser redraw the whole head on every scroll frame
     if (on && glint) gsap.fromTo(glint, { display: 'block', backgroundPosition: '76% 0%' }, { backgroundPosition: '14% 0%', duration: 0.85, ease: 'power1.inOut', overwrite: true, onComplete: () => gsap.set(glint, { display: 'none' }) })
     if (smile) gsap.to(smile, { opacity: on ? 1 : 0, duration: 0.25, overwrite: true })
+    const sense = root.current?.querySelector('.hero-sense')
+    if (sense) {
+      const lines = sense.querySelectorAll('.sense-line')
+      const paths = sense.querySelectorAll('path')
+      gsap.killTweensOf([sense, lines, paths])
+      if (on) {
+        gsap.set(sense, { visibility: 'visible', opacity: 1 })
+        gsap.fromTo(paths, { strokeDasharray: 1, strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.22, ease: 'power2.out', stagger: { each: 0.03, from: 'random' } })
+        // the strokes keep twitching while the pointer stays on the button
+        gsap.fromTo(lines, { x: 0, y: 0 }, { x: () => gsap.utils.random(-8, 14), y: () => gsap.utils.random(-7, 7), duration: 0.07, ease: 'none', repeat: -1, yoyo: true, repeatRefresh: true })
+      } else {
+        gsap.to(sense, { opacity: 0, duration: 0.18, onComplete: () => { gsap.set(sense, { visibility: 'hidden' }); gsap.set(lines, { x: 0, y: 0 }) } })
+      }
+    }
   }
 
   return (
@@ -348,6 +397,7 @@ function Hero() {
                   backgroundPosition: '76% 0%',
                 }}
               />
+              <SpiderSense />
               {HEAD_SMILE && <img src={img('ace-head-smile.webp')} alt="" aria-hidden decoding="async" className="hero-smile pointer-events-none absolute inset-0 w-full opacity-0" />}
             </div>
           </div>
